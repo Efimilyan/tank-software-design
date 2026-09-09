@@ -28,44 +28,14 @@ public class Tank {
         this.graphics = graphics;
     }
 
-    public void moveUp(GameField gameField){
+    public void move(Direction direction, GameField gameField) {
         if (isEqual(movementProgress, 1f)) {
-            if (!gameField.isOccupied(incrementedY(currentCoordinates))) {
-                destinationCoordinates.y++;
+            if (!gameField.isOccupied(direction.nextCoordinates(currentCoordinates))) {
+                destinationCoordinates.set(direction.nextCoordinates(currentCoordinates));
                 movementProgress = 0f;
             }
-            rotation = 90f;
+            rotation = direction.getRotation();
         }
-
-    }
-    public void moveDown(GameField gameField){
-        if (isEqual(movementProgress, 1f)) {
-            if (!gameField.isOccupied(decrementedY(currentCoordinates))) {
-                destinationCoordinates.y--;
-                movementProgress = 0f;
-            }
-            rotation = -90f;
-        }
-
-    }
-    public void moveLeft(GameField gameField){
-        if (isEqual(movementProgress, 1f)) {
-            if (!gameField.isOccupied(decrementedX(currentCoordinates))) {
-                destinationCoordinates.x--;
-                movementProgress = 0f;
-            }
-            rotation = -180f;
-        }
-    }
-    public void moveRight(GameField gameField){
-        if (isEqual(movementProgress, 1f)) {
-            if (!gameField.isOccupied(incrementedX(currentCoordinates))) {
-                destinationCoordinates.x++;
-                movementProgress = 0f;
-            }
-            rotation = 0f;
-        }
-
     }
     public void updateMovementProgress(float deltaTime, TileMovement tileMovement) {
         tileMovement.moveRectangleBetweenTileCenters(boundingRectangle, currentCoordinates, destinationCoordinates, movementProgress);
