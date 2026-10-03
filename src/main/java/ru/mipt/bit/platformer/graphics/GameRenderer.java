@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.Disposable;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
+import java.util.List;
+
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRenderer;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
@@ -21,21 +23,19 @@ public class GameRenderer implements Disposable {
         levelRenderer = createSingleLayerMapRenderer(resources.getLevel(), batch);
     }
 
-    public void render(Tank tank, Obstacle obstacle){
+    public void render(Tank tank, List<Obstacle> obstacles){
         Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
-        // render each tile of the level
         levelRenderer.render();
 
-        // start recording all drawing commands
         batch.begin();
-        // render tank
         drawTextureRegionUnscaled(batch, tank.getGraphics(), tank.getBoundingRectangle(), tank.getRotation());
-        // render obstacle
-        drawTextureRegionUnscaled(batch, obstacle.getGraphics(), obstacle.getBoundingRectangle(), 0f);
-        // submit all drawing requests
+        for (Obstacle obstacle : obstacles) {
+            drawTextureRegionUnscaled(batch, obstacle.getGraphics(), obstacle.getBoundingRectangle(), 0f);
+        }
         batch.end();
     }
+
     @Override
     public void dispose() {
         batch.dispose();

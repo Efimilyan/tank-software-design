@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
-public class Obstacle {
+public class Obstacle implements Blocking{
     private TextureRegion graphics;
     private GridPoint2 coordinates;
     private Rectangle rectangle;
@@ -19,7 +19,7 @@ public class Obstacle {
         this.rectangle = createBoundingRectangle(graphics);
         moveRectangleAtTileCenter(tileLayer, rectangle, coordinates);
     }
-
+    @Override
     public boolean occupies(GridPoint2 position){
         return coordinates.equals(position);
     }
