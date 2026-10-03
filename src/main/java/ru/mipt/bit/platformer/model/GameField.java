@@ -5,16 +5,16 @@ import com.badlogic.gdx.math.GridPoint2;
 import java.util.List;
 
 public class GameField implements CollisionChecker {
-    private List<Obstacle> obstacles;
+    private List<? extends Blocking> obstacles;
 
-    public GameField(List<Obstacle> obstacles) {
+    public GameField(List<? extends Blocking> obstacles) {
         this.obstacles = obstacles;
     }
 
     @Override
     public boolean isOccupied(GridPoint2 coordinates) {
         for (int i = 0; i < obstacles.size(); i++) {
-            Obstacle obstacle = obstacles.get(i);
+            Blocking obstacle = obstacles.get(i);
             if (obstacle.occupies(coordinates)) {
                 return true;
             }
