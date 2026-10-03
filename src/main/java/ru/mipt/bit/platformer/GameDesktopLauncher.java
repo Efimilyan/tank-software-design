@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.graphics.GameRenderer;
 import ru.mipt.bit.platformer.graphics.GameResources;
+import ru.mipt.bit.platformer.input.KeyStateProvider;
 import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
@@ -29,7 +30,13 @@ public class GameDesktopLauncher implements ApplicationListener {
     private GameRenderer renderer;
     private GameResources resources;
     private GameWorld world;
-    private final PlayerKeyboardInput playerInput = new PlayerKeyboardInput();
+    private final PlayerKeyboardInput playerInput =
+            new PlayerKeyboardInput(new KeyStateProvider() {
+                @Override
+                public boolean isKeyPressed(int keyCode) {
+                    return Gdx.input.isKeyPressed(keyCode);
+                }
+            });
 
 
     @Override
