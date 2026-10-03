@@ -3,14 +3,12 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
-import ru.mipt.bit.platformer.util.TileMovement;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 
 public class Tank {
-    ;
 
     public enum Direction { UP, DOWN, LEFT, RIGHT };
     private final float movementSpeed;
@@ -55,8 +53,8 @@ public class Tank {
             case RIGHT -> 0f;
         };
     }
-    public void updateMovementProgress(float deltaTime, TileMovement tileMovement) {
-        tileMovement.moveRectangleBetweenTileCenters(boundingRectangle, currentCoordinates, destinationCoordinates, movementProgress);
+    public void updateMovementProgress(float deltaTime, RectangleMovement rectangleMovement) {
+        rectangleMovement.moveRectangleBetweenTileCenters(boundingRectangle, currentCoordinates, destinationCoordinates, movementProgress);
         movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
         if (isEqual(movementProgress, 1f)) {
             currentCoordinates.set(destinationCoordinates);
