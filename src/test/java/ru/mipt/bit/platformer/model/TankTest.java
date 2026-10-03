@@ -12,6 +12,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TankTest {
+    private static final float SPEED = 0.4f;
+
     private final TextureRegion region = new TextureRegion();
     private final TiledMapTileLayer layer = new TiledMapTileLayer(10, 8, 128, 128);
     private final TileMovement tileMovement = new TileMovement(layer, Interpolation.linear);
@@ -19,14 +21,14 @@ class TankTest {
 
     @Test
     void newTankFacesRight() {
-        Tank tank = new Tank(new GridPoint2(1, 1), region);
+        Tank tank = new Tank(new GridPoint2(1, 1), region, SPEED);
 
         assertEquals(0f, tank.getRotation(), 0.001f);
     }
 
     @Test
     void moveTurnsTankInThatDirection() {
-        Tank tank = new Tank(new GridPoint2(1, 1), region);
+        Tank tank = new Tank(new GridPoint2(1, 1), region, SPEED);
         tank.move(Tank.Direction.UP, emptyField);
 
         assertEquals(90f, tank.getRotation(), 0.001f);
@@ -34,7 +36,7 @@ class TankTest {
 
     @Test
     void tankMovesToNextTile() {
-        Tank tank = new Tank(new GridPoint2(1, 1), region);
+        Tank tank = new Tank(new GridPoint2(1, 1), region, SPEED);
         tank.move(Tank.Direction.UP, emptyField);
 
         tank.updateMovementProgress(0.4f, tileMovement);
@@ -48,7 +50,7 @@ class TankTest {
     void tankDoesNotEnterObstacle() {
         Obstacle obstacle = new Obstacle(new GridPoint2(1, 2), region, layer);
         GameField field = new GameField(List.of(obstacle));
-        Tank tank = new Tank(new GridPoint2(1, 1), region);
+        Tank tank = new Tank(new GridPoint2(1, 1), region, SPEED);
 
         tank.move(Tank.Direction.UP, field);
         tank.updateMovementProgress(0.4f, tileMovement);
@@ -60,7 +62,7 @@ class TankTest {
 
     @Test
     void cannotTurnWhileMoving() {
-        Tank tank = new Tank(new GridPoint2(1, 1), region);
+        Tank tank = new Tank(new GridPoint2(1, 1), region, SPEED);
 
         tank.move(Tank.Direction.UP, emptyField);
         tank.move(Tank.Direction.LEFT, emptyField);

@@ -3,15 +3,23 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Interpolation;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.util.TileMovement;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameWorldTest {
+    private static final float TANK_SPEED = 0.4f;
+
+    private final TextureRegion region = new TextureRegion();
+    private final TiledMapTileLayer layer = new TiledMapTileLayer(10, 8, 128, 128);
     private final GameWorld world = new GameWorld(
-            new TiledMapTileLayer(10, 8, 128, 128),
-            new TextureRegion(),
-            new TextureRegion());
+            new Tank(new GridPoint2(1, 1), region, TANK_SPEED),
+            List.of(new Obstacle(new GridPoint2(1, 3), region, layer)),
+            new TileMovement(layer, Interpolation.smooth));
 
     @Test
     void obstacleTileIsOccupiedInGameField() {

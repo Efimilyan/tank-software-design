@@ -10,10 +10,10 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 
 public class Tank {
-    private static final float MOVEMENT_SPEED = 0.4f;
+    ;
 
-    public enum Direction { UP, DOWN, LEFT, RIGHT }
-
+    public enum Direction { UP, DOWN, LEFT, RIGHT };
+    private final float movementSpeed;
     private TextureRegion graphics;
     private final Rectangle boundingRectangle;
     private GridPoint2 currentCoordinates;
@@ -21,11 +21,12 @@ public class Tank {
     private float movementProgress = 1f;
     private float rotation = 0f;
 
-    public Tank(GridPoint2 coordinates, TextureRegion graphics){
-        this.currentCoordinates = coordinates;
+    public Tank(GridPoint2 coordinates, TextureRegion graphics, float movementSpeed){
+        this.currentCoordinates = new GridPoint2(coordinates);
         this.destinationCoordinates = new GridPoint2(coordinates);
         this.boundingRectangle = createBoundingRectangle(graphics);
         this.graphics = graphics;
+        this.movementSpeed = movementSpeed;
     }
 
     public void move(Direction direction, GameField gameField) {
@@ -56,7 +57,7 @@ public class Tank {
     }
     public void updateMovementProgress(float deltaTime, TileMovement tileMovement) {
         tileMovement.moveRectangleBetweenTileCenters(boundingRectangle, currentCoordinates, destinationCoordinates, movementProgress);
-        movementProgress = continueProgress(movementProgress, deltaTime, MOVEMENT_SPEED);
+        movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
         if (isEqual(movementProgress, 1f)) {
             currentCoordinates.set(destinationCoordinates);
         }

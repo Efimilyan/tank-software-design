@@ -6,16 +6,26 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.graphics.GameRenderer;
 import ru.mipt.bit.platformer.graphics.GameResources;
 import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.util.TileMovement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
+    private static final GridPoint2 PLAYER_START = new GridPoint2(1, 1);
+    private static final float PLAYER_SPEED = 0.4f;
+    private static final List<GridPoint2> TREE_POSITIONS = List.of(new GridPoint2(1, 3));
+
     private GameRenderer renderer;
     private GameResources resources;
     private GameWorld world;
@@ -29,18 +39,24 @@ public class GameDesktopLauncher implements ApplicationListener {
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
         var playerGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
-        world = new GameWorld(groundLayer, playerGraphics, treeObstacleGraphics);
+        Tank tank = new Tank(PLAYER_START, playerGraphics, PLAYER_SPEED);
+        List<Obstacle> obstacles = new ArrayList<>();
+        for (GridPoint2 position : TREE_POSITIONS) {
+            obstacles.add(new Obstacle(position, treeObstacleGraphics, groundLayer));
+        }
+        TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
+
+        world = new GameWorld(tank, obstacles, tileMovement);
+
     }
 
     @Override
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
-        Tank tank = world.getTank();
-        Obstacle obstacle = world.getObstacle();
-        playerInput.handleInput(tank, world.getGameField());
+        playerInput.handleInput(world.getTank(), world.getGameField());
 
         world.update(deltaTime);
-        renderer.render(tank, obstacle);
+        renderer.render(world.getTank(), world.getObstacles());
     }
 
     @Override
