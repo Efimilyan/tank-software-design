@@ -29,10 +29,10 @@ public class Tank {
         this.movementSpeed = movementSpeed;
     }
 
-    public void move(Direction direction, GameField gameField) {
+    public void move(Direction direction, CollisionChecker collisionChecker) {
         if (isEqual(movementProgress, 1f)) {
             GridPoint2 nextCoordinates = nextCoordinatesFor(direction);
-            if (!gameField.isOccupied(nextCoordinates)) {
+            if (!collisionChecker.isOccupied(nextCoordinates)) {
                 destinationCoordinates.set(nextCoordinates);
                 movementProgress = 0f;
             }
