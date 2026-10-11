@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
-public class Tank {
+public class Tank implements GameObject{
 
     public enum Direction { UP, DOWN, LEFT, RIGHT }
 
@@ -31,7 +31,7 @@ public class Tank {
             rotation = rotationFor(direction);
         }
     }
-
+    @Override
     public void update(float deltaTime) {
         movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
         if (isEqual(movementProgress, 1f)) {
