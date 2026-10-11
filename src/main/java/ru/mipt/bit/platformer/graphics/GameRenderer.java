@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.utils.Disposable;
-import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.List;
@@ -23,17 +22,17 @@ public class GameRenderer implements Disposable {
         levelRenderer = createSingleLayerMapRenderer(resources.getLevel(), batch);
     }
 
-    public void render(Tank tank, List<Obstacle> obstacles){
+    public void render(Tank tank, List<ObstacleDrawable> obstacles) {
         Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
         levelRenderer.render();
 
         batch.begin();
         drawTextureRegionUnscaled(batch, tank.getGraphics(), tank.getBoundingRectangle(), tank.getRotation());
-        for (Obstacle obstacle : obstacles) {
-            drawTextureRegionUnscaled(batch, obstacle.getGraphics(), obstacle.getBoundingRectangle(), 0f);
+        for (ObstacleDrawable obstacle : obstacles) {
+            obstacle.draw(batch);
+            batch.end();
         }
-        batch.end();
     }
 
     @Override

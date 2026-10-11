@@ -48,7 +48,7 @@ class TankTest {
 
     @Test
     void tankDoesNotEnterObstacle() {
-        Obstacle obstacle = new Obstacle(new GridPoint2(1, 2), region, layer);
+        Obstacle obstacle = new Obstacle(new GridPoint2(1, 2));
         GameField field = new GameField(List.of(obstacle));
         Tank tank = new Tank(new GridPoint2(1, 1), region, SPEED);
 

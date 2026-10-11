@@ -18,7 +18,7 @@ class GameWorldTest {
     private final TiledMapTileLayer layer = new TiledMapTileLayer(10, 8, 128, 128);
     private final GameWorld world = new GameWorld(
             new Tank(new GridPoint2(1, 1), region, TANK_SPEED),
-            List.of(new Obstacle(new GridPoint2(1, 3), region, layer)),
+            List.of(new Obstacle(new GridPoint2(1, 3))),
             new TileMovement(layer, Interpolation.smooth));
 
     @Test

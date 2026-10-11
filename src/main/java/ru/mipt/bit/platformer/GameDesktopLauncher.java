@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.graphics.GameRenderer;
 import ru.mipt.bit.platformer.graphics.GameResources;
+import ru.mipt.bit.platformer.graphics.ObstacleDrawable;
 import ru.mipt.bit.platformer.input.KeyStateProvider;
 import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
 import ru.mipt.bit.platformer.model.GameWorld;
@@ -26,6 +27,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     private static final GridPoint2 PLAYER_START = new GridPoint2(1, 1);
     private static final float PLAYER_SPEED = 0.4f;
     private static final List<GridPoint2> TREE_POSITIONS = List.of(new GridPoint2(1, 3));
+    private final List<ObstacleDrawable> obstacleDrawables = new ArrayList<>();
 
     private GameRenderer renderer;
     private GameResources resources;
@@ -49,7 +51,9 @@ public class GameDesktopLauncher implements ApplicationListener {
         Tank tank = new Tank(PLAYER_START, playerGraphics, PLAYER_SPEED);
         List<Obstacle> obstacles = new ArrayList<>();
         for (GridPoint2 position : TREE_POSITIONS) {
-            obstacles.add(new Obstacle(position, treeObstacleGraphics, groundLayer));
+            Obstacle obstacle = new Obstacle(position);
+            obstacles.add(obstacle);
+            obstacleDrawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
         }
         TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
@@ -63,7 +67,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         playerInput.handleInput(world.getTank(), world.getGameField());
 
         world.update(deltaTime);
-        renderer.render(world.getTank(), world.getObstacles());
+        renderer.render(world.getTank(), obstacleDrawables);
     }
 
     @Override
