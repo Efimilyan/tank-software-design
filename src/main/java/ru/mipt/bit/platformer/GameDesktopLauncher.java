@@ -8,14 +8,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
-import ru.mipt.bit.platformer.graphics.GameRenderer;
-import ru.mipt.bit.platformer.graphics.GameResources;
+import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyStateProvider;
 import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
+import ru.mipt.bit.platformer.level.LevelData;
+import ru.mipt.bit.platformer.level.LevelLoader;
+import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
-import ru.mipt.bit.platformer.util.TileMovement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ import java.util.List;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
-    private static final GridPoint2 PLAYER_START = new GridPoint2(1, 1);
     private static final float PLAYER_SPEED = 0.4f;
-    private static final List<GridPoint2> TREE_POSITIONS = List.of(new GridPoint2(1, 3));
 
+    private final LevelLoader levelLoader;
+    private final List<Drawable> drawables = new ArrayList<>();
     private GameRenderer renderer;
     private GameResources resources;
     private GameWorld world;
@@ -38,6 +39,9 @@ public class GameDesktopLauncher implements ApplicationListener {
                 }
             });
 
+    public GameDesktopLauncher(LevelLoader levelLoader) {
+        this.levelLoader = levelLoader;
+    }
 
     @Override
     public void create() {
@@ -46,15 +50,20 @@ public class GameDesktopLauncher implements ApplicationListener {
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
         var playerGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
-        Tank tank = new Tank(PLAYER_START, playerGraphics, PLAYER_SPEED);
+
+        LevelData level = levelLoader.load(groundLayer.getWidth(), groundLayer.getHeight());
+
+        Tank tank = new Tank(level.playerPosition(), PLAYER_SPEED);
         List<Obstacle> obstacles = new ArrayList<>();
-        for (GridPoint2 position : TREE_POSITIONS) {
-            obstacles.add(new Obstacle(position, treeObstacleGraphics, groundLayer));
+        for (GridPoint2 position : level.treePositions()) {
+            Obstacle obstacle = new Obstacle(position);
+            obstacles.add(obstacle);
+            drawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
         }
+        world = new GameWorld(tank, obstacles);
+
         TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
-
-        world = new GameWorld(tank, obstacles, tileMovement);
-
+        drawables.add(new TankDrawable(tank, playerGraphics, tileMovement));
     }
 
     @Override
@@ -63,7 +72,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         playerInput.handleInput(world.getTank(), world.getGameField());
 
         world.update(deltaTime);
-        renderer.render(world.getTank(), world.getObstacles());
+        renderer.render(drawables);
     }
 
     @Override
@@ -83,7 +92,6 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void dispose() {
-        // dispose of all the native resources (classes which implement com.badlogic.gdx.utils.Disposable)
         resources.dispose();
         renderer.dispose();
     }
@@ -92,6 +100,6 @@ public class GameDesktopLauncher implements ApplicationListener {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
-        new Lwjgl3Application(new GameDesktopLauncher(), config);
+        new Lwjgl3Application(new GameDesktopLauncher(LevelLoaderSwitch.select(args)), config);
     }
 }

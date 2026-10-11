@@ -1,33 +1,25 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Rectangle;
 
-import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
+public class Obstacle implements Blocking, GameObject {
+    private final GridPoint2 coordinates;
 
-public class Obstacle implements Blocking{
-    private TextureRegion graphics;
-    private GridPoint2 coordinates;
-    private Rectangle rectangle;
-
-    public Obstacle(GridPoint2 coordinates, TextureRegion graphics, TiledMapTileLayer tileLayer){
-        this.coordinates = coordinates;
-        this.graphics = graphics;
-        this.rectangle = createBoundingRectangle(graphics);
-        moveRectangleAtTileCenter(tileLayer, rectangle, coordinates);
+    public Obstacle(GridPoint2 coordinates) {
+        this.coordinates = new GridPoint2(coordinates);
     }
+
     @Override
-    public boolean occupies(GridPoint2 position){
+    public boolean occupies(GridPoint2 position) {
         return coordinates.equals(position);
     }
 
-    public TextureRegion getGraphics(){
-        return graphics;
+    public GridPoint2 getCoordinates() {
+        return coordinates;
     }
-    public Rectangle getBoundingRectangle(){
-        return rectangle;
+
+    @Override
+    public void update(float deltaTime) {
+        // препятствие неподвижно
     }
 }

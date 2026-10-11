@@ -1,22 +1,26 @@
 package ru.mipt.bit.platformer.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameWorld {
     private final Tank tank;
     private final List<Obstacle> obstacles;
+    private final List<GameObject> gameObjects = new ArrayList<>();
     private final GameField gameField;
-    private final RectangleMovement rectangleMovement;
 
-    public GameWorld(Tank tank, List<Obstacle> obstacles, RectangleMovement rectangleMovement) {
+    public GameWorld(Tank tank, List<Obstacle> obstacles) {
         this.tank = tank;
         this.obstacles = obstacles;
-        this.rectangleMovement = rectangleMovement;
         this.gameField = new GameField(obstacles);
+        gameObjects.add(tank);
+        gameObjects.addAll(obstacles);
     }
 
     public void update(float deltaTime) {
-        tank.updateMovementProgress(deltaTime, rectangleMovement);
+        for (GameObject gameObject : gameObjects) {
+            gameObject.update(deltaTime);
+        }
     }
 
     public Tank getTank() {

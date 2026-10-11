@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer.model;
+package ru.mipt.bit.platformer.graphics;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
