@@ -11,8 +11,9 @@ import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyStateProvider;
 import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
-import ru.mipt.bit.platformer.level.FixedLevelLoader;
 import ru.mipt.bit.platformer.level.LevelData;
+import ru.mipt.bit.platformer.level.LevelLoader;
+import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
@@ -25,6 +26,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 public class GameDesktopLauncher implements ApplicationListener {
     private static final float PLAYER_SPEED = 0.4f;
 
+    private final LevelLoader levelLoader;
     private final List<Drawable> drawables = new ArrayList<>();
     private GameRenderer renderer;
     private GameResources resources;
@@ -37,6 +39,10 @@ public class GameDesktopLauncher implements ApplicationListener {
                 }
             });
 
+    public GameDesktopLauncher(LevelLoader levelLoader) {
+        this.levelLoader = levelLoader;
+    }
+
     @Override
     public void create() {
         resources = new GameResources();
@@ -45,7 +51,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         var playerGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
 
-        LevelData level = new FixedLevelLoader().load();
+        LevelData level = levelLoader.load();
 
         Tank tank = new Tank(level.playerPosition(), PLAYER_SPEED);
         List<Obstacle> obstacles = new ArrayList<>();
@@ -94,6 +100,6 @@ public class GameDesktopLauncher implements ApplicationListener {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
-        new Lwjgl3Application(new GameDesktopLauncher(), config);
+        new Lwjgl3Application(new GameDesktopLauncher(LevelLoaderSwitch.select(args)), config);
     }
 }
