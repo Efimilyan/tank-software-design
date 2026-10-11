@@ -6,17 +6,15 @@ public class GameWorld {
     private final Tank tank;
     private final List<Obstacle> obstacles;
     private final GameField gameField;
-    private final RectangleMovement rectangleMovement;
 
-    public GameWorld(Tank tank, List<Obstacle> obstacles, RectangleMovement rectangleMovement) {
+    public GameWorld(Tank tank, List<Obstacle> obstacles) {
         this.tank = tank;
         this.obstacles = obstacles;
-        this.rectangleMovement = rectangleMovement;
         this.gameField = new GameField(obstacles);
     }
 
     public void update(float deltaTime) {
-        tank.updateMovementProgress(deltaTime, rectangleMovement);
+        tank.update(deltaTime);
     }
 
     public Tank getTank() {
