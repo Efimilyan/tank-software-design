@@ -20,15 +20,14 @@ public class GameRenderer implements Disposable {
         levelRenderer = createSingleLayerMapRenderer(resources.getLevel(), batch);
     }
 
-    public void render(TankDrawable tank, List<ObstacleDrawable> obstacles) {
+    public void render(List<? extends Drawable> drawables) {
         Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
         levelRenderer.render();
 
         batch.begin();
-        tank.draw(batch);
-        for (ObstacleDrawable obstacle : obstacles) {
-            obstacle.draw(batch);
+        for (Drawable drawable : drawables) {
+            drawable.draw(batch);
         }
         batch.end();
     }

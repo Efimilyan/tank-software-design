@@ -8,7 +8,7 @@ import ru.mipt.bit.platformer.model.Tank;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
 
-public class TankDrawable {
+public class TankDrawable implements Drawable {
     private final Tank tank;
     private final TextureRegion graphics;
     private final Rectangle rectangle;
@@ -20,7 +20,7 @@ public class TankDrawable {
         this.movement = movement;
         this.rectangle = createBoundingRectangle(graphics);
     }
-
+    @Override
     public void draw(Batch batch) {
         updateRectangle();
         drawTextureRegionUnscaled(batch, graphics, rectangle, tank.getRotation());

@@ -8,7 +8,7 @@ import ru.mipt.bit.platformer.model.Obstacle;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
-public class ObstacleDrawable {
+public class ObstacleDrawable implements Drawable {
     private final TextureRegion graphics;
     private final Rectangle rectangle;
 
@@ -17,7 +17,7 @@ public class ObstacleDrawable {
         this.rectangle = createBoundingRectangle(graphics);
         moveRectangleAtTileCenter(tileLayer, rectangle, obstacle.getCoordinates());
     }
-
+    @Override
     public void draw(Batch batch) {
         drawTextureRegionUnscaled(batch, graphics, rectangle, 0f);
     }

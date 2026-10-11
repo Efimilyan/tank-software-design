@@ -25,8 +25,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     private static final float PLAYER_SPEED = 0.4f;
     private static final List<GridPoint2> TREE_POSITIONS = List.of(new GridPoint2(1, 3));
 
-    private final List<ObstacleDrawable> obstacleDrawables = new ArrayList<>();
-    private TankDrawable tankDrawable;
+    private final List<Drawable> drawables = new ArrayList<>();
     private GameRenderer renderer;
     private GameResources resources;
     private GameWorld world;
@@ -51,12 +50,12 @@ public class GameDesktopLauncher implements ApplicationListener {
         for (GridPoint2 position : TREE_POSITIONS) {
             Obstacle obstacle = new Obstacle(position);
             obstacles.add(obstacle);
-            obstacleDrawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
+            drawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
         }
         world = new GameWorld(tank, obstacles);
 
         TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
-        tankDrawable = new TankDrawable(tank, playerGraphics, tileMovement);
+        drawables.add(new TankDrawable(tank, playerGraphics, tileMovement));
     }
 
     @Override
@@ -65,7 +64,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         playerInput.handleInput(world.getTank(), world.getGameField());
 
         world.update(deltaTime);
-        renderer.render(tankDrawable, obstacleDrawables);
+        renderer.render(drawables);
     }
 
     @Override
