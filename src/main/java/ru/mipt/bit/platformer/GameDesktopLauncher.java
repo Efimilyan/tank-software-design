@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyStateProvider;
 import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
+import ru.mipt.bit.platformer.level.FixedLevelLoader;
+import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
@@ -21,9 +23,7 @@ import java.util.List;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
-    private static final GridPoint2 PLAYER_START = new GridPoint2(1, 1);
     private static final float PLAYER_SPEED = 0.4f;
-    private static final List<GridPoint2> TREE_POSITIONS = List.of(new GridPoint2(1, 3));
 
     private final List<Drawable> drawables = new ArrayList<>();
     private GameRenderer renderer;
@@ -45,9 +45,11 @@ public class GameDesktopLauncher implements ApplicationListener {
         var playerGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
 
-        Tank tank = new Tank(PLAYER_START, PLAYER_SPEED);
+        LevelData level = new FixedLevelLoader().load();
+
+        Tank tank = new Tank(level.playerPosition(), PLAYER_SPEED);
         List<Obstacle> obstacles = new ArrayList<>();
-        for (GridPoint2 position : TREE_POSITIONS) {
+        for (GridPoint2 position : level.treePositions()) {
             Obstacle obstacle = new Obstacle(position);
             obstacles.add(obstacle);
             drawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
