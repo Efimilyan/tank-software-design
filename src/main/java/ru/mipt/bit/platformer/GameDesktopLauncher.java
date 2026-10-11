@@ -51,7 +51,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         var playerGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
 
-        LevelData level = levelLoader.load();
+        LevelData level = levelLoader.load(groundLayer.getWidth(), groundLayer.getHeight());
 
         Tank tank = new Tank(level.playerPosition(), PLAYER_SPEED);
         List<Obstacle> obstacles = new ArrayList<>();

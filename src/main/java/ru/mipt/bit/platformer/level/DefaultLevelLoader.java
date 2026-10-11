@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DefaultLevelLoader implements LevelLoader {
     @Override
-    public LevelData load() {
+    public LevelData load(int fieldWidth, int fieldHeight) {
         return new LevelData(new GridPoint2(1, 1), List.of(new GridPoint2(1, 3)));
     }
 }

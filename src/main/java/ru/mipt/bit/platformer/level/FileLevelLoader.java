@@ -21,7 +21,7 @@ public class FileLevelLoader implements LevelLoader {
     }
 
     @Override
-    public LevelData load() {
+    public LevelData load(int fieldWidth, int fieldHeight) {
         List<String> lines = readLines();
         GridPoint2 player = null;
         List<GridPoint2> trees = new ArrayList<>();
@@ -35,18 +35,18 @@ public class FileLevelLoader implements LevelLoader {
                     case TREE -> trees.add(new GridPoint2(x, y));
                     case PLAYER -> {
                         if (player != null) {
-                            throw new IllegalArgumentException("В уровне больше одного игрока (X)");
+                            throw new IllegalArgumentException("Больше одного X");
                         }
                         player = new GridPoint2(x, y);
                     }
                     case EMPTY -> { }
                     default -> throw new IllegalArgumentException(
-                            "Неизвестный символ '" + symbol + "' в строке " + (row + 1));
+                            "Символ '" + symbol + "', строка " + (row + 1));
                 }
             }
         }
         if (player == null) {
-            throw new IllegalArgumentException("В уровне нет игрока (X)");
+            throw new IllegalArgumentException("Нет X");
         }
         return new LevelData(player, trees);
     }
@@ -55,7 +55,7 @@ public class FileLevelLoader implements LevelLoader {
         try {
             return Files.readAllLines(path);
         } catch (IOException e) {
-            throw new UncheckedIOException("Не удалось прочитать уровень " + path, e);
+            throw new UncheckedIOException("Не прочитан " + path, e);
         }
     }
 }

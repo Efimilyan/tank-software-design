@@ -17,7 +17,7 @@ class FileLevelLoaderTest {
     private LevelData load(String content) throws IOException {
         Path file = dir.resolve("level.txt");
         Files.writeString(file, content);
-        return new FileLevelLoader(file).load();
+        return new FileLevelLoader(file).load(10, 8);
     }
 
     @Test
