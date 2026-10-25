@@ -9,11 +9,18 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.control.TankController;
 import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
 import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
+import ru.mipt.bit.platformer.model.Blocking;
+import ru.mipt.bit.platformer.model.CollisionChecker;
+import ru.mipt.bit.platformer.model.CompositeCollisionChecker;
+import ru.mipt.bit.platformer.model.FieldBounds;
+import ru.mipt.bit.platformer.model.GameField;
+import ru.mipt.bit.platformer.model.GameObject;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
@@ -55,7 +62,18 @@ public class GameDesktopLauncher implements ApplicationListener {
             obstacles.add(obstacle);
             drawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
         }
-        world = new GameWorld(tank, obstacles);
+
+        List<Blocking> blockers = new ArrayList<>(obstacles);
+        blockers.add(tank);
+        CollisionChecker collisionChecker = new CompositeCollisionChecker(List.of(
+                new FieldBounds(groundLayer.getWidth(), groundLayer.getHeight()),
+                new GameField(blockers)));
+
+        List<GameObject> gameObjects = new ArrayList<>();
+        gameObjects.add(new TankController(tank, playerStrategy, collisionChecker));
+        gameObjects.add(tank);
+        gameObjects.addAll(obstacles);
+        world = new GameWorld(gameObjects);
 
         TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
         drawables.add(new TankDrawable(tank, playerGraphics, tileMovement));
@@ -64,7 +82,6 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
-        playerStrategy.nextCommand().execute(world.getTank(), world.getGameField());
 
         world.update(deltaTime);
         renderer.render(drawables);
