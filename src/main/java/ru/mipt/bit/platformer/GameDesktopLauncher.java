@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
+import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.graphics.*;
-import ru.mipt.bit.platformer.input.KeyStateProvider;
-import ru.mipt.bit.platformer.input.PlayerKeyboardInput;
+import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
 import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
@@ -31,13 +31,8 @@ public class GameDesktopLauncher implements ApplicationListener {
     private GameRenderer renderer;
     private GameResources resources;
     private GameWorld world;
-    private final PlayerKeyboardInput playerInput =
-            new PlayerKeyboardInput(new KeyStateProvider() {
-                @Override
-                public boolean isKeyPressed(int keyCode) {
-                    return Gdx.input.isKeyPressed(keyCode);
-                }
-            });
+    private final ControlStrategy playerStrategy =
+            new KeyboardControlStrategy(keyCode -> Gdx.input.isKeyPressed(keyCode));
 
     public GameDesktopLauncher(LevelLoader levelLoader) {
         this.levelLoader = levelLoader;
@@ -69,7 +64,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
-        playerInput.handleInput(world.getTank(), world.getGameField());
+        playerStrategy.nextCommand().execute(world.getTank(), world.getGameField());
 
         world.update(deltaTime);
         renderer.render(drawables);
