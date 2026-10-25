@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.input;
 
 import ru.mipt.bit.platformer.model.CollisionChecker;
-
+import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -15,16 +15,16 @@ public class PlayerKeyboardInput {
 
     public void handleInput(Tank tank, CollisionChecker collisionChecker) {
         if (keys.isKeyPressed(UP) || keys.isKeyPressed(W)) {
-            tank.move(Tank.Direction.UP, collisionChecker);
+            tank.move(Direction.UP, collisionChecker);
         }
         if (keys.isKeyPressed(DOWN) || keys.isKeyPressed(S)) {
-            tank.move(Tank.Direction.DOWN, collisionChecker);
+            tank.move(Direction.DOWN, collisionChecker);
         }
         if (keys.isKeyPressed(LEFT) || keys.isKeyPressed(A)) {
-            tank.move(Tank.Direction.LEFT, collisionChecker);
+            tank.move(Direction.LEFT, collisionChecker);
         }
         if (keys.isKeyPressed(RIGHT) || keys.isKeyPressed(D)) {
-            tank.move(Tank.Direction.RIGHT, collisionChecker);
+            tank.move(Direction.RIGHT, collisionChecker);
         }
     }
     }

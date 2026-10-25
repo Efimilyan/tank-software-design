@@ -22,7 +22,7 @@ class GameWorldTest {
     @Test
     void updateMovesTank() {
         Tank tank = world.getTank();
-        tank.move(Tank.Direction.UP, world.getGameField());
+        tank.move(Direction.UP, world.getGameField());
 
         world.update(0.4f);
         world.update(0.1f);
@@ -33,9 +33,9 @@ class GameWorldTest {
     @Test
     void tankCannotDriveThroughObstacle() {
         Tank tank = world.getTank();
-        tank.move(Tank.Direction.UP, world.getGameField());
+        tank.move(Direction.UP, world.getGameField());
         world.update(0.4f);
-        tank.move(Tank.Direction.UP, world.getGameField());
+        tank.move(Direction.UP, world.getGameField());
 
         world.update(0.4f);
         world.update(0.1f);

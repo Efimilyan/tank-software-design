@@ -22,7 +22,7 @@ class TankTest {
     @Test
     void moveTurnsTankInThatDirection() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
-        tank.move(Tank.Direction.UP, emptyField);
+        tank.move(Direction.UP, emptyField);
 
         assertEquals(90f, tank.getRotation(), 0.001f);
     }
@@ -30,7 +30,7 @@ class TankTest {
     @Test
     void tankMovesToNextTile() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
-        tank.move(Tank.Direction.UP, emptyField);
+        tank.move(Direction.UP, emptyField);
 
         tank.update(0.4f);
         tank.update(0.1f);
@@ -44,7 +44,7 @@ class TankTest {
         GameField field = new GameField(List.of(obstacle));
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
 
-        tank.move(Tank.Direction.UP, field);
+        tank.move(Direction.UP, field);
         tank.update(0.4f);
         tank.update(0.1f);
 
@@ -55,8 +55,8 @@ class TankTest {
     void cannotTurnWhileMoving() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
 
-        tank.move(Tank.Direction.UP, emptyField);
-        tank.move(Tank.Direction.LEFT, emptyField);
+        tank.move(Direction.UP, emptyField);
+        tank.move(Direction.LEFT, emptyField);
 
         assertEquals(90f, tank.getRotation(), 0.001f);
     }

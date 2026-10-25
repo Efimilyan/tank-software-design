@@ -3,11 +3,9 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
+import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
 public class Tank implements GameObject{
-
-    public enum Direction { UP, DOWN, LEFT, RIGHT }
 
     private final float movementSpeed;
     private final GridPoint2 currentCoordinates;
@@ -23,12 +21,12 @@ public class Tank implements GameObject{
 
     public void move(Direction direction, CollisionChecker collisionChecker) {
         if (isEqual(movementProgress, 1f)) {
-            GridPoint2 nextCoordinates = nextCoordinatesFor(direction);
+            GridPoint2 nextCoordinates = direction.shift(currentCoordinates);
             if (!collisionChecker.isOccupied(nextCoordinates)) {
                 destinationCoordinates.set(nextCoordinates);
                 movementProgress = 0f;
             }
-            rotation = rotationFor(direction);
+            rotation = direction.rotation();
         }
     }
     @Override
@@ -39,23 +37,6 @@ public class Tank implements GameObject{
         }
     }
 
-    private GridPoint2 nextCoordinatesFor(Direction direction) {
-        return switch (direction) {
-            case UP -> incrementedY(currentCoordinates);
-            case DOWN -> decrementedY(currentCoordinates);
-            case LEFT -> decrementedX(currentCoordinates);
-            case RIGHT -> incrementedX(currentCoordinates);
-        };
-    }
-
-    private float rotationFor(Direction direction) {
-        return switch (direction) {
-            case UP -> 90f;
-            case DOWN -> -90f;
-            case LEFT -> -180f;
-            case RIGHT -> 0f;
-        };
-    }
 
     public GridPoint2 getCurrentCoordinates() {
         return currentCoordinates;
