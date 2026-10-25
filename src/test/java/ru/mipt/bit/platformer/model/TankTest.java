@@ -60,4 +60,42 @@ class TankTest {
 
         assertEquals(90f, tank.getRotation(), 0.001f);
     }
+    @Test
+    void idleTankOccupiesOnlyItsTile() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        assertTrue(tank.occupies(new GridPoint2(1, 1)));
+        assertFalse(tank.occupies(new GridPoint2(1, 2)));
+    }
+
+    @Test
+    void movingTankOccupiesBothTiles() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        tank.move(Direction.UP, emptyField);
+
+        assertTrue(tank.occupies(new GridPoint2(1, 1)));
+        assertTrue(tank.occupies(new GridPoint2(1, 2)));
+        assertFalse(tank.occupies(new GridPoint2(1, 3)));
+    }
+
+    @Test
+    void tankReleasesOldTileWhenMoveFinished() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        tank.move(Direction.UP, emptyField);
+        tank.update(0.4f);
+        tank.update(0.1f);
+
+        assertFalse(tank.occupies(new GridPoint2(1, 1)));
+        assertTrue(tank.occupies(new GridPoint2(1, 2)));
+    }
+
+    @Test
+    void blockedTankOccupiesOnlyItsTile() {
+        GameField field = new GameField(List.of(new Obstacle(new GridPoint2(1, 2))));
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        tank.move(Direction.UP, field);
+
+        assertTrue(tank.occupies(new GridPoint2(1, 1)));
+        assertFalse(tank.occupies(new GridPoint2(1, 2)));
+    }
 }

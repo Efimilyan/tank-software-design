@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
-public class Tank implements GameObject{
+public class Tank implements GameObject, Blocking {
 
     private final float movementSpeed;
     private final GridPoint2 currentCoordinates;
@@ -37,6 +37,10 @@ public class Tank implements GameObject{
         }
     }
 
+    @Override
+    public boolean occupies(GridPoint2 position) {
+        return currentCoordinates.equals(position) || destinationCoordinates.equals(position);
+    }
 
     public GridPoint2 getCurrentCoordinates() {
         return currentCoordinates;
