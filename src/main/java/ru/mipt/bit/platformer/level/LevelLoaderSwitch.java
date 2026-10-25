@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.Random;
 
 public final class LevelLoaderSwitch {
+    private static final int RANDOM_LEVEL_ENEMY_COUNT = 5;
+
     private LevelLoaderSwitch() {
     }
 
@@ -12,7 +14,7 @@ public final class LevelLoaderSwitch {
             return new DefaultLevelLoader();
         }
         if (args[0].equals("random")) {
-            return new RandomLevelGenerator(new Random());
+            return new RandomLevelGenerator(new Random(), RANDOM_LEVEL_ENEMY_COUNT);
         }
         if (args[0].equals("file")) {
             if (args.length < 2) {

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import java.util.List;
 
 public class GameField implements CollisionChecker {
-    private List<? extends Blocking> obstacles;
+    private final List<? extends Blocking> obstacles;
 
     public GameField(List<? extends Blocking> obstacles) {
         this.obstacles = obstacles;

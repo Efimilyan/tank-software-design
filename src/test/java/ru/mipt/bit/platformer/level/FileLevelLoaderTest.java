@@ -7,6 +7,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,9 +25,17 @@ class FileLevelLoaderTest {
     void firstLineIsTopRow() throws IOException {
         LevelData level = load("T_\n_X");
 
-        assertEquals(new GridPoint2(1, 0), level.playerPosition());
-        assertEquals(1, level.treePositions().size());
-        assertEquals(new GridPoint2(0, 1), level.treePositions().get(0));
+        assertEquals(List.of(new TankSpec(new GridPoint2(1, 0), ControlType.PLAYER)), level.tanks());
+        assertEquals(List.of(new GridPoint2(0, 1)), level.treePositions());
+    }
+
+    @Test
+    void aiSymbolCreatesRandomControlledTank() throws IOException {
+        LevelData level = load("AX");
+
+        assertEquals(List.of(
+                new TankSpec(new GridPoint2(0, 0), ControlType.RANDOM),
+                new TankSpec(new GridPoint2(1, 0), ControlType.PLAYER)), level.tanks());
     }
 
     @Test

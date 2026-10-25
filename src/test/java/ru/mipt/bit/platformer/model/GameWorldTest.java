@@ -1,45 +1,39 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameWorldTest {
-    private static final float TANK_SPEED = 0.4f;
-
-    private final GameWorld world = new GameWorld(
-            new Tank(new GridPoint2(1, 1), TANK_SPEED),
-            List.of(new Obstacle(new GridPoint2(1, 3))));
-
     @Test
-    void obstacleTileIsOccupiedInGameField() {
-        assertTrue(world.getGameField().isOccupied(new GridPoint2(1, 3)));
+    void updatesEveryObjectWithSameDeltaInOrder() {
+        List<String> log = new ArrayList<>();
+        GameObject first = delta -> log.add("first " + delta);
+        GameObject second = delta -> log.add("second " + delta);
+        GameWorld world = new GameWorld(List.of(first, second));
+
+        world.update(0.5f);
+
+        assertEquals(List.of("first 0.5", "second 0.5"), log);
     }
 
     @Test
-    void updateMovesTank() {
-        Tank tank = world.getTank();
-        tank.move(Tank.Direction.UP, world.getGameField());
+    void updateEachTimeReachesObjects() {
+        int[] updates = {0};
+        GameObject counter = delta -> updates[0]++;
+        GameWorld world = new GameWorld(List.of(counter));
 
-        world.update(0.4f);
+        world.update(0.1f);
         world.update(0.1f);
 
-        assertEquals(new GridPoint2(1, 2), tank.getCurrentCoordinates());
+        assertEquals(2, updates[0]);
     }
 
     @Test
-    void tankCannotDriveThroughObstacle() {
-        Tank tank = world.getTank();
-        tank.move(Tank.Direction.UP, world.getGameField());
-        world.update(0.4f);
-        tank.move(Tank.Direction.UP, world.getGameField());
-
-        world.update(0.4f);
-        world.update(0.1f);
-
-        assertEquals(new GridPoint2(1, 2), tank.getCurrentCoordinates());
+    void emptyWorldCanBeUpdated() {
+        new GameWorld(List.of()).update(0.1f);
     }
 }
