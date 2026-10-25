@@ -6,24 +6,15 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.control.ControlStrategy;
-import ru.mipt.bit.platformer.control.RandomControlStrategy;
-import ru.mipt.bit.platformer.control.TankController;
+import ru.mipt.bit.platformer.game.GameWorldFactory;
+import ru.mipt.bit.platformer.game.WorldAssembly;
 import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
-import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
 import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
-import ru.mipt.bit.platformer.level.TankSpec;
-import ru.mipt.bit.platformer.model.Blocking;
-import ru.mipt.bit.platformer.model.CollisionChecker;
-import ru.mipt.bit.platformer.model.CompositeCollisionChecker;
-import ru.mipt.bit.platformer.model.FieldBounds;
-import ru.mipt.bit.platformer.model.GameField;
-import ru.mipt.bit.platformer.model.GameObject;
 import ru.mipt.bit.platformer.model.GameWorld;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
@@ -38,7 +29,6 @@ public class GameDesktopLauncher implements ApplicationListener {
     private static final float TANK_SPEED = 0.4f;
 
     private final LevelLoader levelLoader;
-    private final Random random = new Random();
     private final List<Drawable> drawables = new ArrayList<>();
     private GameRenderer renderer;
     private GameResources resources;
@@ -58,45 +48,21 @@ public class GameDesktopLauncher implements ApplicationListener {
         var tankGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
 
-        LevelData level = levelLoader.load(groundLayer.getWidth(), groundLayer.getHeight());
+        int fieldWidth = groundLayer.getWidth();
+        int fieldHeight = groundLayer.getHeight();
+        LevelData level = levelLoader.load(fieldWidth, fieldHeight);
 
-        List<TankSpec> tankSpecs = level.tanks();
-        List<Tank> tanks = new ArrayList<>();
-        for (TankSpec spec : tankSpecs) {
-            tanks.add(new Tank(spec.position(), TANK_SPEED));
-        }
+        GameWorldFactory worldFactory = new GameWorldFactory(TANK_SPEED, playerStrategy, new Random());
+        WorldAssembly assembly = worldFactory.create(level, fieldWidth, fieldHeight);
+        world = assembly.world();
 
-        List<Obstacle> obstacles = new ArrayList<>();
-        for (GridPoint2 position : level.treePositions()) {
-            Obstacle obstacle = new Obstacle(position);
-            obstacles.add(obstacle);
+        for (Obstacle obstacle : assembly.obstacles()) {
             drawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
         }
-
-        List<Blocking> blockers = new ArrayList<>(obstacles);
-        blockers.addAll(tanks);
-        CollisionChecker collisionChecker = new CompositeCollisionChecker(List.of(
-                new FieldBounds(groundLayer.getWidth(), groundLayer.getHeight()),
-                new GameField(blockers)));
-
         TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
-        List<GameObject> gameObjects = new ArrayList<>();
-        for (int i = 0; i < tanks.size(); i++) {
-            Tank tank = tanks.get(i);
-            ControlStrategy strategy = strategyFor(tankSpecs.get(i).control());
-            gameObjects.add(new TankController(tank, strategy, collisionChecker));
+        for (Tank tank : assembly.tanks()) {
             drawables.add(new TankDrawable(tank, tankGraphics, tileMovement));
         }
-        gameObjects.addAll(tanks);
-        gameObjects.addAll(obstacles);
-        world = new GameWorld(gameObjects);
-    }
-
-    private ControlStrategy strategyFor(ControlType type) {
-        return switch (type) {
-            case PLAYER -> playerStrategy;
-            case RANDOM -> new RandomControlStrategy(random);
-        };
     }
 
     @Override
