@@ -8,31 +8,35 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.game.GameSettings;
 import ru.mipt.bit.platformer.game.GameWorldFactory;
-import ru.mipt.bit.platformer.game.WorldAssembly;
 import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
 import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
-import ru.mipt.bit.platformer.model.GameWorld;
+import ru.mipt.bit.platformer.model.Bullet;
+import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
     private static final float TANK_SPEED = 0.4f;
+    private static final int TANK_HEALTH = 3;
+    private static final float BULLET_SPEED = 0.1f;
+    private static final int BULLET_DAMAGE = 1;
+    private static final float RELOAD_TIME = 0.5f;
+    private static final double ENEMY_SHOOT_PROBABILITY = 0.01;
 
     private final LevelLoader levelLoader;
-    private final List<Drawable> drawables = new ArrayList<>();
+    private final LevelView levelView = new LevelView();
     private GameRenderer renderer;
     private GameResources resources;
-    private GameWorld world;
+    private Level level;
     private final ControlStrategy playerStrategy =
             new KeyboardControlStrategy(keyCode -> Gdx.input.isKeyPressed(keyCode));
 
@@ -47,30 +51,35 @@ public class GameDesktopLauncher implements ApplicationListener {
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
         var tankGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
+        var bulletGraphics = new TextureRegion(resources.getBulletTexture());
 
         int fieldWidth = groundLayer.getWidth();
         int fieldHeight = groundLayer.getHeight();
-        LevelData level = levelLoader.load(fieldWidth, fieldHeight);
+        LevelData levelData = levelLoader.load(fieldWidth, fieldHeight);
 
-        GameWorldFactory worldFactory = new GameWorldFactory(TANK_SPEED, playerStrategy, new Random());
-        WorldAssembly assembly = worldFactory.create(level, fieldWidth, fieldHeight);
-        world = assembly.world();
-
-        for (Obstacle obstacle : assembly.obstacles()) {
-            drawables.add(new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
-        }
         TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
-        for (Tank tank : assembly.tanks()) {
-            drawables.add(new TankDrawable(tank, tankGraphics, tileMovement));
-        }
+        levelView.register(Obstacle.class,
+                obstacle -> new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
+        levelView.register(Tank.class,
+                tank -> new MovableDrawable(tank, tankGraphics, tileMovement));
+        levelView.register(Bullet.class,
+                bullet -> new MovableDrawable(bullet, bulletGraphics, tileMovement));
+
+        GameSettings settings = new GameSettings(
+                TANK_SPEED, TANK_HEALTH, BULLET_SPEED, BULLET_DAMAGE, RELOAD_TIME,
+                ENEMY_SHOOT_PROBABILITY);
+        level = new Level();
+        level.subscribe(levelView);
+        new GameWorldFactory(settings, playerStrategy, new Random())
+                .populate(level, levelData, fieldWidth, fieldHeight);
     }
 
     @Override
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        world.update(deltaTime);
-        renderer.render(drawables);
+        level.update(deltaTime);
+        renderer.render(levelView.drawables());
     }
 
     @Override

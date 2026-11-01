@@ -20,6 +20,106 @@ class TankTest {
     }
 
     @Test
+    void newTankHasGivenHealth() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 7);
+
+        assertEquals(7, tank.getHealth());
+        assertTrue(tank.isAlive());
+    }
+
+    @Test
+    void newTankFacesRightDirection() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        assertEquals(Direction.RIGHT, tank.getDirection());
+    }
+
+    @Test
+    void moveRemembersDirectionEvenWhenBlocked() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        tank.move(Direction.UP, coordinates -> true);
+
+        assertEquals(Direction.UP, tank.getDirection());
+    }
+
+    @Test
+    void damageReducesHealth() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3);
+
+        tank.takeDamage(1);
+
+        assertEquals(2, tank.getHealth());
+        assertTrue(tank.isAlive());
+    }
+
+    @Test
+    void tankIsDeadWhenHealthRunsOut() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
+
+        tank.takeDamage(2);
+
+        assertFalse(tank.isAlive());
+    }
+
+    @Test
+    void hitByBulletDamagesTank() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3);
+
+        tank.hit(2);
+
+        assertEquals(1, tank.getHealth());
+    }
+
+    @Test
+    void negativeDamageIsRejected() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
+
+        assertThrows(IllegalArgumentException.class, () -> tank.takeDamage(-1));
+        assertEquals(2, tank.getHealth());
+    }
+
+    @Test
+    void shootFiresIntoTileInFrontOfTank() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+
+        tank.shoot();
+
+        assertEquals(List.of("(2, 1) RIGHT"), gun.shots);
+    }
+
+    @Test
+    void shootFromMovingTankFiresBeyondItsDestinationTile() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+        tank.move(Direction.UP, emptyField);
+
+        tank.shoot();
+
+        assertEquals(List.of("(1, 3) UP"), gun.shots);
+    }
+
+    @Test
+    void updateReloadsTheGun() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+
+        tank.update(0.25f);
+
+        assertEquals(0.25f, gun.updated, 0.001f);
+    }
+
+    @Test
+    void tankWithoutGunCanShootHarmlessly() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        tank.shoot();
+
+        assertTrue(tank.isAlive());
+    }
+
+    @Test
     void moveTurnsTankInThatDirection() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
         tank.move(Direction.UP, emptyField);

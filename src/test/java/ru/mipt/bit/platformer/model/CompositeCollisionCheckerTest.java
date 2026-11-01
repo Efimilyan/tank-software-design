@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -56,5 +57,37 @@ class CompositeCollisionCheckerTest {
         CollisionChecker empty = new CompositeCollisionChecker(List.of());
 
         assertFalse(empty.isOccupied(new GridPoint2(-100, 100)));
+    }
+
+    @Test
+    void hitIsPassedToEveryChecker() {
+        int[] damage = {0, 0};
+        CollisionChecker first = new CollisionChecker() {
+            @Override
+            public boolean isOccupied(GridPoint2 coordinates) {
+                return false;
+            }
+
+            @Override
+            public void hit(GridPoint2 coordinates, int amount) {
+                damage[0] += amount;
+            }
+        };
+        CollisionChecker second = new CollisionChecker() {
+            @Override
+            public boolean isOccupied(GridPoint2 coordinates) {
+                return false;
+            }
+
+            @Override
+            public void hit(GridPoint2 coordinates, int amount) {
+                damage[1] += amount;
+            }
+        };
+
+        new CompositeCollisionChecker(List.of(first, second)).hit(new GridPoint2(1, 1), 2);
+
+        assertEquals(2, damage[0]);
+        assertEquals(2, damage[1]);
     }
 }

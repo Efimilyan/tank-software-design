@@ -5,18 +5,31 @@ import com.badlogic.gdx.math.GridPoint2;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
-public class Tank implements GameObject, Blocking {
+public class Tank implements GameObject, Blocking, Movable {
+    public static final int DEFAULT_HEALTH = 3;
 
     private final float movementSpeed;
+    private final Gun gun;
     private final GridPoint2 currentCoordinates;
     private final GridPoint2 destinationCoordinates;
     private float movementProgress = 1f;
-    private float rotation = 0f;
+    private Direction direction = Direction.RIGHT;
+    private int health;
 
     public Tank(GridPoint2 coordinates, float movementSpeed) {
+        this(coordinates, movementSpeed, DEFAULT_HEALTH);
+    }
+
+    public Tank(GridPoint2 coordinates, float movementSpeed, int health) {
+        this(coordinates, movementSpeed, health, Gun.NONE);
+    }
+
+    public Tank(GridPoint2 coordinates, float movementSpeed, int health, Gun gun) {
+        this.gun = gun;
         this.currentCoordinates = new GridPoint2(coordinates);
         this.destinationCoordinates = new GridPoint2(coordinates);
         this.movementSpeed = movementSpeed;
+        this.health = health;
     }
 
     public void move(Direction direction, CollisionChecker collisionChecker) {
@@ -26,11 +39,16 @@ public class Tank implements GameObject, Blocking {
                 destinationCoordinates.set(nextCoordinates);
                 movementProgress = 0f;
             }
-            rotation = direction.rotation();
+            this.direction = direction;
         }
     }
+    public void shoot() {
+        gun.fire(direction.shift(destinationCoordinates), direction);
+    }
+
     @Override
     public void update(float deltaTime) {
+        gun.update(deltaTime);
         movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
         if (isEqual(movementProgress, 1f)) {
             currentCoordinates.set(destinationCoordinates);
@@ -42,19 +60,48 @@ public class Tank implements GameObject, Blocking {
         return currentCoordinates.equals(position) || destinationCoordinates.equals(position);
     }
 
+    @Override
     public GridPoint2 getCurrentCoordinates() {
         return currentCoordinates;
     }
 
+    @Override
     public GridPoint2 getDestinationCoordinates() {
         return destinationCoordinates;
     }
 
+    @Override
     public float getMovementProgress() {
         return movementProgress;
     }
 
+    @Override
     public float getRotation() {
-        return rotation;
+        return direction.rotation();
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void takeDamage(int damage) {
+        if (damage < 0) {
+            throw new IllegalArgumentException("Урон не может быть отрицательным: " + damage);
+        }
+        health -= damage;
+    }
+
+    @Override
+    public void hit(int damage) {
+        takeDamage(damage);
+    }
+
+    @Override
+    public boolean isAlive() {
+        return health > 0;
     }
 }

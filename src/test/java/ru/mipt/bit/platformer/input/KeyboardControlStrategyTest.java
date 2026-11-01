@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.RecordingGun;
 import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.HashSet;
@@ -56,5 +57,40 @@ class KeyboardControlStrategyTest {
     @Test
     void firstDirectionByPriorityWinsWhenSeveralKeysPressed() {
         assertEquals(new GridPoint2(5, 6), destinationAfterPressing(Keys.LEFT, Keys.UP));
+    }
+
+    @Test
+    void spaceMakesTankShoot() {
+        pressed.add(Keys.SPACE);
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(START, SPEED, 3, gun);
+
+        strategy.nextCommand().execute(tank, coordinates -> false);
+
+        assertEquals(List.of("(6, 5) RIGHT"), gun.shots);
+        assertEquals(START, tank.getDestinationCoordinates());
+    }
+
+    @Test
+    void directionAndSpaceTogetherTurnMoveAndShootThatWay() {
+        pressed.addAll(List.of(Keys.UP, Keys.SPACE));
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(START, SPEED, 3, gun);
+
+        strategy.nextCommand().execute(tank, coordinates -> false);
+
+        assertEquals(new GridPoint2(5, 6), tank.getDestinationCoordinates());
+        assertEquals(List.of("(5, 7) UP"), gun.shots);
+    }
+
+    @Test
+    void noSpaceMeansNoShot() {
+        pressed.add(Keys.UP);
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(START, SPEED, 3, gun);
+
+        strategy.nextCommand().execute(tank, coordinates -> false);
+
+        assertEquals(List.of(), gun.shots);
     }
 }
