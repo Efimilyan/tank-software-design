@@ -95,4 +95,11 @@ class LevelTest {
         assertTrue(events.isEmpty());
         assertEquals(List.of(killer), level.objects());
     }
+
+    @Test
+    void emptyLevelCanBeUpdated() {
+        level.update(0.1f);
+
+        assertTrue(events.isEmpty());
+    }
 }

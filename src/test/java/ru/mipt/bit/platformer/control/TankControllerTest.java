@@ -2,15 +2,11 @@ package ru.mipt.bit.platformer.control;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.model.Blocking;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.GameField;
-import ru.mipt.bit.platformer.model.GameObject;
-import ru.mipt.bit.platformer.model.GameWorld;
+import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -58,14 +54,15 @@ class TankControllerTest {
     @Test
     void controlledTankStopsInFrontOfObstacle() {
         Obstacle obstacle = new Obstacle(new GridPoint2(1, 3));
-        List<Blocking> blockers = List.of(obstacle, tank);
-        TankController controller = new TankController(
-                tank, () -> new MoveCommand(Direction.UP), new GameField(blockers));
-        List<GameObject> objects = List.of(controller, tank, obstacle);
-        GameWorld world = new GameWorld(objects);
+        Level level = new Level();
+        GameField field = new GameField();
+        level.subscribe(field);
+        level.add(new TankController(tank, () -> new MoveCommand(Direction.UP), field));
+        level.add(tank);
+        level.add(obstacle);
 
         for (int i = 0; i < 20; i++) {
-            world.update(0.1f);
+            level.update(0.1f);
         }
 
         assertEquals(new GridPoint2(1, 2), tank.getCurrentCoordinates());
