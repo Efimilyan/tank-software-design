@@ -35,10 +35,18 @@ public class Level implements GameObject {
 
     @Override
     public void update(float deltaTime) {
-        // Обходим снимок: объекты могут добавляться и удаляться прямо во время хода.
         for (GameObject object : List.copyOf(objects)) {
-            if (objects.contains(object)) {
+            if (objects.contains(object) && object.isAlive()) {
                 object.update(deltaTime);
+            }
+        }
+        removeDeadObjects();
+    }
+
+    private void removeDeadObjects() {
+        for (GameObject object : List.copyOf(objects)) {
+            if (!object.isAlive()) {
+                remove(object);
             }
         }
     }

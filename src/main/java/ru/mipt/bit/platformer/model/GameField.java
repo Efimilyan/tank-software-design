@@ -28,6 +28,15 @@ public class GameField implements CollisionChecker, LevelListener {
     }
 
     @Override
+    public void hit(GridPoint2 coordinates, int damage) {
+        for (Blocking obstacle : List.copyOf(obstacles)) {
+            if (obstacle.occupies(coordinates)) {
+                obstacle.hit(damage);
+            }
+        }
+    }
+
+    @Override
     public void objectAdded(GameObject object) {
         if (object instanceof Blocking blocking) {
             obstacles.add(blocking);

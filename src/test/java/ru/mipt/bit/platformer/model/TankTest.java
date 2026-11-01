@@ -63,6 +63,15 @@ class TankTest {
     }
 
     @Test
+    void hitByBulletDamagesTank() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3);
+
+        tank.hit(2);
+
+        assertEquals(1, tank.getHealth());
+    }
+
+    @Test
     void negativeDamageIsRejected() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
 

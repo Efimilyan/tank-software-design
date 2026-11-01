@@ -19,4 +19,9 @@ public class TankController implements GameObject {
     public void update(float deltaTime) {
         strategy.nextCommand().execute(tank, collisionChecker);
     }
+
+    @Override
+    public boolean isAlive() {
+        return tank.isAlive();
+    }
 }

@@ -61,4 +61,29 @@ class GameFieldTest {
 
         assertFalse(field.isOccupied(new GridPoint2(0, 0)));
     }
+
+    private static class Target extends Obstacle {
+        int damageTaken = 0;
+
+        Target(GridPoint2 coordinates) {
+            super(coordinates);
+        }
+
+        @Override
+        public void hit(int damage) {
+            damageTaken += damage;
+        }
+    }
+
+    @Test
+    void hitDamagesOnlyObjectsInThatTile() {
+        Target inside = new Target(new GridPoint2(1, 1));
+        Target elsewhere = new Target(new GridPoint2(2, 2));
+        GameField field = new GameField(List.of(inside, elsewhere));
+
+        field.hit(new GridPoint2(1, 1), 3);
+
+        assertEquals(3, inside.damageTaken);
+        assertEquals(0, elsewhere.damageTaken);
+    }
 }

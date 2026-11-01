@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,7 +14,7 @@ class BulletGunTest {
     private static final GridPoint2 FROM = new GridPoint2(2, 3);
 
     private final Level level = new Level();
-    private final BulletGun gun = new BulletGun(level, 0.1f, 2, RELOAD);
+    private final BulletGun gun = new BulletGun(level, coordinates -> false, 0.1f, 2, RELOAD);
 
     @Test
     void fireRegistersBulletInLevelAtGivenTile() {
@@ -48,9 +49,46 @@ class BulletGunTest {
     }
 
     @Test
-    void newGunIsReadyToFire() {
-        gun.fire(FROM, Direction.UP);
+    void firingAtOccupiedTileHitsItImmediatelyWithoutCreatingBullet() {
+        List<String> hits = new ArrayList<>();
+        CollisionChecker occupied = new CollisionChecker() {
+            @Override
+            public boolean isOccupied(GridPoint2 coordinates) {
+                return true;
+            }
 
-        assertTrue(!level.objects().isEmpty());
+            @Override
+            public void hit(GridPoint2 coordinates, int damage) {
+                hits.add(coordinates + " " + damage);
+            }
+        };
+        BulletGun pointBlank = new BulletGun(level, occupied, 0.1f, 2, RELOAD);
+
+        pointBlank.fire(FROM, Direction.LEFT);
+
+        assertEquals(List.of("(2, 3) 2"), hits);
+        assertTrue(level.objects().isEmpty());
+    }
+
+    @Test
+    void pointBlankShotAlsoReloadsTheGun() {
+        List<String> hits = new ArrayList<>();
+        CollisionChecker occupied = new CollisionChecker() {
+            @Override
+            public boolean isOccupied(GridPoint2 coordinates) {
+                return true;
+            }
+
+            @Override
+            public void hit(GridPoint2 coordinates, int damage) {
+                hits.add("hit");
+            }
+        };
+        BulletGun pointBlank = new BulletGun(level, occupied, 0.1f, 2, RELOAD);
+
+        pointBlank.fire(FROM, Direction.LEFT);
+        pointBlank.fire(FROM, Direction.LEFT);
+
+        assertEquals(1, hits.size());
     }
 }

@@ -9,6 +9,7 @@ import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class TankControllerTest {
     private static final float SPEED = 0.4f;
@@ -66,5 +67,14 @@ class TankControllerTest {
         }
 
         assertEquals(new GridPoint2(1, 2), tank.getCurrentCoordinates());
+    }
+
+    @Test
+    void controllerDiesTogetherWithItsTank() {
+        TankController controller = new TankController(tank, () -> Command.NONE, coordinates -> false);
+
+        tank.takeDamage(Tank.DEFAULT_HEALTH);
+
+        assertFalse(controller.isAlive());
     }
 }

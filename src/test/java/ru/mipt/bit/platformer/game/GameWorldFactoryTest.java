@@ -2,8 +2,10 @@ package ru.mipt.bit.platformer.game;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.control.Command;
 import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.control.MoveCommand;
+import ru.mipt.bit.platformer.control.TankController;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class GameWorldFactoryTest {
     private static final float SPEED = 0.4f;
@@ -174,5 +177,122 @@ class GameWorldFactoryTest {
         assertEquals(1, bullets.size());
         assertEquals(new GridPoint2(2, 1), ((Bullet) bullets.get(0)).getCurrentCoordinates());
         assertEquals(2, ((Bullet) bullets.get(0)).getDamage());
+    }
+
+    private static Assembly assembleIdle(LevelData data, int width, int height) {
+        GameWorldFactory factory = new GameWorldFactory(
+                SETTINGS, () -> Command.NONE, alwaysChoosing(Direction.UP));
+        Level level = new Level();
+        List<Tank> tanks = new ArrayList<>();
+        level.subscribe(new LevelListener() {
+            @Override
+            public void objectAdded(GameObject object) {
+                if (object instanceof Tank tank) {
+                    tanks.add(tank);
+                }
+            }
+
+            @Override
+            public void objectRemoved(GameObject object) {
+            }
+        });
+        factory.populate(level, data, width, height);
+        return new Assembly(level, tanks, List.of());
+    }
+
+    private static long countOf(Level level, Class<?> type) {
+        return level.objects().stream().filter(type::isInstance).count();
+    }
+
+    @Test
+    void bulletHitsEnemyTankAndDisappears() {
+        LevelData data = new LevelData(List.of(player(1, 1), enemy(4, 1)), List.of());
+        Assembly assembly = assembleIdle(data, 10, 2);
+
+        assembly.tanks().get(0).shoot();
+        runFor(assembly, 10);
+
+        assertEquals(HEALTH - 2, assembly.tanks().get(1).getHealth());
+        assertEquals(0, countOf(assembly.level(), Bullet.class));
+    }
+
+    @Test
+    void enemyTankIsRemovedFromLevelTogetherWithItsControllerWhenHealthRunsOut() {
+        LevelData data = new LevelData(List.of(player(1, 1), enemy(4, 1)), List.of());
+        Assembly assembly = assembleIdle(data, 10, 2);
+        Tank enemyTank = assembly.tanks().get(1);
+
+        for (int shot = 0; shot < 3; shot++) {
+            assembly.tanks().get(0).shoot();
+            runFor(assembly, 7);
+        }
+
+        assertFalse(enemyTank.isAlive());
+        assertFalse(assembly.level().objects().contains(enemyTank));
+        assertEquals(1, countOf(assembly.level(), Tank.class));
+        assertEquals(1, countOf(assembly.level(), TankController.class));
+    }
+
+    @Test
+    void treeStopsBullet() {
+        LevelData data = new LevelData(
+                List.of(player(1, 1), enemy(6, 1)), List.of(new GridPoint2(3, 1)));
+        Assembly assembly = assembleIdle(data, 10, 2);
+
+        assembly.tanks().get(0).shoot();
+        runFor(assembly, 10);
+
+        assertEquals(HEALTH, assembly.tanks().get(1).getHealth());
+        assertEquals(0, countOf(assembly.level(), Bullet.class));
+        assertEquals(1, countOf(assembly.level(), Obstacle.class));
+    }
+
+    @Test
+    void bulletDisappearsAtFieldEdge() {
+        LevelData data = new LevelData(List.of(player(1, 0), enemy(5, 1)), List.of());
+        Assembly assembly = assembleIdle(data, 4, 2);
+
+        assembly.tanks().get(0).shoot();
+        runFor(assembly, 10);
+
+        assertEquals(0, countOf(assembly.level(), Bullet.class));
+    }
+
+    @Test
+    void shotInFrontOfFieldEdgeCreatesNoBullet() {
+        LevelData data = new LevelData(List.of(player(3, 0), enemy(0, 1)), List.of());
+        Assembly assembly = assembleIdle(data, 4, 2);
+
+        assembly.tanks().get(0).shoot();
+
+        assertEquals(0, countOf(assembly.level(), Bullet.class));
+    }
+
+    @Test
+    void enemyStandingRightInFrontIsHitAtOnce() {
+        LevelData data = new LevelData(List.of(player(1, 1), enemy(2, 1)), List.of());
+        Assembly assembly = assembleIdle(data, 10, 2);
+
+        assembly.tanks().get(0).shoot();
+
+        assertEquals(HEALTH - 2, assembly.tanks().get(1).getHealth());
+        assertEquals(0, countOf(assembly.level(), Bullet.class));
+    }
+
+    @Test
+    void collidingBulletsDestroyEachOther() {
+        LevelData data = new LevelData(List.of(player(1, 1), enemy(6, 1)), List.of());
+        Assembly assembly = assembleIdle(data, 10, 2);
+        Tank player = assembly.tanks().get(0);
+        Tank enemy = assembly.tanks().get(1);
+        enemy.move(Direction.LEFT, coordinates -> true);
+
+        player.shoot();
+        enemy.shoot();
+        runFor(assembly, 10);
+
+        assertEquals(0, countOf(assembly.level(), Bullet.class));
+        assertEquals(HEALTH, player.getHealth());
+        assertEquals(HEALTH, enemy.getHealth());
     }
 }

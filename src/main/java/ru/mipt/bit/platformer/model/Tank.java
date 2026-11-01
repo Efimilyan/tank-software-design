@@ -95,6 +95,12 @@ public class Tank implements GameObject, Blocking, Movable {
         health -= damage;
     }
 
+    @Override
+    public void hit(int damage) {
+        takeDamage(damage);
+    }
+
+    @Override
     public boolean isAlive() {
         return health > 0;
     }

@@ -102,4 +102,65 @@ class LevelTest {
 
         assertTrue(events.isEmpty());
     }
+
+    private static class Mortal implements GameObject {
+        boolean alive = true;
+        int updates = 0;
+
+        @Override
+        public void update(float deltaTime) {
+            updates++;
+        }
+
+        @Override
+        public boolean isAlive() {
+            return alive;
+        }
+    }
+
+    @Test
+    void deadObjectIsRemovedAtTheEndOfUpdateAndSubscribersAreNotified() {
+        Mortal mortal = new Mortal();
+        level.add(mortal);
+        mortal.alive = false;
+        List<GameObject> removed = new ArrayList<>();
+        level.subscribe(new LevelListener() {
+            @Override
+            public void objectAdded(GameObject object) {
+            }
+
+            @Override
+            public void objectRemoved(GameObject object) {
+                removed.add(object);
+            }
+        });
+
+        level.update(0.1f);
+
+        assertEquals(List.of(mortal), removed);
+        assertTrue(level.objects().isEmpty());
+    }
+
+    @Test
+    void deadObjectIsNotUpdated() {
+        Mortal mortal = new Mortal();
+        mortal.alive = false;
+        level.add(mortal);
+
+        level.update(0.1f);
+
+        assertEquals(0, mortal.updates);
+    }
+
+    @Test
+    void objectThatDiesDuringUpdateIsRemovedInTheSameUpdate() {
+        Mortal mortal = new Mortal();
+        GameObject killer = delta -> mortal.alive = false;
+        level.add(killer);
+        level.add(mortal);
+
+        level.update(0.1f);
+
+        assertEquals(List.of(killer), level.objects());
+    }
 }
