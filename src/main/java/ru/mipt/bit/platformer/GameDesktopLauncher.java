@@ -24,6 +24,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
     private static final float TANK_SPEED = 0.4f;
+    private static final int TANK_HEALTH = 3;
 
     private final LevelLoader levelLoader;
     private final LevelView levelView = new LevelView();
@@ -57,7 +58,7 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         level = new Level();
         level.subscribe(levelView);
-        new GameWorldFactory(TANK_SPEED, playerStrategy, new Random())
+        new GameWorldFactory(TANK_SPEED, TANK_HEALTH, playerStrategy, new Random())
                 .populate(level, levelData, fieldWidth, fieldHeight);
     }
 

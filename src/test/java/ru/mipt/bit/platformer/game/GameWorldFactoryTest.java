@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameWorldFactoryTest {
     private static final float SPEED = 0.4f;
+    private static final int HEALTH = 5;
 
     private static Random alwaysChoosing(Direction direction) {
         return new Random() {
@@ -50,7 +51,7 @@ class GameWorldFactoryTest {
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
                                      int width, int height) {
         GameWorldFactory factory =
-                new GameWorldFactory(SPEED, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
+                new GameWorldFactory(SPEED, HEALTH, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
         Level level = new Level();
         List<Tank> tanks = new ArrayList<>();
         List<Obstacle> obstacles = new ArrayList<>();
@@ -146,5 +147,15 @@ class GameWorldFactoryTest {
 
         assertEquals(new GridPoint2(2, 1), assembly.tanks().get(0).getDestinationCoordinates());
         assertEquals(new GridPoint2(0, 1), assembly.tanks().get(1).getDestinationCoordinates());
+    }
+
+    @Test
+    void tanksGetHealthFromFactory() {
+        LevelData level = new LevelData(List.of(player(1, 1), enemy(5, 5)), List.of());
+
+        Assembly assembly = assemble(level, Direction.UP, Direction.UP, 10, 8);
+
+        assertEquals(HEALTH, assembly.tanks().get(0).getHealth());
+        assertEquals(HEALTH, assembly.tanks().get(1).getHealth());
     }
 }

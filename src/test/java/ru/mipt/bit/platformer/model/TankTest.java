@@ -20,6 +20,57 @@ class TankTest {
     }
 
     @Test
+    void newTankHasGivenHealth() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 7);
+
+        assertEquals(7, tank.getHealth());
+        assertTrue(tank.isAlive());
+    }
+
+    @Test
+    void newTankFacesRightDirection() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        assertEquals(Direction.RIGHT, tank.getDirection());
+    }
+
+    @Test
+    void moveRemembersDirectionEvenWhenBlocked() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        tank.move(Direction.UP, coordinates -> true);
+
+        assertEquals(Direction.UP, tank.getDirection());
+    }
+
+    @Test
+    void damageReducesHealth() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3);
+
+        tank.takeDamage(1);
+
+        assertEquals(2, tank.getHealth());
+        assertTrue(tank.isAlive());
+    }
+
+    @Test
+    void tankIsDeadWhenHealthRunsOut() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
+
+        tank.takeDamage(2);
+
+        assertFalse(tank.isAlive());
+    }
+
+    @Test
+    void negativeDamageIsRejected() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
+
+        assertThrows(IllegalArgumentException.class, () -> tank.takeDamage(-1));
+        assertEquals(2, tank.getHealth());
+    }
+
+    @Test
     void moveTurnsTankInThatDirection() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
         tank.move(Direction.UP, emptyField);

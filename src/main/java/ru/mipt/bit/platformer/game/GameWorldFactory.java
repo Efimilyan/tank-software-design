@@ -21,11 +21,14 @@ import java.util.Random;
 
 public class GameWorldFactory {
     private final float tankSpeed;
+    private final int tankHealth;
     private final ControlStrategy playerStrategy;
     private final Random random;
 
-    public GameWorldFactory(float tankSpeed, ControlStrategy playerStrategy, Random random) {
+    public GameWorldFactory(
+            float tankSpeed, int tankHealth, ControlStrategy playerStrategy, Random random) {
         this.tankSpeed = tankSpeed;
+        this.tankHealth = tankHealth;
         this.playerStrategy = playerStrategy;
         this.random = random;
     }
@@ -39,7 +42,7 @@ public class GameWorldFactory {
         List<TankSpec> specs = data.tanks();
         List<Tank> tanks = new ArrayList<>();
         for (TankSpec spec : specs) {
-            tanks.add(new Tank(spec.position(), tankSpeed));
+            tanks.add(new Tank(spec.position(), tankSpeed, tankHealth));
         }
 
         for (GridPoint2 position : data.treePositions()) {
