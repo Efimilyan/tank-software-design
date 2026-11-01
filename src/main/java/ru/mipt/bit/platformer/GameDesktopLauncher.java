@@ -30,6 +30,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     private static final float BULLET_SPEED = 0.1f;
     private static final int BULLET_DAMAGE = 1;
     private static final float RELOAD_TIME = 0.5f;
+    private static final double ENEMY_SHOOT_PROBABILITY = 0.01;
 
     private final LevelLoader levelLoader;
     private final LevelView levelView = new LevelView();
@@ -65,7 +66,8 @@ public class GameDesktopLauncher implements ApplicationListener {
                 bullet -> new MovableDrawable(bullet, bulletGraphics, tileMovement));
 
         GameSettings settings = new GameSettings(
-                TANK_SPEED, TANK_HEALTH, BULLET_SPEED, BULLET_DAMAGE, RELOAD_TIME);
+                TANK_SPEED, TANK_HEALTH, BULLET_SPEED, BULLET_DAMAGE, RELOAD_TIME,
+                ENEMY_SHOOT_PROBABILITY);
         level = new Level();
         level.subscribe(levelView);
         new GameWorldFactory(settings, playerStrategy, new Random())

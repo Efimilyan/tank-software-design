@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GameWorldFactoryTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
-    private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f);
+    private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f, 0.0);
 
     private static Random alwaysChoosing(Direction direction) {
         return new Random() {

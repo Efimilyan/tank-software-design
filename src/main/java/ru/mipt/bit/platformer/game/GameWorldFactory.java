@@ -61,7 +61,7 @@ public class GameWorldFactory {
     private ControlStrategy strategyFor(ControlType type) {
         return switch (type) {
             case PLAYER -> playerStrategy;
-            case RANDOM -> new RandomControlStrategy(random);
+            case RANDOM -> new RandomControlStrategy(random, settings.enemyShootProbability());
         };
     }
 }

@@ -70,21 +70,6 @@ class TankTest {
         assertEquals(2, tank.getHealth());
     }
 
-    private static class RecordingGun implements Gun {
-        final List<String> shots = new java.util.ArrayList<>();
-        float updated = 0f;
-
-        @Override
-        public void update(float deltaTime) {
-            updated += deltaTime;
-        }
-
-        @Override
-        public void fire(GridPoint2 from, Direction direction) {
-            shots.add(from + " " + direction);
-        }
-    }
-
     @Test
     void shootFiresIntoTileInFrontOfTank() {
         RecordingGun gun = new RecordingGun();

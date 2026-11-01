@@ -5,5 +5,6 @@ public record GameSettings(
         int tankHealth,
         float bulletSpeed,
         int bulletDamage,
-        float reloadTime) {
+        float reloadTime,
+        double enemyShootProbability) {
 }
