@@ -14,6 +14,7 @@ import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
 import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
+import ru.mipt.bit.platformer.model.Bullet;
 import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
@@ -45,6 +46,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
         var tankGraphics = new TextureRegion(resources.getBlueTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
+        var bulletGraphics = new TextureRegion(resources.getBulletTexture());
 
         int fieldWidth = groundLayer.getWidth();
         int fieldHeight = groundLayer.getHeight();
@@ -54,7 +56,9 @@ public class GameDesktopLauncher implements ApplicationListener {
         levelView.register(Obstacle.class,
                 obstacle -> new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
         levelView.register(Tank.class,
-                tank -> new TankDrawable(tank, tankGraphics, tileMovement));
+                tank -> new MovableDrawable(tank, tankGraphics, tileMovement));
+        levelView.register(Bullet.class,
+                bullet -> new MovableDrawable(bullet, bulletGraphics, tileMovement));
 
         level = new Level();
         level.subscribe(levelView);

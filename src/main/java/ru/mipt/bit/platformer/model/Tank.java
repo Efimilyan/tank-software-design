@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
-public class Tank implements GameObject, Blocking {
+public class Tank implements GameObject, Blocking, Movable {
     public static final int DEFAULT_HEALTH = 3;
 
     private final float movementSpeed;
@@ -49,18 +49,22 @@ public class Tank implements GameObject, Blocking {
         return currentCoordinates.equals(position) || destinationCoordinates.equals(position);
     }
 
+    @Override
     public GridPoint2 getCurrentCoordinates() {
         return currentCoordinates;
     }
 
+    @Override
     public GridPoint2 getDestinationCoordinates() {
         return destinationCoordinates;
     }
 
+    @Override
     public float getMovementProgress() {
         return movementProgress;
     }
 
+    @Override
     public float getRotation() {
         return direction.rotation();
     }

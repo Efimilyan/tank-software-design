@@ -9,14 +9,14 @@ import ru.mipt.bit.platformer.model.Tank;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import ru.mipt.bit.platformer.model.Direction;
-class TankDrawableTest {
+class MovableDrawableTest {
     private final TextureRegion region = new TextureRegion();
     private final TiledMapTileLayer layer = new TiledMapTileLayer(10, 8, 128, 128);
 
     @Test
     void rectangleFollowsTankToNextTile() {
         Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
-        TankDrawable drawable = new TankDrawable(tank, region, new TileMovement(layer, Interpolation.linear));
+        MovableDrawable drawable = new MovableDrawable(tank, region, new TileMovement(layer, Interpolation.linear));
         tank.move(Direction.UP, coordinates -> false);
         tank.update(0.4f);
         tank.update(0.1f);

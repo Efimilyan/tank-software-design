@@ -9,15 +9,18 @@ public class GameResources implements Disposable {
     private final TiledMap level;
     private final Texture blueTankTexture;
     private final Texture greenTreeTexture;
+    private final Texture bulletTexture;
 
     public GameResources(){
         level = new TmxMapLoader().load("level.tmx");
         blueTankTexture = new Texture("images/tank_blue.png");
         greenTreeTexture = new Texture("images/greenTree.png");
+        bulletTexture = new Texture("images/bullet.png");
     }
 
     @Override
     public void dispose(){
+        bulletTexture.dispose();
         greenTreeTexture.dispose();
         blueTankTexture.dispose();
         level.dispose();
@@ -31,5 +34,8 @@ public class GameResources implements Disposable {
     }
     public Texture getGreenTreeTexture(){
         return greenTreeTexture;
+    }
+    public Texture getBulletTexture(){
+        return bulletTexture;
     }
 }
