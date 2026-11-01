@@ -9,6 +9,7 @@ public class Tank implements GameObject, Blocking, Movable {
     public static final int DEFAULT_HEALTH = 3;
 
     private final float movementSpeed;
+    private final Gun gun;
     private final GridPoint2 currentCoordinates;
     private final GridPoint2 destinationCoordinates;
     private float movementProgress = 1f;
@@ -20,6 +21,11 @@ public class Tank implements GameObject, Blocking, Movable {
     }
 
     public Tank(GridPoint2 coordinates, float movementSpeed, int health) {
+        this(coordinates, movementSpeed, health, Gun.NONE);
+    }
+
+    public Tank(GridPoint2 coordinates, float movementSpeed, int health, Gun gun) {
+        this.gun = gun;
         this.currentCoordinates = new GridPoint2(coordinates);
         this.destinationCoordinates = new GridPoint2(coordinates);
         this.movementSpeed = movementSpeed;
@@ -36,8 +42,13 @@ public class Tank implements GameObject, Blocking, Movable {
             this.direction = direction;
         }
     }
+    public void shoot() {
+        gun.fire(direction.shift(destinationCoordinates), direction);
+    }
+
     @Override
     public void update(float deltaTime) {
+        gun.update(deltaTime);
         movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
         if (isEqual(movementProgress, 1f)) {
             currentCoordinates.set(destinationCoordinates);

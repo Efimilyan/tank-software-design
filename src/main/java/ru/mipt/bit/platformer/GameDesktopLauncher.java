@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.game.GameSettings;
 import ru.mipt.bit.platformer.game.GameWorldFactory;
 import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
@@ -26,6 +27,9 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 public class GameDesktopLauncher implements ApplicationListener {
     private static final float TANK_SPEED = 0.4f;
     private static final int TANK_HEALTH = 3;
+    private static final float BULLET_SPEED = 0.1f;
+    private static final int BULLET_DAMAGE = 1;
+    private static final float RELOAD_TIME = 0.5f;
 
     private final LevelLoader levelLoader;
     private final LevelView levelView = new LevelView();
@@ -60,9 +64,11 @@ public class GameDesktopLauncher implements ApplicationListener {
         levelView.register(Bullet.class,
                 bullet -> new MovableDrawable(bullet, bulletGraphics, tileMovement));
 
+        GameSettings settings = new GameSettings(
+                TANK_SPEED, TANK_HEALTH, BULLET_SPEED, BULLET_DAMAGE, RELOAD_TIME);
         level = new Level();
         level.subscribe(levelView);
-        new GameWorldFactory(TANK_SPEED, TANK_HEALTH, playerStrategy, new Random())
+        new GameWorldFactory(settings, playerStrategy, new Random())
                 .populate(level, levelData, fieldWidth, fieldHeight);
     }
 

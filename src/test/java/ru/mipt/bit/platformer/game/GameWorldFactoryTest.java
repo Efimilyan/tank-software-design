@@ -7,6 +7,7 @@ import ru.mipt.bit.platformer.control.MoveCommand;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
+import ru.mipt.bit.platformer.model.Bullet;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.GameObject;
 import ru.mipt.bit.platformer.model.Level;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GameWorldFactoryTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
+    private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f);
 
     private static Random alwaysChoosing(Direction direction) {
         return new Random() {
@@ -51,7 +53,7 @@ class GameWorldFactoryTest {
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
                                      int width, int height) {
         GameWorldFactory factory =
-                new GameWorldFactory(SPEED, HEALTH, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
+                new GameWorldFactory(SETTINGS, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
         Level level = new Level();
         List<Tank> tanks = new ArrayList<>();
         List<Obstacle> obstacles = new ArrayList<>();
@@ -157,5 +159,20 @@ class GameWorldFactoryTest {
 
         assertEquals(HEALTH, assembly.tanks().get(0).getHealth());
         assertEquals(HEALTH, assembly.tanks().get(1).getHealth());
+    }
+
+    @Test
+    void tankShootsBulletIntoLevel() {
+        LevelData level = new LevelData(List.of(player(1, 1)), List.of());
+        Assembly assembly = assemble(level, Direction.UP, Direction.UP, 10, 8);
+
+        assembly.tanks().get(0).shoot();
+
+        List<GameObject> bullets = assembly.level().objects().stream()
+                .filter(object -> object instanceof Bullet)
+                .toList();
+        assertEquals(1, bullets.size());
+        assertEquals(new GridPoint2(2, 1), ((Bullet) bullets.get(0)).getCurrentCoordinates());
+        assertEquals(2, ((Bullet) bullets.get(0)).getDamage());
     }
 }

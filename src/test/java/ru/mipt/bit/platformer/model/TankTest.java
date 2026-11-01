@@ -70,6 +70,61 @@ class TankTest {
         assertEquals(2, tank.getHealth());
     }
 
+    private static class RecordingGun implements Gun {
+        final List<String> shots = new java.util.ArrayList<>();
+        float updated = 0f;
+
+        @Override
+        public void update(float deltaTime) {
+            updated += deltaTime;
+        }
+
+        @Override
+        public void fire(GridPoint2 from, Direction direction) {
+            shots.add(from + " " + direction);
+        }
+    }
+
+    @Test
+    void shootFiresIntoTileInFrontOfTank() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+
+        tank.shoot();
+
+        assertEquals(List.of("(2, 1) RIGHT"), gun.shots);
+    }
+
+    @Test
+    void shootFromMovingTankFiresBeyondItsDestinationTile() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+        tank.move(Direction.UP, emptyField);
+
+        tank.shoot();
+
+        assertEquals(List.of("(1, 3) UP"), gun.shots);
+    }
+
+    @Test
+    void updateReloadsTheGun() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+
+        tank.update(0.25f);
+
+        assertEquals(0.25f, gun.updated, 0.001f);
+    }
+
+    @Test
+    void tankWithoutGunCanShootHarmlessly() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+
+        tank.shoot();
+
+        assertTrue(tank.isAlive());
+    }
+
     @Test
     void moveTurnsTankInThatDirection() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED);

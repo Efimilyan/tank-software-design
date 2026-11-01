@@ -7,10 +7,12 @@ import ru.mipt.bit.platformer.control.TankController;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
+import ru.mipt.bit.platformer.model.BulletGun;
 import ru.mipt.bit.platformer.model.CollisionChecker;
 import ru.mipt.bit.platformer.model.CompositeCollisionChecker;
 import ru.mipt.bit.platformer.model.FieldBounds;
 import ru.mipt.bit.platformer.model.GameField;
+import ru.mipt.bit.platformer.model.Gun;
 import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
@@ -20,15 +22,12 @@ import java.util.List;
 import java.util.Random;
 
 public class GameWorldFactory {
-    private final float tankSpeed;
-    private final int tankHealth;
+    private final GameSettings settings;
     private final ControlStrategy playerStrategy;
     private final Random random;
 
-    public GameWorldFactory(
-            float tankSpeed, int tankHealth, ControlStrategy playerStrategy, Random random) {
-        this.tankSpeed = tankSpeed;
-        this.tankHealth = tankHealth;
+    public GameWorldFactory(GameSettings settings, ControlStrategy playerStrategy, Random random) {
+        this.settings = settings;
         this.playerStrategy = playerStrategy;
         this.random = random;
     }
@@ -42,7 +41,9 @@ public class GameWorldFactory {
         List<TankSpec> specs = data.tanks();
         List<Tank> tanks = new ArrayList<>();
         for (TankSpec spec : specs) {
-            tanks.add(new Tank(spec.position(), tankSpeed, tankHealth));
+            Gun gun = new BulletGun(level, settings.bulletSpeed(), settings.bulletDamage(),
+                    settings.reloadTime());
+            tanks.add(new Tank(spec.position(), settings.tankSpeed(), settings.tankHealth(), gun));
         }
 
         for (GridPoint2 position : data.treePositions()) {
