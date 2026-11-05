@@ -5,24 +5,24 @@ import com.badlogic.gdx.math.GridPoint2;
 public class Bullet implements GameObject, Movable, Blocking {
     private final Direction direction;
     private final int damage;
-    private final CollisionChecker collisionChecker;
+    private final BattleField battleField;
     private final GridMovement movement;
     private boolean alive = true;
 
     public Bullet(GridPoint2 coordinates, Direction direction, float movementSpeed, int damage,
-                  CollisionChecker collisionChecker) {
+                  BattleField battleField) {
         this.movement = new GridMovement(coordinates, movementSpeed);
         this.direction = direction;
         this.damage = damage;
-        this.collisionChecker = collisionChecker;
+        this.battleField = battleField;
     }
 
     @Override
     public void update(float deltaTime) {
         if (movement.isIdle()) {
             GridPoint2 next = direction.shift(movement.getCurrent());
-            if (collisionChecker.isOccupied(next)) {
-                collisionChecker.hit(next, damage);
+            if (battleField.isOccupied(next)) {
+                battleField.hit(next, damage);
                 alive = false;
                 return;
             }

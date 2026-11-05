@@ -8,15 +8,7 @@ import ru.mipt.bit.platformer.control.TankController;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
-import ru.mipt.bit.platformer.model.BulletGun;
-import ru.mipt.bit.platformer.model.CollisionChecker;
-import ru.mipt.bit.platformer.model.CompositeCollisionChecker;
-import ru.mipt.bit.platformer.model.FieldBounds;
-import ru.mipt.bit.platformer.model.GameField;
-import ru.mipt.bit.platformer.model.Gun;
-import ru.mipt.bit.platformer.model.Level;
-import ru.mipt.bit.platformer.model.Obstacle;
-import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +31,12 @@ public class GameWorldFactory {
         level.subscribe(field);
         CollisionChecker collisionChecker = new CompositeCollisionChecker(List.of(
                 new FieldBounds(fieldWidth, fieldHeight), field));
+        BattleField battleField = BattleField.of(collisionChecker, field);
 
         List<TankSpec> specs = data.tanks();
         List<Tank> tanks = new ArrayList<>();
         for (TankSpec spec : specs) {
-            Gun gun = new BulletGun(level, collisionChecker, settings.bulletSpeed(),
+            Gun gun = new BulletGun(level, battleField, settings.bulletSpeed(),
                     settings.bulletDamage(), settings.reloadTime());
             tanks.add(new Tank(spec.position(), settings.tankSpeed(), settings.tankHealth(), gun));
         }

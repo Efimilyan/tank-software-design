@@ -14,7 +14,8 @@ class BulletGunTest {
     private static final GridPoint2 FROM = new GridPoint2(2, 3);
 
     private final Level level = new Level();
-    private final BulletGun gun = new BulletGun(level, coordinates -> false, 0.1f, 2, RELOAD);
+    private final BulletGun gun = new BulletGun(level, BattleField.of(coordinates -> false,
+            (coordinates, damage) -> { }), 0.1f, 2, RELOAD);
 
     @Test
     void fireRegistersBulletInLevelAtGivenTile() {
@@ -51,7 +52,7 @@ class BulletGunTest {
     @Test
     void firingAtOccupiedTileHitsItImmediatelyWithoutCreatingBullet() {
         List<String> hits = new ArrayList<>();
-        CollisionChecker occupied = new CollisionChecker() {
+        BattleField occupied = new BattleField() {
             @Override
             public boolean isOccupied(GridPoint2 coordinates) {
                 return true;
@@ -73,7 +74,7 @@ class BulletGunTest {
     @Test
     void pointBlankShotAlsoReloadsTheGun() {
         List<String> hits = new ArrayList<>();
-        CollisionChecker occupied = new CollisionChecker() {
+        BattleField occupied = new BattleField() {
             @Override
             public boolean isOccupied(GridPoint2 coordinates) {
                 return true;

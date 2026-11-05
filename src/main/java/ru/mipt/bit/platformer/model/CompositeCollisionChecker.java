@@ -20,11 +20,4 @@ public class CompositeCollisionChecker implements CollisionChecker {
         }
         return false;
     }
-
-    @Override
-    public void hit(GridPoint2 coordinates, int damage) {
-        for (CollisionChecker checker : checkers) {
-            checker.hit(coordinates, damage);
-        }
-    }
 }
