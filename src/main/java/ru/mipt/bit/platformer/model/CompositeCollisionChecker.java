@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.CollisionChecker;
 
 import java.util.List;
 
@@ -19,12 +20,5 @@ public class CompositeCollisionChecker implements CollisionChecker {
             }
         }
         return false;
-    }
-
-    @Override
-    public void hit(GridPoint2 coordinates, int damage) {
-        for (CollisionChecker checker : checkers) {
-            checker.hit(coordinates, damage);
-        }
     }
 }

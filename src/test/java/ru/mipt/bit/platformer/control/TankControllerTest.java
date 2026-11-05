@@ -2,7 +2,7 @@ package ru.mipt.bit.platformer.control;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.model.Direction;
+import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.GameField;
 import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
@@ -20,7 +20,7 @@ class TankControllerTest {
     @Test
     void updateExecutesCommandFromStrategy() {
         TankController controller = new TankController(
-                tank, () -> new MoveCommand(Direction.UP), coordinates -> false);
+                tank, (deltaTime) -> new MoveCommand(Direction.UP), coordinates -> false);
 
         controller.update(0.1f);
 
@@ -30,7 +30,7 @@ class TankControllerTest {
     @Test
     void updateAsksStrategyEveryTime() {
         int[] calls = {0};
-        ControlStrategy counting = () -> {
+        ControlStrategy counting = (deltaTime) -> {
             calls[0]++;
             return Command.NONE;
         };
@@ -45,7 +45,7 @@ class TankControllerTest {
     @Test
     void controllerRespectsCollisionChecker() {
         TankController controller = new TankController(
-                tank, () -> new MoveCommand(Direction.UP), coordinates -> true);
+                tank, (deltaTime) -> new MoveCommand(Direction.UP), coordinates -> true);
 
         controller.update(0.1f);
 
@@ -58,11 +58,13 @@ class TankControllerTest {
         Level level = new Level();
         GameField field = new GameField();
         level.subscribe(field);
-        level.add(new TankController(tank, () -> new MoveCommand(Direction.UP), field));
+        Controllers controllers = new Controllers();
+        controllers.add(new TankController(tank, (deltaTime) -> new MoveCommand(Direction.UP), field));
         level.add(tank);
         level.add(obstacle);
 
         for (int i = 0; i < 20; i++) {
+            controllers.update(0.1f);
             level.update(0.1f);
         }
 
@@ -71,7 +73,7 @@ class TankControllerTest {
 
     @Test
     void controllerDiesTogetherWithItsTank() {
-        TankController controller = new TankController(tank, () -> Command.NONE, coordinates -> false);
+        TankController controller = new TankController(tank, (deltaTime) -> Command.NONE, coordinates -> false);
 
         tank.takeDamage(Tank.DEFAULT_HEALTH);
 

@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class KeyboardControlStrategyTest {
     private static final float SPEED = 0.4f;
     private static final GridPoint2 START = new GridPoint2(5, 5);
+    private static final float DELTA = 0.1f;
 
     private final Set<Integer> pressed = new HashSet<>();
     private final KeyboardControlStrategy strategy = new KeyboardControlStrategy(
@@ -28,7 +29,7 @@ class KeyboardControlStrategyTest {
     private GridPoint2 destinationAfterPressing(Integer... keys) {
         pressed.addAll(List.of(keys));
         Tank tank = new Tank(START, SPEED);
-        strategy.nextCommand().execute(tank, coordinates -> false);
+        strategy.nextCommand(DELTA).execute(tank, coordinates -> false);
         return tank.getDestinationCoordinates();
     }
 
@@ -70,7 +71,7 @@ class KeyboardControlStrategyTest {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(START, SPEED, 3, gun);
 
-        strategy.nextCommand().execute(tank, coordinates -> false);
+        strategy.nextCommand(DELTA).execute(tank, coordinates -> false);
 
         assertEquals(List.of("(6, 5) RIGHT"), gun.shots);
         assertEquals(START, tank.getDestinationCoordinates());
@@ -82,7 +83,7 @@ class KeyboardControlStrategyTest {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(START, SPEED, 3, gun);
 
-        strategy.nextCommand().execute(tank, coordinates -> false);
+        strategy.nextCommand(DELTA).execute(tank, coordinates -> false);
 
         assertEquals(new GridPoint2(5, 6), tank.getDestinationCoordinates());
         assertEquals(List.of("(5, 7) UP"), gun.shots);
@@ -94,7 +95,7 @@ class KeyboardControlStrategyTest {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(START, SPEED, 3, gun);
 
-        strategy.nextCommand().execute(tank, coordinates -> false);
+        strategy.nextCommand(DELTA).execute(tank, coordinates -> false);
 
         assertEquals(List.of(), gun.shots);
     }
@@ -108,7 +109,7 @@ class KeyboardControlStrategyTest {
                 List.of(new KeyBinding(custom, Keys.F)));
         pressed.add(Keys.F);
 
-        customStrategy.nextCommand().execute(new Tank(START, SPEED), coordinates -> false);
+        customStrategy.nextCommand(DELTA).execute(new Tank(START, SPEED), coordinates -> false);
 
         assertEquals(List.of("custom"), log);
     }
@@ -124,7 +125,7 @@ class KeyboardControlStrategyTest {
                         new KeyBinding((tank, collisionChecker) -> log.add("second"), Keys.G)));
         pressed.addAll(List.of(Keys.F, Keys.G));
 
-        customStrategy.nextCommand().execute(new Tank(START, SPEED), coordinates -> false);
+        customStrategy.nextCommand(DELTA).execute(new Tank(START, SPEED), coordinates -> false);
 
         assertEquals(List.of("first", "second"), log);
     }

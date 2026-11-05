@@ -2,6 +2,9 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.Blocking;
+import ru.mipt.bit.platformer.model.api.CollisionChecker;
+import ru.mipt.bit.platformer.model.api.Direction;
 
 import java.util.List;
 
@@ -57,37 +60,5 @@ class CompositeCollisionCheckerTest {
         CollisionChecker empty = new CompositeCollisionChecker(List.of());
 
         assertFalse(empty.isOccupied(new GridPoint2(-100, 100)));
-    }
-
-    @Test
-    void hitIsPassedToEveryChecker() {
-        int[] damage = {0, 0};
-        CollisionChecker first = new CollisionChecker() {
-            @Override
-            public boolean isOccupied(GridPoint2 coordinates) {
-                return false;
-            }
-
-            @Override
-            public void hit(GridPoint2 coordinates, int amount) {
-                damage[0] += amount;
-            }
-        };
-        CollisionChecker second = new CollisionChecker() {
-            @Override
-            public boolean isOccupied(GridPoint2 coordinates) {
-                return false;
-            }
-
-            @Override
-            public void hit(GridPoint2 coordinates, int amount) {
-                damage[1] += amount;
-            }
-        };
-
-        new CompositeCollisionChecker(List.of(first, second)).hit(new GridPoint2(1, 1), 2);
-
-        assertEquals(2, damage[0]);
-        assertEquals(2, damage[1]);
     }
 }

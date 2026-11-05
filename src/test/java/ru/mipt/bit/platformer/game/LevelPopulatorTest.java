@@ -2,18 +2,15 @@ package ru.mipt.bit.platformer.game;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.control.Command;
-import ru.mipt.bit.platformer.control.ControlStrategy;
-import ru.mipt.bit.platformer.control.MoveCommand;
-import ru.mipt.bit.platformer.control.TankController;
+import ru.mipt.bit.platformer.control.*;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
 import ru.mipt.bit.platformer.model.Bullet;
-import ru.mipt.bit.platformer.model.Direction;
-import ru.mipt.bit.platformer.model.GameObject;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GameObject;
 import ru.mipt.bit.platformer.model.Level;
-import ru.mipt.bit.platformer.model.LevelListener;
+import ru.mipt.bit.platformer.model.api.LevelListener;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
@@ -24,7 +21,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class GameWorldFactoryTest {
+class LevelPopulatorTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
     private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f, 0.0);
@@ -39,25 +36,34 @@ class GameWorldFactoryTest {
     }
 
     private static ControlStrategy alwaysGoing(Direction direction) {
-        return () -> new MoveCommand(direction);
+        return deltaTime -> new MoveCommand(direction);
+    }
+
+    private static ControlStrategyRegistry strategies(ControlStrategy player, Random random) {
+        return new ControlStrategyRegistry()
+                .register(ControlType.HUMAN, () -> player)
+                .register(ControlType.AI, () -> new RandomControlStrategy(
+                        random, SETTINGS.enemyShotsPerSecond()));
     }
 
     private static TankSpec player(int x, int y) {
-        return new TankSpec(new GridPoint2(x, y), ControlType.PLAYER);
+        return new TankSpec(new GridPoint2(x, y), ControlType.HUMAN);
     }
 
     private static TankSpec enemy(int x, int y) {
-        return new TankSpec(new GridPoint2(x, y), ControlType.RANDOM);
+        return new TankSpec(new GridPoint2(x, y), ControlType.AI);
     }
 
-    private record Assembly(Level level, List<Tank> tanks, List<Obstacle> obstacles) {
+    private record Assembly(Level level, Controllers controllers,
+                            List<Tank> tanks, List<Obstacle> obstacles) {
     }
 
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
                                      int width, int height) {
-        GameWorldFactory factory =
-                new GameWorldFactory(SETTINGS, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
+        LevelPopulator factory = new LevelPopulator(
+                SETTINGS, strategies(alwaysGoing(playerGoes), alwaysChoosing(enemyGoes)));
         Level level = new Level();
+        Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
         List<Obstacle> obstacles = new ArrayList<>();
         level.subscribe(new LevelListener() {
@@ -74,12 +80,13 @@ class GameWorldFactoryTest {
             public void objectRemoved(GameObject object) {
             }
         });
-        factory.populate(level, data, width, height);
-        return new Assembly(level, tanks, obstacles);
+        factory.populate(level, controllers, data, width, height);
+        return new Assembly(level, controllers, tanks, obstacles);
     }
 
     private static void runFor(Assembly assembly, int updates) {
         for (int i = 0; i < updates; i++) {
+            assembly.controllers().update(0.1f);
             assembly.level().update(0.1f);
         }
     }
@@ -180,9 +187,10 @@ class GameWorldFactoryTest {
     }
 
     private static Assembly assembleIdle(LevelData data, int width, int height) {
-        GameWorldFactory factory = new GameWorldFactory(
-                SETTINGS, () -> Command.NONE, alwaysChoosing(Direction.UP));
+        LevelPopulator factory = new LevelPopulator(
+                SETTINGS, strategies((deltaTime) -> Command.NONE, alwaysChoosing(Direction.UP)));
         Level level = new Level();
+        Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
         level.subscribe(new LevelListener() {
             @Override
@@ -196,8 +204,8 @@ class GameWorldFactoryTest {
             public void objectRemoved(GameObject object) {
             }
         });
-        factory.populate(level, data, width, height);
-        return new Assembly(level, tanks, List.of());
+        factory.populate(level, controllers, data, width, height);
+        return new Assembly(level, controllers, tanks, List.of());
     }
 
     private static long countOf(Level level, Class<?> type) {
@@ -230,7 +238,7 @@ class GameWorldFactoryTest {
         assertFalse(enemyTank.isAlive());
         assertFalse(assembly.level().objects().contains(enemyTank));
         assertEquals(1, countOf(assembly.level(), Tank.class));
-        assertEquals(1, countOf(assembly.level(), TankController.class));
+        assertEquals(1, assembly.controllers().size());
     }
 
     @Test

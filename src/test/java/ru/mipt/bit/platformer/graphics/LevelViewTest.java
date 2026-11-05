@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.graphics;
 
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.model.GameObject;
+import ru.mipt.bit.platformer.model.api.GameObject;
 
 import java.util.List;
 

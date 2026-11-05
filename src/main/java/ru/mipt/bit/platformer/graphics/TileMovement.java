@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 
-import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
+import static ru.mipt.bit.platformer.graphics.GdxGameUtils.moveRectangleAtTileCenter;
 
 public class TileMovement implements RectangleMovement {
 

@@ -1,51 +1,40 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
-
-import static com.badlogic.gdx.math.MathUtils.isEqual;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
+import ru.mipt.bit.platformer.model.api.*;
 
 public class Bullet implements GameObject, Movable, Blocking {
     private final Direction direction;
-    private final float movementSpeed;
     private final int damage;
-    private final CollisionChecker collisionChecker;
-    private final GridPoint2 currentCoordinates;
-    private final GridPoint2 destinationCoordinates;
-    private float movementProgress = 1f;
+    private final BattleField battleField;
+    private final GridMovement movement;
     private boolean alive = true;
 
     public Bullet(GridPoint2 coordinates, Direction direction, float movementSpeed, int damage,
-                  CollisionChecker collisionChecker) {
-        this.currentCoordinates = new GridPoint2(coordinates);
-        this.destinationCoordinates = new GridPoint2(coordinates);
+                  BattleField battleField) {
+        this.movement = new GridMovement(coordinates, movementSpeed);
         this.direction = direction;
-        this.movementSpeed = movementSpeed;
         this.damage = damage;
-        this.collisionChecker = collisionChecker;
+        this.battleField = battleField;
     }
 
     @Override
     public void update(float deltaTime) {
-        if (isEqual(movementProgress, 1f)) {
-            GridPoint2 next = direction.shift(currentCoordinates);
-            if (collisionChecker.isOccupied(next)) {
-                collisionChecker.hit(next, damage);
+        if (movement.isIdle()) {
+            GridPoint2 next = direction.shift(movement.getCurrent());
+            if (battleField.isOccupied(next)) {
+                battleField.hit(next, damage);
                 alive = false;
                 return;
             }
-            destinationCoordinates.set(next);
-            movementProgress = 0f;
+            movement.start(next);
         }
-        movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
-        if (isEqual(movementProgress, 1f)) {
-            currentCoordinates.set(destinationCoordinates);
-        }
+        movement.update(deltaTime);
     }
 
     @Override
     public boolean occupies(GridPoint2 position) {
-        return currentCoordinates.equals(position) || destinationCoordinates.equals(position);
+        return movement.occupies(position);
     }
 
     @Override
@@ -63,17 +52,17 @@ public class Bullet implements GameObject, Movable, Blocking {
 
     @Override
     public GridPoint2 getCurrentCoordinates() {
-        return currentCoordinates;
+        return movement.getCurrent();
     }
 
     @Override
     public GridPoint2 getDestinationCoordinates() {
-        return destinationCoordinates;
+        return movement.getDestination();
     }
 
     @Override
     public float getMovementProgress() {
-        return movementProgress;
+        return movement.getProgress();
     }
 
     @Override

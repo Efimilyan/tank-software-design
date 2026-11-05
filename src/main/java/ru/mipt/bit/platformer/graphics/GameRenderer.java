@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 import java.util.Collection;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRenderer;
+import static ru.mipt.bit.platformer.graphics.GdxGameUtils.createSingleLayerMapRenderer;
 
 public class GameRenderer implements Disposable {
     private final Batch batch;

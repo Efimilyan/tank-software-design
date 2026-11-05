@@ -1,11 +1,15 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.BattleField;
+import ru.mipt.bit.platformer.model.api.Blocking;
+import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.LevelListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameField implements CollisionChecker, LevelListener {
+public class GameField implements BattleField, LevelListener {
     private final List<Blocking> obstacles;
 
     public GameField() {

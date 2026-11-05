@@ -10,13 +10,13 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RandomLevelGeneratorTest {
+class RandomLevelProviderTest {
     private static final int WIDTH = 10;
     private static final int HEIGHT = 8;
     private static final int ENEMY_COUNT = 3;
 
     private LevelData generate(long seed, int width, int height, int enemyCount) {
-        return new RandomLevelGenerator(new Random(seed), enemyCount).load(width, height);
+        return new RandomLevelProvider(new Random(seed), enemyCount).load(width, height);
     }
 
     private List<GridPoint2> allPositions(LevelData level) {
@@ -48,8 +48,8 @@ class RandomLevelGeneratorTest {
     void hasOnePlayerAndRequestedNumberOfAiTanks() {
         LevelData level = generate(1, WIDTH, HEIGHT, ENEMY_COUNT);
 
-        long players = level.tanks().stream().filter(t -> t.control() == ControlType.PLAYER).count();
-        long enemies = level.tanks().stream().filter(t -> t.control() == ControlType.RANDOM).count();
+        long players = level.tanks().stream().filter(t -> t.control() == ControlType.HUMAN).count();
+        long enemies = level.tanks().stream().filter(t -> t.control() == ControlType.AI).count();
 
         assertEquals(1, players);
         assertEquals(ENEMY_COUNT, enemies);

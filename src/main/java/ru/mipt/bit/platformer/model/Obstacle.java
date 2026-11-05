@@ -1,6 +1,8 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.Blocking;
+import ru.mipt.bit.platformer.model.api.GameObject;
 
 public class Obstacle implements Blocking, GameObject {
     private final GridPoint2 coordinates;

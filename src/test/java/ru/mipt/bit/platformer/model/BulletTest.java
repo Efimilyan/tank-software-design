@@ -2,6 +2,8 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.BattleField;
+import ru.mipt.bit.platformer.model.api.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,8 @@ class BulletTest {
     private static final int DAMAGE = 2;
     private static final GridPoint2 START = new GridPoint2(3, 3);
 
-    private static final CollisionChecker FREE_FIELD = coordinates -> false;
+    private static final BattleField FREE_FIELD =
+            BattleField.of(coordinates -> false, (coordinates, damage) -> { });
 
     private final Bullet bullet = new Bullet(START, Direction.UP, SPEED, DAMAGE, FREE_FIELD);
 
@@ -71,7 +74,7 @@ class BulletTest {
     @Test
     void bulletHitsNextTileAndDiesWhenItIsOccupied() {
         List<String> hits = new ArrayList<>();
-        CollisionChecker wallAbove = new CollisionChecker() {
+        BattleField wallAbove = new BattleField() {
             @Override
             public boolean isOccupied(GridPoint2 coordinates) {
                 return coordinates.equals(new GridPoint2(3, 4));
@@ -93,7 +96,8 @@ class BulletTest {
 
     @Test
     void bulletThatHitSomethingStopsMoving() {
-        Bullet blocked = new Bullet(START, Direction.UP, SPEED, DAMAGE, coordinates -> true);
+        Bullet blocked = new Bullet(START, Direction.UP, SPEED, DAMAGE,
+                BattleField.of(coordinates -> true, (coordinates, damage) -> { }));
         blocked.update(SPEED);
 
         blocked.update(SPEED);

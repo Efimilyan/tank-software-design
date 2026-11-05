@@ -2,6 +2,9 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.BattleField;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +17,8 @@ class BulletGunTest {
     private static final GridPoint2 FROM = new GridPoint2(2, 3);
 
     private final Level level = new Level();
-    private final BulletGun gun = new BulletGun(level, coordinates -> false, 0.1f, 2, RELOAD);
+    private final BulletGun gun = new BulletGun(level::add,
+            BattleField.of(coordinates -> false, (coordinates, damage) -> { }), 0.1f, 2, RELOAD);
 
     @Test
     void fireRegistersBulletInLevelAtGivenTile() {
@@ -51,7 +55,7 @@ class BulletGunTest {
     @Test
     void firingAtOccupiedTileHitsItImmediatelyWithoutCreatingBullet() {
         List<String> hits = new ArrayList<>();
-        CollisionChecker occupied = new CollisionChecker() {
+        BattleField occupied = new BattleField() {
             @Override
             public boolean isOccupied(GridPoint2 coordinates) {
                 return true;
@@ -62,7 +66,7 @@ class BulletGunTest {
                 hits.add(coordinates + " " + damage);
             }
         };
-        BulletGun pointBlank = new BulletGun(level, occupied, 0.1f, 2, RELOAD);
+        BulletGun pointBlank = new BulletGun(level::add, occupied, 0.1f, 2, RELOAD);
 
         pointBlank.fire(FROM, Direction.LEFT);
 
@@ -73,7 +77,7 @@ class BulletGunTest {
     @Test
     void pointBlankShotAlsoReloadsTheGun() {
         List<String> hits = new ArrayList<>();
-        CollisionChecker occupied = new CollisionChecker() {
+        BattleField occupied = new BattleField() {
             @Override
             public boolean isOccupied(GridPoint2 coordinates) {
                 return true;
@@ -84,11 +88,22 @@ class BulletGunTest {
                 hits.add("hit");
             }
         };
-        BulletGun pointBlank = new BulletGun(level, occupied, 0.1f, 2, RELOAD);
+        BulletGun pointBlank = new BulletGun(level::add, occupied, 0.1f, 2, RELOAD);
 
         pointBlank.fire(FROM, Direction.LEFT);
         pointBlank.fire(FROM, Direction.LEFT);
 
         assertEquals(1, hits.size());
+    }
+    @Test
+    void firePassesCreatedBulletToSpawner() {
+        List<GameObject> spawned = new ArrayList<>();
+        BulletGun customGun = new BulletGun(spawned::add,
+                BattleField.of(coordinates -> false, (coordinates, damage) -> { }), 0.1f, 2, RELOAD);
+
+        customGun.fire(FROM, Direction.UP);
+
+        assertEquals(1, spawned.size());
+        assertTrue(spawned.get(0) instanceof Bullet);
     }
 }
