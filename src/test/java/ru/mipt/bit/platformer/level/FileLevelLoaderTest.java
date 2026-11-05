@@ -16,9 +16,13 @@ class FileLevelLoaderTest {
     Path dir;
 
     private LevelData load(String content) throws IOException {
+        return load(content, 10, 8);
+    }
+
+    private LevelData load(String content, int width, int height) throws IOException {
         Path file = dir.resolve("level.txt");
         Files.writeString(file, content);
-        return new FileLevelLoader(file).load(10, 8);
+        return new FileLevelLoader(file).load(width, height);
     }
 
     @Test
@@ -51,5 +55,31 @@ class FileLevelLoaderTest {
     @Test
     void unknownSymbolIsRejected() {
         assertThrows(IllegalArgumentException.class, () -> load("X?"));
+    }
+
+    @Test
+    void symbolBeyondFieldWidthIsRejected() {
+        String line = "_".repeat(10) + "X";
+
+        IllegalArgumentException error =
+                assertThrows(IllegalArgumentException.class, () -> load(line));
+
+        assertTrue(error.getMessage().contains("Строка 1"));
+    }
+
+    @Test
+    void tooManyRowsAreRejected() {
+        String content = "X\n" + "_\n".repeat(8) + "_";
+
+        assertThrows(IllegalArgumentException.class, () -> load(content));
+    }
+
+    @Test
+    void levelOfExactlyFieldSizeIsAccepted() throws IOException {
+        String content = "X" + "_".repeat(9) + ("\n" + "_".repeat(10)).repeat(7);
+
+        LevelData level = load(content);
+
+        assertEquals(List.of(new TankSpec(new GridPoint2(0, 7), ControlType.PLAYER)), level.tanks());
     }
 }

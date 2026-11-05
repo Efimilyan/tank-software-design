@@ -24,6 +24,7 @@ public class FileLevelLoader implements LevelLoader {
     @Override
     public LevelData load(int fieldWidth, int fieldHeight) {
         List<String> lines = readLines();
+        requireFits(lines, fieldWidth, fieldHeight);
         List<TankSpec> tanks = new ArrayList<>();
         List<GridPoint2> trees = new ArrayList<>();
 
@@ -45,7 +46,20 @@ public class FileLevelLoader implements LevelLoader {
         }
         return new LevelData(tanks, trees);
     }
-
+    private void requireFits(List<String> lines, int fieldWidth, int fieldHeight) {
+        if (lines.size() > fieldHeight) {
+            throw new IllegalArgumentException(
+                    "Строк в файле " + lines.size() + ", а высота поля " + fieldHeight);
+        }
+        for (int row = 0; row < lines.size(); row++) {
+            int length = lines.get(row).length();
+            if (length > fieldWidth) {
+                throw new IllegalArgumentException(
+                        "Строка " + (row + 1) + " длиной " + length
+                                + " не помещается в поле шириной " + fieldWidth);
+            }
+        }
+    }
     private List<String> readLines() {
         try {
             return Files.readAllLines(path);
