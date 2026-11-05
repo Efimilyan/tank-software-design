@@ -20,11 +20,11 @@ import ru.mipt.bit.platformer.model.Tank;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameWorldFactory {
+public class LevelPopulator {
     private final GameSettings settings;
     private final ControlStrategyRegistry strategies;
 
-    public GameWorldFactory(GameSettings settings, ControlStrategyRegistry strategies) {
+    public LevelPopulator(GameSettings settings, ControlStrategyRegistry strategies) {
         this.settings = settings;
         this.strategies = strategies;
     }

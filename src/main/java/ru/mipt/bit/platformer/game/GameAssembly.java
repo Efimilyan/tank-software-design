@@ -68,7 +68,7 @@ public class GameAssembly {
                               int fieldWidth, int fieldHeight) {
         Level level = new Level();
         level.subscribe(levelView);
-        new GameWorldFactory(settings, strategies)
+        new LevelPopulator(settings, strategies)
                 .populate(level, controllers, levelData, fieldWidth, fieldHeight);
         return level;
     }

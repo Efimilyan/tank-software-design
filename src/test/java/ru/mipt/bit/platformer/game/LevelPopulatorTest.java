@@ -21,7 +21,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class MainCycleWorldFactoryTest {
+class LevelPopulatorTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
     private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f, 0.0);
@@ -60,7 +60,7 @@ class MainCycleWorldFactoryTest {
 
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
                                      int width, int height) {
-        GameWorldFactory factory = new GameWorldFactory(
+        LevelPopulator factory = new LevelPopulator(
                 SETTINGS, strategies(alwaysGoing(playerGoes), alwaysChoosing(enemyGoes)));
         Level level = new Level();
         Controllers controllers = new Controllers();
@@ -187,7 +187,7 @@ class MainCycleWorldFactoryTest {
     }
 
     private static Assembly assembleIdle(LevelData data, int width, int height) {
-        GameWorldFactory factory = new GameWorldFactory(
+        LevelPopulator factory = new LevelPopulator(
                 SETTINGS, strategies(() -> Command.NONE, alwaysChoosing(Direction.UP)));
         Level level = new Level();
         Controllers controllers = new Controllers();
