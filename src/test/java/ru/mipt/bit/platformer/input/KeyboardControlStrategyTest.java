@@ -5,10 +5,13 @@ import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.RecordingGun;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.control.Command;
+
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,8 +20,10 @@ class KeyboardControlStrategyTest {
     private static final GridPoint2 START = new GridPoint2(5, 5);
 
     private final Set<Integer> pressed = new HashSet<>();
-    private final KeyboardControlStrategy strategy =
-            new KeyboardControlStrategy(keyCode -> pressed.contains(keyCode));
+    private final KeyboardControlStrategy strategy = new KeyboardControlStrategy(
+            keyCode -> pressed.contains(keyCode),
+            DefaultKeyBindings.movement(),
+            DefaultKeyBindings.actions());
 
     private GridPoint2 destinationAfterPressing(Integer... keys) {
         pressed.addAll(List.of(keys));
@@ -92,5 +97,35 @@ class KeyboardControlStrategyTest {
         strategy.nextCommand().execute(tank, coordinates -> false);
 
         assertEquals(List.of(), gun.shots);
+    }
+    @Test
+    void customActionBindingRunsItsCommandWithoutChangingStrategy() {
+        List<String> log = new ArrayList<>();
+        Command custom = (tank, collisionChecker) -> log.add("custom");
+        KeyboardControlStrategy customStrategy = new KeyboardControlStrategy(
+                keyCode -> pressed.contains(keyCode),
+                List.of(),
+                List.of(new KeyBinding(custom, Keys.F)));
+        pressed.add(Keys.F);
+
+        customStrategy.nextCommand().execute(new Tank(START, SPEED), coordinates -> false);
+
+        assertEquals(List.of("custom"), log);
+    }
+
+    @Test
+    void allPressedActionBindingsAreExecuted() {
+        List<String> log = new ArrayList<>();
+        KeyboardControlStrategy customStrategy = new KeyboardControlStrategy(
+                keyCode -> pressed.contains(keyCode),
+                List.of(),
+                List.of(
+                        new KeyBinding((tank, collisionChecker) -> log.add("first"), Keys.F),
+                        new KeyBinding((tank, collisionChecker) -> log.add("second"), Keys.G)));
+        pressed.addAll(List.of(Keys.F, Keys.G));
+
+        customStrategy.nextCommand().execute(new Tank(START, SPEED), coordinates -> false);
+
+        assertEquals(List.of("first", "second"), log);
     }
 }

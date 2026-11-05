@@ -11,6 +11,7 @@ import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.game.GameSettings;
 import ru.mipt.bit.platformer.game.GameWorldFactory;
 import ru.mipt.bit.platformer.graphics.*;
+import ru.mipt.bit.platformer.input.DefaultKeyBindings;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
@@ -42,8 +43,10 @@ public class GameDesktopLauncher implements ApplicationListener {
     private GameRenderer renderer;
     private GameResources resources;
     private Level level;
-    private final ControlStrategy playerStrategy =
-            new KeyboardControlStrategy(keyCode -> Gdx.input.isKeyPressed(keyCode));
+    private final ControlStrategy playerStrategy = new KeyboardControlStrategy(
+            keyCode -> Gdx.input.isKeyPressed(keyCode),
+            DefaultKeyBindings.movement(),
+            DefaultKeyBindings.actions());
 
     public GameDesktopLauncher(LevelLoader levelLoader) {
         this.levelLoader = levelLoader;
