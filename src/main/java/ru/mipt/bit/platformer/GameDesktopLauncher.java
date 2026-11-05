@@ -31,6 +31,11 @@ public class GameDesktopLauncher implements ApplicationListener {
     private static final int BULLET_DAMAGE = 1;
     private static final float RELOAD_TIME = 0.5f;
     private static final double ENEMY_SHOOT_PROBABILITY = 0.01;
+    private static final ResourcePaths RESOURCE_PATHS = new ResourcePaths(
+            "level.tmx",
+            "images/tank_blue.png",
+            "images/greenTree.png",
+            "images/bullet.png");
 
     private final LevelLoader levelLoader;
     private final LevelView levelView = new LevelView();
@@ -46,10 +51,10 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        resources = new GameResources();
+        resources = new GameResources(RESOURCE_PATHS);
         renderer = new GameRenderer(resources);
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
-        var tankGraphics = new TextureRegion(resources.getBlueTankTexture());
+        var tankGraphics = new TextureRegion(resources.getTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
         var bulletGraphics = new TextureRegion(resources.getBulletTexture());
 
