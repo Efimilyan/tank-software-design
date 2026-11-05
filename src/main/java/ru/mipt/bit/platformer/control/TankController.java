@@ -1,10 +1,9 @@
 package ru.mipt.bit.platformer.control;
 
 import ru.mipt.bit.platformer.model.CollisionChecker;
-import ru.mipt.bit.platformer.model.GameObject;
 import ru.mipt.bit.platformer.model.Tank;
 
-public class TankController implements GameObject {
+public class TankController implements Controller {
     private final Tank tank;
     private final ControlStrategy strategy;
     private final CollisionChecker collisionChecker;

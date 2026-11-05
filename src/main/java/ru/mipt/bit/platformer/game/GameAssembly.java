@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.control.Controllers;
 import ru.mipt.bit.platformer.graphics.GameRenderer;
 import ru.mipt.bit.platformer.graphics.GameResources;
 import ru.mipt.bit.platformer.graphics.LevelView;
@@ -46,9 +47,10 @@ public class GameAssembly {
         int fieldHeight = groundLayer.getHeight();
         LevelData levelData = levelLoader.load(fieldWidth, fieldHeight);
 
+        Controllers controllers = new Controllers();
         LevelView levelView = createLevelView(resources, groundLayer);
-        Level level = createLevel(levelView, levelData, fieldWidth, fieldHeight);
-        return new MainCycle(resources, renderer, levelView, level);
+        Level level = createLevel(levelView, controllers, levelData, fieldWidth, fieldHeight);
+        return new MainCycle(resources, renderer, levelView, controllers, level);
     }
 
     private LevelView createLevelView(GameResources resources, TiledMapTileLayer groundLayer) {
@@ -67,11 +69,12 @@ public class GameAssembly {
         return levelView;
     }
 
-    private Level createLevel(LevelView levelView, LevelData levelData, int fieldWidth, int fieldHeight) {
+    private Level createLevel(LevelView levelView, Controllers controllers, LevelData levelData,
+                              int fieldWidth, int fieldHeight) {
         Level level = new Level();
         level.subscribe(levelView);
         new GameWorldFactory(settings, playerStrategy, random)
-                .populate(level, levelData, fieldWidth, fieldHeight);
+                .populate(level, controllers, levelData, fieldWidth, fieldHeight);
         return level;
     }
 }

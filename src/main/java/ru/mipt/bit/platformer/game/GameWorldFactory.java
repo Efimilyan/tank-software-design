@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer.game;
 
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.control.Controllers;
 import ru.mipt.bit.platformer.control.RandomControlStrategy;
 import ru.mipt.bit.platformer.control.TankController;
 import ru.mipt.bit.platformer.level.ControlType;
@@ -32,7 +33,8 @@ public class GameWorldFactory {
         this.random = random;
     }
 
-    public void populate(Level level, LevelData data, int fieldWidth, int fieldHeight) {
+    public void populate(Level level, Controllers controllers, LevelData data,
+                         int fieldWidth, int fieldHeight) {
         GameField field = new GameField();
         level.subscribe(field);
         CollisionChecker collisionChecker = new CompositeCollisionChecker(List.of(
@@ -51,7 +53,7 @@ public class GameWorldFactory {
         }
         for (int i = 0; i < tanks.size(); i++) {
             ControlStrategy strategy = strategyFor(specs.get(i).control());
-            level.add(new TankController(tanks.get(i), strategy, collisionChecker));
+            controllers.add(new TankController(tanks.get(i), strategy, collisionChecker));
         }
         for (Tank tank : tanks) {
             level.add(tank);

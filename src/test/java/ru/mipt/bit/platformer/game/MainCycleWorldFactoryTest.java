@@ -2,10 +2,7 @@ package ru.mipt.bit.platformer.game;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.control.Command;
-import ru.mipt.bit.platformer.control.ControlStrategy;
-import ru.mipt.bit.platformer.control.MoveCommand;
-import ru.mipt.bit.platformer.control.TankController;
+import ru.mipt.bit.platformer.control.*;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
@@ -50,7 +47,8 @@ class MainCycleWorldFactoryTest {
         return new TankSpec(new GridPoint2(x, y), ControlType.RANDOM);
     }
 
-    private record Assembly(Level level, List<Tank> tanks, List<Obstacle> obstacles) {
+    private record Assembly(Level level, Controllers controllers,
+                            List<Tank> tanks, List<Obstacle> obstacles) {
     }
 
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
@@ -58,6 +56,7 @@ class MainCycleWorldFactoryTest {
         GameWorldFactory factory =
                 new GameWorldFactory(SETTINGS, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
         Level level = new Level();
+        Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
         List<Obstacle> obstacles = new ArrayList<>();
         level.subscribe(new LevelListener() {
@@ -74,12 +73,13 @@ class MainCycleWorldFactoryTest {
             public void objectRemoved(GameObject object) {
             }
         });
-        factory.populate(level, data, width, height);
-        return new Assembly(level, tanks, obstacles);
+        factory.populate(level, controllers, data, width, height);
+        return new Assembly(level, controllers, tanks, obstacles);
     }
 
     private static void runFor(Assembly assembly, int updates) {
         for (int i = 0; i < updates; i++) {
+            assembly.controllers().update(0.1f);
             assembly.level().update(0.1f);
         }
     }
@@ -183,6 +183,7 @@ class MainCycleWorldFactoryTest {
         GameWorldFactory factory = new GameWorldFactory(
                 SETTINGS, () -> Command.NONE, alwaysChoosing(Direction.UP));
         Level level = new Level();
+        Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
         level.subscribe(new LevelListener() {
             @Override
@@ -196,8 +197,8 @@ class MainCycleWorldFactoryTest {
             public void objectRemoved(GameObject object) {
             }
         });
-        factory.populate(level, data, width, height);
-        return new Assembly(level, tanks, List.of());
+        factory.populate(level, controllers, data, width, height);
+        return new Assembly(level, controllers, tanks, List.of());
     }
 
     private static long countOf(Level level, Class<?> type) {
@@ -230,7 +231,7 @@ class MainCycleWorldFactoryTest {
         assertFalse(enemyTank.isAlive());
         assertFalse(assembly.level().objects().contains(enemyTank));
         assertEquals(1, countOf(assembly.level(), Tank.class));
-        assertEquals(1, countOf(assembly.level(), TankController.class));
+        assertEquals(1, assembly.controllers().size());
     }
 
     @Test

@@ -58,11 +58,13 @@ class TankControllerTest {
         Level level = new Level();
         GameField field = new GameField();
         level.subscribe(field);
-        level.add(new TankController(tank, () -> new MoveCommand(Direction.UP), field));
+        Controllers controllers = new Controllers();
+        controllers.add(new TankController(tank, () -> new MoveCommand(Direction.UP), field));
         level.add(tank);
         level.add(obstacle);
 
         for (int i = 0; i < 20; i++) {
+            controllers.update(0.1f);
             level.update(0.1f);
         }
 
