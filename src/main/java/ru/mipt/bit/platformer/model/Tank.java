@@ -2,17 +2,11 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 
-import static com.badlogic.gdx.math.MathUtils.isEqual;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
-
 public class Tank implements GameObject, Blocking, Movable {
     public static final int DEFAULT_HEALTH = 3;
 
-    private final float movementSpeed;
     private final Gun gun;
-    private final GridPoint2 currentCoordinates;
-    private final GridPoint2 destinationCoordinates;
-    private float movementProgress = 1f;
+    private final GridMovement movement;
     private Direction direction = Direction.RIGHT;
     private int health;
 
@@ -26,53 +20,47 @@ public class Tank implements GameObject, Blocking, Movable {
 
     public Tank(GridPoint2 coordinates, float movementSpeed, int health, Gun gun) {
         this.gun = gun;
-        this.currentCoordinates = new GridPoint2(coordinates);
-        this.destinationCoordinates = new GridPoint2(coordinates);
-        this.movementSpeed = movementSpeed;
+        this.movement = new GridMovement(coordinates, movementSpeed);
         this.health = health;
     }
 
     public void move(Direction direction, CollisionChecker collisionChecker) {
-        if (isEqual(movementProgress, 1f)) {
-            GridPoint2 nextCoordinates = direction.shift(currentCoordinates);
+        if (movement.isIdle()) {
+            GridPoint2 nextCoordinates = direction.shift(movement.getCurrent());
             if (!collisionChecker.isOccupied(nextCoordinates)) {
-                destinationCoordinates.set(nextCoordinates);
-                movementProgress = 0f;
+                movement.start(nextCoordinates);
             }
             this.direction = direction;
         }
     }
     public void shoot() {
-        gun.fire(direction.shift(destinationCoordinates), direction);
+        gun.fire(direction.shift(movement.getDestination()), direction);
     }
 
     @Override
     public void update(float deltaTime) {
         gun.update(deltaTime);
-        movementProgress = continueProgress(movementProgress, deltaTime, movementSpeed);
-        if (isEqual(movementProgress, 1f)) {
-            currentCoordinates.set(destinationCoordinates);
-        }
+        movement.update(deltaTime);
     }
 
     @Override
     public boolean occupies(GridPoint2 position) {
-        return currentCoordinates.equals(position) || destinationCoordinates.equals(position);
+        return movement.occupies(position);
     }
 
     @Override
     public GridPoint2 getCurrentCoordinates() {
-        return currentCoordinates;
+        return movement.getCurrent();
     }
 
     @Override
     public GridPoint2 getDestinationCoordinates() {
-        return destinationCoordinates;
+        return movement.getDestination();
     }
 
     @Override
     public float getMovementProgress() {
-        return movementProgress;
+        return movement.getProgress();
     }
 
     @Override
