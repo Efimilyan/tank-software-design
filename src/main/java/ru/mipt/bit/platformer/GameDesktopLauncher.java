@@ -4,90 +4,40 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Interpolation;
-import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.game.MainCycle;
+import ru.mipt.bit.platformer.game.GameAssembly;
 import ru.mipt.bit.platformer.game.GameSettings;
-import ru.mipt.bit.platformer.game.GameWorldFactory;
-import ru.mipt.bit.platformer.graphics.*;
+import ru.mipt.bit.platformer.graphics.ResourcePaths;
 import ru.mipt.bit.platformer.input.DefaultKeyBindings;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
-import ru.mipt.bit.platformer.level.LevelData;
-import ru.mipt.bit.platformer.level.LevelLoader;
 import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
-import ru.mipt.bit.platformer.model.Bullet;
-import ru.mipt.bit.platformer.model.Level;
-import ru.mipt.bit.platformer.model.Obstacle;
-import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.Random;
 
-import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
-
 public class GameDesktopLauncher implements ApplicationListener {
-    private static final float TANK_SPEED = 0.4f;
-    private static final int TANK_HEALTH = 3;
-    private static final float BULLET_SPEED = 0.1f;
-    private static final int BULLET_DAMAGE = 1;
-    private static final float RELOAD_TIME = 0.5f;
-    private static final double ENEMY_SHOOT_PROBABILITY = 0.01;
+    private static final GameSettings SETTINGS = new GameSettings(
+            0.4f, 3, 0.1f, 1, 0.5f, 0.01);
     private static final ResourcePaths RESOURCE_PATHS = new ResourcePaths(
             "level.tmx",
             "images/tank_blue.png",
             "images/greenTree.png",
             "images/bullet.png");
 
-    private final LevelLoader levelLoader;
-    private final LevelView levelView = new LevelView();
-    private GameRenderer renderer;
-    private GameResources resources;
-    private Level level;
-    private final ControlStrategy playerStrategy = new KeyboardControlStrategy(
-            keyCode -> Gdx.input.isKeyPressed(keyCode),
-            DefaultKeyBindings.movement(),
-            DefaultKeyBindings.actions());
+    private final GameAssembly assembly;
+    private MainCycle mainCycle;
 
-    public GameDesktopLauncher(LevelLoader levelLoader) {
-        this.levelLoader = levelLoader;
+    public GameDesktopLauncher(GameAssembly assembly) {
+        this.assembly = assembly;
     }
 
     @Override
     public void create() {
-        resources = new GameResources(RESOURCE_PATHS);
-        renderer = new GameRenderer(resources);
-        TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
-        var tankGraphics = new TextureRegion(resources.getTankTexture());
-        var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
-        var bulletGraphics = new TextureRegion(resources.getBulletTexture());
-
-        int fieldWidth = groundLayer.getWidth();
-        int fieldHeight = groundLayer.getHeight();
-        LevelData levelData = levelLoader.load(fieldWidth, fieldHeight);
-
-        TileMovement tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
-        levelView.register(Obstacle.class,
-                obstacle -> new ObstacleDrawable(obstacle, treeObstacleGraphics, groundLayer));
-        levelView.register(Tank.class,
-                tank -> new MovableDrawable(tank, tankGraphics, tileMovement));
-        levelView.register(Bullet.class,
-                bullet -> new MovableDrawable(bullet, bulletGraphics, tileMovement));
-
-        GameSettings settings = new GameSettings(
-                TANK_SPEED, TANK_HEALTH, BULLET_SPEED, BULLET_DAMAGE, RELOAD_TIME,
-                ENEMY_SHOOT_PROBABILITY);
-        level = new Level();
-        level.subscribe(levelView);
-        new GameWorldFactory(settings, playerStrategy, new Random())
-                .populate(level, levelData, fieldWidth, fieldHeight);
+        mainCycle = assembly.assemble();
     }
 
     @Override
     public void render() {
-        float deltaTime = Gdx.graphics.getDeltaTime();
-
-        level.update(deltaTime);
-        renderer.render(levelView.drawables());
+        mainCycle.render(Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -107,14 +57,21 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void dispose() {
-        resources.dispose();
-        renderer.dispose();
+        mainCycle.dispose();
     }
 
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
-        new Lwjgl3Application(new GameDesktopLauncher(LevelLoaderSwitch.select(args)), config);
+        GameAssembly assembly = new GameAssembly(
+                LevelLoaderSwitch.select(args),
+                SETTINGS,
+                RESOURCE_PATHS,
+                new KeyboardControlStrategy(
+                        keyCode -> Gdx.input.isKeyPressed(keyCode),
+                        DefaultKeyBindings.movement(),
+                        DefaultKeyBindings.actions()),
+                new Random());
+        new Lwjgl3Application(new GameDesktopLauncher(assembly), config);
     }
 }

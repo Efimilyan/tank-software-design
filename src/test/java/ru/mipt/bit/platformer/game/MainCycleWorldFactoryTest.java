@@ -24,7 +24,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class GameWorldFactoryTest {
+class MainCycleWorldFactoryTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
     private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f, 0.0);
