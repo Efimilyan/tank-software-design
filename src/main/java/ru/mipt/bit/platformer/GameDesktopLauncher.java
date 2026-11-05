@@ -11,6 +11,7 @@ import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.game.GameSettings;
 import ru.mipt.bit.platformer.game.GameWorldFactory;
 import ru.mipt.bit.platformer.graphics.*;
+import ru.mipt.bit.platformer.input.DefaultKeyBindings;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.LevelLoader;
@@ -31,14 +32,21 @@ public class GameDesktopLauncher implements ApplicationListener {
     private static final int BULLET_DAMAGE = 1;
     private static final float RELOAD_TIME = 0.5f;
     private static final double ENEMY_SHOOT_PROBABILITY = 0.01;
+    private static final ResourcePaths RESOURCE_PATHS = new ResourcePaths(
+            "level.tmx",
+            "images/tank_blue.png",
+            "images/greenTree.png",
+            "images/bullet.png");
 
     private final LevelLoader levelLoader;
     private final LevelView levelView = new LevelView();
     private GameRenderer renderer;
     private GameResources resources;
     private Level level;
-    private final ControlStrategy playerStrategy =
-            new KeyboardControlStrategy(keyCode -> Gdx.input.isKeyPressed(keyCode));
+    private final ControlStrategy playerStrategy = new KeyboardControlStrategy(
+            keyCode -> Gdx.input.isKeyPressed(keyCode),
+            DefaultKeyBindings.movement(),
+            DefaultKeyBindings.actions());
 
     public GameDesktopLauncher(LevelLoader levelLoader) {
         this.levelLoader = levelLoader;
@@ -46,10 +54,10 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        resources = new GameResources();
+        resources = new GameResources(RESOURCE_PATHS);
         renderer = new GameRenderer(resources);
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
-        var tankGraphics = new TextureRegion(resources.getBlueTankTexture());
+        var tankGraphics = new TextureRegion(resources.getTankTexture());
         var treeObstacleGraphics = new TextureRegion(resources.getGreenTreeTexture());
         var bulletGraphics = new TextureRegion(resources.getBulletTexture());
 

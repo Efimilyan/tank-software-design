@@ -7,30 +7,30 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class GameResources implements Disposable {
     private final TiledMap level;
-    private final Texture blueTankTexture;
+    private final Texture tankTexture;
     private final Texture greenTreeTexture;
     private final Texture bulletTexture;
 
-    public GameResources(){
-        level = new TmxMapLoader().load("level.tmx");
-        blueTankTexture = new Texture("images/tank_blue.png");
-        greenTreeTexture = new Texture("images/greenTree.png");
-        bulletTexture = new Texture("images/bullet.png");
+    public GameResources(ResourcePaths paths){
+        level = new TmxMapLoader().load(paths.map());
+        tankTexture = new Texture(paths.tankTexture());
+        greenTreeTexture = new Texture(paths.treeTexture());
+        bulletTexture = new Texture(paths.bulletTexture());
     }
 
     @Override
     public void dispose(){
         bulletTexture.dispose();
         greenTreeTexture.dispose();
-        blueTankTexture.dispose();
+        tankTexture.dispose();
         level.dispose();
     }
 
     public TiledMap getLevel(){
         return level;
     }
-    public Texture getBlueTankTexture(){
-        return blueTankTexture;
+    public Texture getTankTexture(){
+        return tankTexture;
     }
     public Texture getGreenTreeTexture(){
         return greenTreeTexture;
