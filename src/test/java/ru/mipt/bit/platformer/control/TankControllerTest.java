@@ -20,7 +20,7 @@ class TankControllerTest {
     @Test
     void updateExecutesCommandFromStrategy() {
         TankController controller = new TankController(
-                tank, () -> new MoveCommand(Direction.UP), coordinates -> false);
+                tank, (deltaTime) -> new MoveCommand(Direction.UP), coordinates -> false);
 
         controller.update(0.1f);
 
@@ -30,7 +30,7 @@ class TankControllerTest {
     @Test
     void updateAsksStrategyEveryTime() {
         int[] calls = {0};
-        ControlStrategy counting = () -> {
+        ControlStrategy counting = (deltaTime) -> {
             calls[0]++;
             return Command.NONE;
         };
@@ -45,7 +45,7 @@ class TankControllerTest {
     @Test
     void controllerRespectsCollisionChecker() {
         TankController controller = new TankController(
-                tank, () -> new MoveCommand(Direction.UP), coordinates -> true);
+                tank, (deltaTime) -> new MoveCommand(Direction.UP), coordinates -> true);
 
         controller.update(0.1f);
 
@@ -59,7 +59,7 @@ class TankControllerTest {
         GameField field = new GameField();
         level.subscribe(field);
         Controllers controllers = new Controllers();
-        controllers.add(new TankController(tank, () -> new MoveCommand(Direction.UP), field));
+        controllers.add(new TankController(tank, (deltaTime) -> new MoveCommand(Direction.UP), field));
         level.add(tank);
         level.add(obstacle);
 
@@ -73,7 +73,7 @@ class TankControllerTest {
 
     @Test
     void controllerDiesTogetherWithItsTank() {
-        TankController controller = new TankController(tank, () -> Command.NONE, coordinates -> false);
+        TankController controller = new TankController(tank, (deltaTime) -> Command.NONE, coordinates -> false);
 
         tank.takeDamage(Tank.DEFAULT_HEALTH);
 

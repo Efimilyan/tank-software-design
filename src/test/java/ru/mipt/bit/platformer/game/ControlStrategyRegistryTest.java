@@ -14,7 +14,7 @@ class ControlStrategyRegistryTest {
 
     @Test
     void createReturnsStrategyFromRegisteredFactory() {
-        ControlStrategy player = () -> Command.NONE;
+        ControlStrategy player = (deltaTime) -> Command.NONE;
         registry.register(ControlType.HUMAN, () -> player);
 
         assertSame(player, registry.create(ControlType.HUMAN));
@@ -25,7 +25,7 @@ class ControlStrategyRegistryTest {
         int[] calls = {0};
         registry.register(ControlType.AI, () -> {
             calls[0]++;
-            return () -> Command.NONE;
+            return (deltaTime) -> Command.NONE;
         });
 
         registry.create(ControlType.AI);

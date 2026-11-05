@@ -21,7 +21,7 @@ public class KeyboardControlStrategy implements ControlStrategy {
     }
 
     @Override
-    public Command nextCommand() {
+    public Command nextCommand(float deltaTime) {
         List<Command> commands = new ArrayList<>();
         for (KeyBinding binding : movementBindings) {
             if (binding.isPressed(keys)) {

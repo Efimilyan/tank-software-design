@@ -6,5 +6,5 @@ public record GameSettings(
         float bulletSpeed,
         int bulletDamage,
         float reloadTime,
-        double enemyShootProbability) {
+        double enemyShotsPerSecond) {
 }

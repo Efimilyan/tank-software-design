@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class GameDesktopLauncher implements ApplicationListener {
     private static final GameSettings SETTINGS = new GameSettings(
-            0.4f, 3, 0.1f, 1, 0.5f, 0.01);
+            0.4f, 3, 0.1f, 1, 0.5f, 0.6);
     private static final ResourcePaths RESOURCE_PATHS = new ResourcePaths(
             "level.tmx",
             "images/tank_blue.png",
@@ -73,7 +73,7 @@ public class GameDesktopLauncher implements ApplicationListener {
                         DefaultKeyBindings.movement(),
                         DefaultKeyBindings.actions()))
                 .register(ControlType.AI, () -> new RandomControlStrategy(
-                        random, SETTINGS.enemyShootProbability()));
+                        random, SETTINGS.enemyShotsPerSecond()));
         GameAssembly assembly = new GameAssembly(
                 LevelProviderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies);
         new Lwjgl3Application(new GameDesktopLauncher(assembly), config);

@@ -17,6 +17,8 @@ class RandomControlStrategyTest {
     private static final float SPEED = 0.4f;
     private static final GridPoint2 START = new GridPoint2(5, 5);
     private static final double NEVER_SHOOTS = 0.0;
+    private static final float FRAME = 0.1f;
+    private static final float ONE_SECOND = 1f;
 
     private static Random alwaysReturning(int value) {
         return new Random() {
@@ -40,7 +42,7 @@ class RandomControlStrategyTest {
         for (int i = 0; i < directions.length; i++) {
             RandomControlStrategy strategy = new RandomControlStrategy(alwaysReturning(i), NEVER_SHOOTS);
 
-            assertEquals(directions[i].shift(START), destinationAfter(strategy.nextCommand()));
+            assertEquals(directions[i].shift(START), destinationAfter(strategy.nextCommand(FRAME)));
         }
     }
 
@@ -50,7 +52,7 @@ class RandomControlStrategyTest {
         Set<GridPoint2> destinations = new HashSet<>();
 
         for (int i = 0; i < 200; i++) {
-            destinations.add(destinationAfter(strategy.nextCommand()));
+            destinations.add(destinationAfter(strategy.nextCommand(FRAME)));
         }
 
         assertEquals(4, destinations.size());
@@ -61,7 +63,7 @@ class RandomControlStrategyTest {
         RandomControlStrategy strategy = new RandomControlStrategy(new Random(7), NEVER_SHOOTS);
 
         for (int i = 0; i < 50; i++) {
-            GridPoint2 destination = destinationAfter(strategy.nextCommand());
+            GridPoint2 destination = destinationAfter(strategy.nextCommand(FRAME));
             int distance = Math.abs(destination.x - START.x) + Math.abs(destination.y - START.y);
 
             assertEquals(1, distance);
@@ -83,7 +85,7 @@ class RandomControlStrategyTest {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(START, SPEED, 3, gun);
 
-        strategy.nextCommand().execute(tank, coordinates -> false);
+        strategy.nextCommand(ONE_SECOND).execute(tank, coordinates -> false);
 
         assertEquals(List.of("(6, 5) RIGHT"), gun.shots);
         assertEquals(START, tank.getDestinationCoordinates());
@@ -95,10 +97,32 @@ class RandomControlStrategyTest {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(START, SPEED, 3, gun);
 
-        strategy.nextCommand().execute(tank, coordinates -> false);
+        strategy.nextCommand(ONE_SECOND).execute(tank, coordinates -> false);
 
         assertEquals(List.of(), gun.shots);
         assertEquals(1, Math.abs(tank.getDestinationCoordinates().x - START.x)
                 + Math.abs(tank.getDestinationCoordinates().y - START.y));
+    }
+
+    @Test
+    void shortFrameMakesShotLessLikely() {
+        RandomControlStrategy strategy = new RandomControlStrategy(drawing(0.1), 1.0);
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(START, SPEED, 3, gun);
+
+        strategy.nextCommand(0.05f).execute(tank, coordinates -> false);
+
+        assertEquals(List.of(), gun.shots);
+    }
+
+    @Test
+    void longFrameMakesShotMoreLikely() {
+        RandomControlStrategy strategy = new RandomControlStrategy(drawing(0.1), 1.0);
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(START, SPEED, 3, gun);
+
+        strategy.nextCommand(0.5f).execute(tank, coordinates -> false);
+
+        assertEquals(List.of("(6, 5) RIGHT"), gun.shots);
     }
 }

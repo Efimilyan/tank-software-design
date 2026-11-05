@@ -36,14 +36,14 @@ class LevelPopulatorTest {
     }
 
     private static ControlStrategy alwaysGoing(Direction direction) {
-        return () -> new MoveCommand(direction);
+        return deltaTime -> new MoveCommand(direction);
     }
 
     private static ControlStrategyRegistry strategies(ControlStrategy player, Random random) {
         return new ControlStrategyRegistry()
                 .register(ControlType.HUMAN, () -> player)
                 .register(ControlType.AI, () -> new RandomControlStrategy(
-                        random, SETTINGS.enemyShootProbability()));
+                        random, SETTINGS.enemyShotsPerSecond()));
     }
 
     private static TankSpec player(int x, int y) {
@@ -188,7 +188,7 @@ class LevelPopulatorTest {
 
     private static Assembly assembleIdle(LevelData data, int width, int height) {
         LevelPopulator factory = new LevelPopulator(
-                SETTINGS, strategies(() -> Command.NONE, alwaysChoosing(Direction.UP)));
+                SETTINGS, strategies((deltaTime) -> Command.NONE, alwaysChoosing(Direction.UP)));
         Level level = new Level();
         Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();

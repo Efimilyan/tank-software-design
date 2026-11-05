@@ -16,7 +16,7 @@ public class TankController implements Controller {
 
     @Override
     public void update(float deltaTime) {
-        strategy.nextCommand().execute(tank, collisionChecker);
+        strategy.nextCommand(deltaTime).execute(tank, collisionChecker);
     }
 
     @Override
