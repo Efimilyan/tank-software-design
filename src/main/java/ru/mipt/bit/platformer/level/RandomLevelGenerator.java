@@ -23,6 +23,15 @@ public class RandomLevelGenerator implements LevelLoader {
 
     @Override
     public LevelData load(int fieldWidth, int fieldHeight) {
+        List<GridPoint2> cells = shuffledCells(fieldWidth, fieldHeight);
+        int treeCount = chooseTreeCount(cells.size());
+        List<TankSpec> tanks = placeTanks(cells);
+        List<GridPoint2> trees = new ArrayList<>(
+                cells.subList(1 + enemyCount, 1 + enemyCount + treeCount));
+        return new LevelData(tanks, trees);
+    }
+
+    private List<GridPoint2> shuffledCells(int fieldWidth, int fieldHeight) {
         List<GridPoint2> cells = new ArrayList<>();
         for (int x = 0; x < fieldWidth; x++) {
             for (int y = 0; y < fieldHeight; y++) {
@@ -30,21 +39,24 @@ public class RandomLevelGenerator implements LevelLoader {
             }
         }
         Collections.shuffle(cells, random);
+        return cells;
+    }
 
-        int cellsLeftForTrees = cells.size() - 1 - enemyCount;
+    private int chooseTreeCount(int cellCount) {
+        int cellsLeftForTrees = cellCount - 1 - enemyCount;
         if (cellsLeftForTrees < 0) {
             throw new IllegalArgumentException("Танков больше, чем клеток на поле");
         }
-        int maxTreeCount = Math.min((int) (cells.size() * MAX_TREE_FRACTION), cellsLeftForTrees);
-        int treeCount = random.nextInt(maxTreeCount + 1);
+        int maxTreeCount = Math.min((int) (cellCount * MAX_TREE_FRACTION), cellsLeftForTrees);
+        return random.nextInt(maxTreeCount + 1);
+    }
 
+    private List<TankSpec> placeTanks(List<GridPoint2> cells) {
         List<TankSpec> tanks = new ArrayList<>();
         tanks.add(new TankSpec(cells.get(0), ControlType.PLAYER));
         for (int i = 1; i <= enemyCount; i++) {
             tanks.add(new TankSpec(cells.get(i), ControlType.RANDOM));
         }
-        List<GridPoint2> trees = new ArrayList<>(
-                cells.subList(1 + enemyCount, 1 + enemyCount + treeCount));
-        return new LevelData(tanks, trees);
+        return tanks;
     }
 }
