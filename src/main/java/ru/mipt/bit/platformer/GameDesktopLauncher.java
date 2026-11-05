@@ -68,11 +68,11 @@ public class GameDesktopLauncher implements ApplicationListener {
         config.setWindowedMode(1280, 1024);
         Random random = new Random();
         ControlStrategyRegistry strategies = new ControlStrategyRegistry()
-                .register(ControlType.PLAYER, () -> new KeyboardControlStrategy(
+                .register(ControlType.HUMAN, () -> new KeyboardControlStrategy(
                         keyCode -> Gdx.input.isKeyPressed(keyCode),
                         DefaultKeyBindings.movement(),
                         DefaultKeyBindings.actions()))
-                .register(ControlType.RANDOM, () -> new RandomControlStrategy(
+                .register(ControlType.AI, () -> new RandomControlStrategy(
                         random, SETTINGS.enemyShootProbability()));
         GameAssembly assembly = new GameAssembly(
                 LevelLoaderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies);

@@ -15,27 +15,27 @@ class ControlStrategyRegistryTest {
     @Test
     void createReturnsStrategyFromRegisteredFactory() {
         ControlStrategy player = () -> Command.NONE;
-        registry.register(ControlType.PLAYER, () -> player);
+        registry.register(ControlType.HUMAN, () -> player);
 
-        assertSame(player, registry.create(ControlType.PLAYER));
+        assertSame(player, registry.create(ControlType.HUMAN));
     }
 
     @Test
     void createAsksFactoryEveryTime() {
         int[] calls = {0};
-        registry.register(ControlType.RANDOM, () -> {
+        registry.register(ControlType.AI, () -> {
             calls[0]++;
             return () -> Command.NONE;
         });
 
-        registry.create(ControlType.RANDOM);
-        registry.create(ControlType.RANDOM);
+        registry.create(ControlType.AI);
+        registry.create(ControlType.AI);
 
         assertEquals(2, calls[0]);
     }
 
     @Test
     void unregisteredTypeIsRejected() {
-        assertThrows(IllegalStateException.class, () -> registry.create(ControlType.RANDOM));
+        assertThrows(IllegalStateException.class, () -> registry.create(ControlType.AI));
     }
 }

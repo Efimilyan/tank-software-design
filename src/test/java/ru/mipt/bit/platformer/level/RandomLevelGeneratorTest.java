@@ -48,8 +48,8 @@ class RandomLevelGeneratorTest {
     void hasOnePlayerAndRequestedNumberOfAiTanks() {
         LevelData level = generate(1, WIDTH, HEIGHT, ENEMY_COUNT);
 
-        long players = level.tanks().stream().filter(t -> t.control() == ControlType.PLAYER).count();
-        long enemies = level.tanks().stream().filter(t -> t.control() == ControlType.RANDOM).count();
+        long players = level.tanks().stream().filter(t -> t.control() == ControlType.HUMAN).count();
+        long enemies = level.tanks().stream().filter(t -> t.control() == ControlType.AI).count();
 
         assertEquals(1, players);
         assertEquals(ENEMY_COUNT, enemies);

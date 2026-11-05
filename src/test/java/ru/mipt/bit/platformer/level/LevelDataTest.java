@@ -9,8 +9,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LevelDataTest {
-    private static final TankSpec PLAYER = new TankSpec(new GridPoint2(0, 0), ControlType.PLAYER);
-    private static final TankSpec ENEMY = new TankSpec(new GridPoint2(1, 1), ControlType.RANDOM);
+    private static final TankSpec PLAYER = new TankSpec(new GridPoint2(0, 0), ControlType.HUMAN);
+    private static final TankSpec ENEMY = new TankSpec(new GridPoint2(1, 1), ControlType.AI);
 
     @Test
     void levelWithOnePlayerAndEnemiesIsAccepted() {
@@ -26,7 +26,7 @@ class LevelDataTest {
 
     @Test
     void levelWithTwoPlayersIsRejected() {
-        TankSpec secondPlayer = new TankSpec(new GridPoint2(2, 2), ControlType.PLAYER);
+        TankSpec secondPlayer = new TankSpec(new GridPoint2(2, 2), ControlType.HUMAN);
 
         assertThrows(IllegalArgumentException.class,
                 () -> new LevelData(List.of(PLAYER, secondPlayer), List.of()));

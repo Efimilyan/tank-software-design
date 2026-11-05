@@ -41,17 +41,17 @@ class MainCycleWorldFactoryTest {
 
     private static ControlStrategyRegistry strategies(ControlStrategy player, Random random) {
         return new ControlStrategyRegistry()
-                .register(ControlType.PLAYER, () -> player)
-                .register(ControlType.RANDOM, () -> new RandomControlStrategy(
+                .register(ControlType.HUMAN, () -> player)
+                .register(ControlType.AI, () -> new RandomControlStrategy(
                         random, SETTINGS.enemyShootProbability()));
     }
 
     private static TankSpec player(int x, int y) {
-        return new TankSpec(new GridPoint2(x, y), ControlType.PLAYER);
+        return new TankSpec(new GridPoint2(x, y), ControlType.HUMAN);
     }
 
     private static TankSpec enemy(int x, int y) {
-        return new TankSpec(new GridPoint2(x, y), ControlType.RANDOM);
+        return new TankSpec(new GridPoint2(x, y), ControlType.AI);
     }
 
     private record Assembly(Level level, Controllers controllers,

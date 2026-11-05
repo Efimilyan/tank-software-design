@@ -15,7 +15,7 @@ class DefaultLevelLoaderTest {
 
     @Test
     void containsAiTanks() {
-        assertTrue(level.tanks().stream().anyMatch(t -> t.control() == ControlType.RANDOM));
+        assertTrue(level.tanks().stream().anyMatch(t -> t.control() == ControlType.AI));
     }
 
     @Test

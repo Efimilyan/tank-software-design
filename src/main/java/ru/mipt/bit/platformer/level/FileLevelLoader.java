@@ -41,8 +41,8 @@ public class FileLevelLoader implements LevelLoader {
             GridPoint2 position = new GridPoint2(x, y);
             switch (symbol) {
                 case TREE -> trees.add(position);
-                case PLAYER -> tanks.add(new TankSpec(position, ControlType.PLAYER));
-                case AI_TANK -> tanks.add(new TankSpec(position, ControlType.RANDOM));
+                case PLAYER -> tanks.add(new TankSpec(position, ControlType.HUMAN));
+                case AI_TANK -> tanks.add(new TankSpec(position, ControlType.AI));
                 case EMPTY -> { }
                 default -> throw new IllegalArgumentException(
                         "Символ '" + symbol + "', строка " + (row + 1));

@@ -53,9 +53,9 @@ public class RandomLevelGenerator implements LevelLoader {
 
     private List<TankSpec> placeTanks(List<GridPoint2> cells) {
         List<TankSpec> tanks = new ArrayList<>();
-        tanks.add(new TankSpec(cells.get(0), ControlType.PLAYER));
+        tanks.add(new TankSpec(cells.get(0), ControlType.HUMAN));
         for (int i = 1; i <= enemyCount; i++) {
-            tanks.add(new TankSpec(cells.get(i), ControlType.RANDOM));
+            tanks.add(new TankSpec(cells.get(i), ControlType.AI));
         }
         return tanks;
     }
