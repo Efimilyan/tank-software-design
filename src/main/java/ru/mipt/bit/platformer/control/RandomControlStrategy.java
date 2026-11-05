@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.control;
 
-import ru.mipt.bit.platformer.model.Direction;
+import ru.mipt.bit.platformer.model.api.Direction;
 
 import java.util.Random;
 

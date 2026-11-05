@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.control;
 
-import ru.mipt.bit.platformer.model.CollisionChecker;
+import ru.mipt.bit.platformer.model.api.CollisionChecker;
 import ru.mipt.bit.platformer.model.Tank;
 
 @FunctionalInterface

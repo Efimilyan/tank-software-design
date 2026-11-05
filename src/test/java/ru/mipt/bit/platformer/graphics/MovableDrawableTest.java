@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.Tank;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import ru.mipt.bit.platformer.model.Direction;
+import ru.mipt.bit.platformer.model.api.Direction;
 class MovableDrawableTest {
     private final TextureRegion region = new TextureRegion();
     private final TiledMapTileLayer layer = new TiledMapTileLayer(10, 8, 128, 128);

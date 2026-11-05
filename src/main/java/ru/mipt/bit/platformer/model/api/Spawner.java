@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer.model;
+package ru.mipt.bit.platformer.model.api;
 
 @FunctionalInterface
 public interface Spawner {

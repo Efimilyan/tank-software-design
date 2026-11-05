@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.*;
 
 public class Tank implements GameObject, Blocking, Movable {
     public static final int DEFAULT_HEALTH = 3;

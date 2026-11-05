@@ -1,6 +1,8 @@
 package ru.mipt.bit.platformer.model;
 
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.LevelListener;
 
 import java.util.ArrayList;
 import java.util.List;

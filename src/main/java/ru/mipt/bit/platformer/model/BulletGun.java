@@ -1,6 +1,10 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.BattleField;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.Gun;
+import ru.mipt.bit.platformer.model.api.Spawner;
 
 public class BulletGun implements Gun {
     private final Spawner spawner;

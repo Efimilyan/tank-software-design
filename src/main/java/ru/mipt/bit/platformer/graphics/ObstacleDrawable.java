@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import ru.mipt.bit.platformer.model.Obstacle;
 
-import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
+import static ru.mipt.bit.platformer.graphics.GdxGameUtils.*;
 
 public class ObstacleDrawable implements Drawable {
     private final TextureRegion graphics;

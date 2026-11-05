@@ -18,7 +18,7 @@ import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
-import static ru.mipt.bit.platformer.util.GdxGameUtils.getSingleLayer;
+import static ru.mipt.bit.platformer.graphics.GdxGameUtils.getSingleLayer;
 
 public class GameAssembly {
     private final LevelProvider levelProvider;

@@ -1,5 +1,8 @@
 package ru.mipt.bit.platformer.model;
 
+import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.LevelListener;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

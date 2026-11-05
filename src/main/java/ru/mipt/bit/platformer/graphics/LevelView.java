@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.graphics;
 
-import ru.mipt.bit.platformer.model.GameObject;
-import ru.mipt.bit.platformer.model.LevelListener;
+import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.LevelListener;
 
 import java.util.Collection;
 import java.util.Collections;

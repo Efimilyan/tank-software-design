@@ -1,6 +1,10 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.BattleField;
+import ru.mipt.bit.platformer.model.api.Blocking;
+import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.LevelListener;
 
 import java.util.ArrayList;
 import java.util.List;

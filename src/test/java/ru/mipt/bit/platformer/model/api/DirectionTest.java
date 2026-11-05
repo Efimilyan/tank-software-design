@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer.model;
+package ru.mipt.bit.platformer.model.api;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;

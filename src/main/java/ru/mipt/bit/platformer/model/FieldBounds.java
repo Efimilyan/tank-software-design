@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.CollisionChecker;
 
 public class FieldBounds implements CollisionChecker {
     private final int width;

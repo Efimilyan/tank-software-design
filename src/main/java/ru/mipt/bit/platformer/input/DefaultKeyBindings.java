@@ -2,7 +2,7 @@ package ru.mipt.bit.platformer.input;
 
 import ru.mipt.bit.platformer.control.MoveCommand;
 import ru.mipt.bit.platformer.control.ShootCommand;
-import ru.mipt.bit.platformer.model.Direction;
+import ru.mipt.bit.platformer.model.api.Direction;
 
 import java.util.List;
 

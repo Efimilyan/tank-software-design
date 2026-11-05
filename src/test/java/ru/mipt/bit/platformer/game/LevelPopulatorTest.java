@@ -7,10 +7,10 @@ import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
 import ru.mipt.bit.platformer.model.Bullet;
-import ru.mipt.bit.platformer.model.Direction;
-import ru.mipt.bit.platformer.model.GameObject;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GameObject;
 import ru.mipt.bit.platformer.model.Level;
-import ru.mipt.bit.platformer.model.LevelListener;
+import ru.mipt.bit.platformer.model.api.LevelListener;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
