@@ -3,7 +3,6 @@ package ru.mipt.bit.platformer.game;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Interpolation;
-import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.control.Controllers;
 import ru.mipt.bit.platformer.graphics.GameRenderer;
 import ru.mipt.bit.platformer.graphics.GameResources;
@@ -19,24 +18,20 @@ import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
-import java.util.Random;
-
 import static ru.mipt.bit.platformer.util.GdxGameUtils.getSingleLayer;
 
 public class GameAssembly {
     private final LevelLoader levelLoader;
     private final GameSettings settings;
     private final ResourcePaths paths;
-    private final ControlStrategy playerStrategy;
-    private final Random random;
+    private final ControlStrategyRegistry strategies;
 
     public GameAssembly(LevelLoader levelLoader, GameSettings settings, ResourcePaths paths,
-                        ControlStrategy playerStrategy, Random random) {
+                        ControlStrategyRegistry strategies) {
         this.levelLoader = levelLoader;
         this.settings = settings;
         this.paths = paths;
-        this.playerStrategy = playerStrategy;
-        this.random = random;
+        this.strategies = strategies;
     }
 
     public MainCycle assemble() {
@@ -73,7 +68,7 @@ public class GameAssembly {
                               int fieldWidth, int fieldHeight) {
         Level level = new Level();
         level.subscribe(levelView);
-        new GameWorldFactory(settings, playerStrategy, random)
+        new GameWorldFactory(settings, strategies)
                 .populate(level, controllers, levelData, fieldWidth, fieldHeight);
         return level;
     }

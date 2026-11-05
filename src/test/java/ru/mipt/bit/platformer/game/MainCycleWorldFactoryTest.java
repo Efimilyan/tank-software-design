@@ -39,6 +39,13 @@ class MainCycleWorldFactoryTest {
         return () -> new MoveCommand(direction);
     }
 
+    private static ControlStrategyRegistry strategies(ControlStrategy player, Random random) {
+        return new ControlStrategyRegistry()
+                .register(ControlType.PLAYER, () -> player)
+                .register(ControlType.RANDOM, () -> new RandomControlStrategy(
+                        random, SETTINGS.enemyShootProbability()));
+    }
+
     private static TankSpec player(int x, int y) {
         return new TankSpec(new GridPoint2(x, y), ControlType.PLAYER);
     }
@@ -53,8 +60,8 @@ class MainCycleWorldFactoryTest {
 
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
                                      int width, int height) {
-        GameWorldFactory factory =
-                new GameWorldFactory(SETTINGS, alwaysGoing(playerGoes), alwaysChoosing(enemyGoes));
+        GameWorldFactory factory = new GameWorldFactory(
+                SETTINGS, strategies(alwaysGoing(playerGoes), alwaysChoosing(enemyGoes)));
         Level level = new Level();
         Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
@@ -181,7 +188,7 @@ class MainCycleWorldFactoryTest {
 
     private static Assembly assembleIdle(LevelData data, int width, int height) {
         GameWorldFactory factory = new GameWorldFactory(
-                SETTINGS, () -> Command.NONE, alwaysChoosing(Direction.UP));
+                SETTINGS, strategies(() -> Command.NONE, alwaysChoosing(Direction.UP)));
         Level level = new Level();
         Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
