@@ -14,8 +14,8 @@ class BulletGunTest {
     private static final GridPoint2 FROM = new GridPoint2(2, 3);
 
     private final Level level = new Level();
-    private final BulletGun gun = new BulletGun(level, BattleField.of(coordinates -> false,
-            (coordinates, damage) -> { }), 0.1f, 2, RELOAD);
+    private final BulletGun gun = new BulletGun(level::add,
+            BattleField.of(coordinates -> false, (coordinates, damage) -> { }), 0.1f, 2, RELOAD);
 
     @Test
     void fireRegistersBulletInLevelAtGivenTile() {
@@ -63,7 +63,7 @@ class BulletGunTest {
                 hits.add(coordinates + " " + damage);
             }
         };
-        BulletGun pointBlank = new BulletGun(level, occupied, 0.1f, 2, RELOAD);
+        BulletGun pointBlank = new BulletGun(level::add, occupied, 0.1f, 2, RELOAD);
 
         pointBlank.fire(FROM, Direction.LEFT);
 
@@ -85,11 +85,22 @@ class BulletGunTest {
                 hits.add("hit");
             }
         };
-        BulletGun pointBlank = new BulletGun(level, occupied, 0.1f, 2, RELOAD);
+        BulletGun pointBlank = new BulletGun(level::add, occupied, 0.1f, 2, RELOAD);
 
         pointBlank.fire(FROM, Direction.LEFT);
         pointBlank.fire(FROM, Direction.LEFT);
 
         assertEquals(1, hits.size());
+    }
+    @Test
+    void firePassesCreatedBulletToSpawner() {
+        List<GameObject> spawned = new ArrayList<>();
+        BulletGun customGun = new BulletGun(spawned::add,
+                BattleField.of(coordinates -> false, (coordinates, damage) -> { }), 0.1f, 2, RELOAD);
+
+        customGun.fire(FROM, Direction.UP);
+
+        assertEquals(1, spawned.size());
+        assertTrue(spawned.get(0) instanceof Bullet);
     }
 }

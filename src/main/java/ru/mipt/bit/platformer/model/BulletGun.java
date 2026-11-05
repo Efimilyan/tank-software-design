@@ -3,16 +3,16 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.math.GridPoint2;
 
 public class BulletGun implements Gun {
-    private final Level level;
+    private final Spawner spawner;
     private final BattleField battleField;
     private final float bulletSpeed;
     private final int bulletDamage;
     private final float reloadTime;
     private float reloadLeft = 0f;
 
-    public BulletGun(Level level, BattleField battleField,
+    public BulletGun(Spawner spawner, BattleField battleField,
                      float bulletSpeed, int bulletDamage, float reloadTime) {
-        this.level = level;
+        this.spawner = spawner;
         this.battleField = battleField;
         this.bulletSpeed = bulletSpeed;
         this.bulletDamage = bulletDamage;
@@ -34,6 +34,6 @@ public class BulletGun implements Gun {
             battleField.hit(from, bulletDamage);
             return;
         }
-        level.add(new Bullet(from, direction, bulletSpeed, bulletDamage, battleField));
+        spawner.spawn(new Bullet(from, direction, bulletSpeed, bulletDamage, battleField));
     }
 }

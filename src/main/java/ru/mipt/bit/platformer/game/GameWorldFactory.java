@@ -46,7 +46,7 @@ public class GameWorldFactory {
     private List<Tank> createTanks(Level level, BattleField battleField, List<TankSpec> specs) {
         List<Tank> tanks = new ArrayList<>();
         for (TankSpec spec : specs) {
-            Gun gun = new BulletGun(level, battleField, settings.bulletSpeed(),
+            Gun gun = new BulletGun(level::add, battleField, settings.bulletSpeed(),
                     settings.bulletDamage(), settings.reloadTime());
             tanks.add(new Tank(spec.position(), settings.tankSpeed(), settings.tankHealth(), gun));
         }
