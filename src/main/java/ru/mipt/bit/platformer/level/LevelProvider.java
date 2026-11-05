@@ -1,5 +1,5 @@
 package ru.mipt.bit.platformer.level;
 
-public interface LevelLoader {
+public interface LevelProvider {
     LevelData load(int fieldWidth, int fieldHeight);
 }

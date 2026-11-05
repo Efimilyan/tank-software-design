@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class RandomLevelGenerator implements LevelLoader {
+public class RandomLevelProvider implements LevelProvider {
     private static final double MAX_TREE_FRACTION = 0.25;
 
     private final Random random;
     private final int enemyCount;
 
-    public RandomLevelGenerator(Random random, int enemyCount) {
+    public RandomLevelProvider(Random random, int enemyCount) {
         if (enemyCount < 0) {
             throw new IllegalArgumentException("Число AI-танков не может быть отрицательным");
         }

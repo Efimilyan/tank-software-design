@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileLevelLoader implements LevelLoader {
+public class FileLevelProvider implements LevelProvider {
     private static final char TREE = 'T';
     private static final char PLAYER = 'X';
     private static final char AI_TANK = 'A';
@@ -17,7 +17,7 @@ public class FileLevelLoader implements LevelLoader {
 
     private final Path path;
 
-    public FileLevelLoader(Path path) {
+    public FileLevelProvider(Path path) {
         this.path = path;
     }
 

@@ -13,7 +13,7 @@ import ru.mipt.bit.platformer.graphics.ResourcePaths;
 import ru.mipt.bit.platformer.input.DefaultKeyBindings;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.ControlType;
-import ru.mipt.bit.platformer.level.LevelLoaderSwitch;
+import ru.mipt.bit.platformer.level.LevelProviderSwitch;
 
 import java.util.Random;
 
@@ -75,7 +75,7 @@ public class GameDesktopLauncher implements ApplicationListener {
                 .register(ControlType.AI, () -> new RandomControlStrategy(
                         random, SETTINGS.enemyShootProbability()));
         GameAssembly assembly = new GameAssembly(
-                LevelLoaderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies);
+                LevelProviderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies);
         new Lwjgl3Application(new GameDesktopLauncher(assembly), config);
     }
 }

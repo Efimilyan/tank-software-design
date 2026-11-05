@@ -10,8 +10,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DefaultLevelLoaderTest {
-    private final LevelData level = new DefaultLevelLoader().load(10, 8);
+class DefaultLevelProviderTest {
+    private final LevelData level = new DefaultLevelProvider().load(10, 8);
 
     @Test
     void containsAiTanks() {

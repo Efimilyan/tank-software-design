@@ -10,13 +10,13 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RandomLevelGeneratorTest {
+class RandomLevelProviderTest {
     private static final int WIDTH = 10;
     private static final int HEIGHT = 8;
     private static final int ENEMY_COUNT = 3;
 
     private LevelData generate(long seed, int width, int height, int enemyCount) {
-        return new RandomLevelGenerator(new Random(seed), enemyCount).load(width, height);
+        return new RandomLevelProvider(new Random(seed), enemyCount).load(width, height);
     }
 
     private List<GridPoint2> allPositions(LevelData level) {

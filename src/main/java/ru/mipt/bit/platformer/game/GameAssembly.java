@@ -12,7 +12,7 @@ import ru.mipt.bit.platformer.graphics.ObstacleDrawable;
 import ru.mipt.bit.platformer.graphics.ResourcePaths;
 import ru.mipt.bit.platformer.graphics.TileMovement;
 import ru.mipt.bit.platformer.level.LevelData;
-import ru.mipt.bit.platformer.level.LevelLoader;
+import ru.mipt.bit.platformer.level.LevelProvider;
 import ru.mipt.bit.platformer.model.Bullet;
 import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
@@ -21,14 +21,14 @@ import ru.mipt.bit.platformer.model.Tank;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.getSingleLayer;
 
 public class GameAssembly {
-    private final LevelLoader levelLoader;
+    private final LevelProvider levelProvider;
     private final GameSettings settings;
     private final ResourcePaths paths;
     private final ControlStrategyRegistry strategies;
 
-    public GameAssembly(LevelLoader levelLoader, GameSettings settings, ResourcePaths paths,
+    public GameAssembly(LevelProvider levelProvider, GameSettings settings, ResourcePaths paths,
                         ControlStrategyRegistry strategies) {
-        this.levelLoader = levelLoader;
+        this.levelProvider = levelProvider;
         this.settings = settings;
         this.paths = paths;
         this.strategies = strategies;
@@ -40,7 +40,7 @@ public class GameAssembly {
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
         int fieldWidth = groundLayer.getWidth();
         int fieldHeight = groundLayer.getHeight();
-        LevelData levelData = levelLoader.load(fieldWidth, fieldHeight);
+        LevelData levelData = levelProvider.load(fieldWidth, fieldHeight);
 
         Controllers controllers = new Controllers();
         LevelView levelView = createLevelView(resources, groundLayer);

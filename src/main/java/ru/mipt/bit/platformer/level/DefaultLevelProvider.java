@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.GridPoint2;
 
 import java.util.List;
 
-public class DefaultLevelLoader implements LevelLoader {
+public class DefaultLevelProvider implements LevelProvider {
     @Override
     public LevelData load(int fieldWidth, int fieldHeight) {
         return new LevelData(

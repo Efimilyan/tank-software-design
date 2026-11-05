@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileLevelLoaderTest {
+class FileLevelProviderTest {
     @TempDir
     Path dir;
 
@@ -22,7 +22,7 @@ class FileLevelLoaderTest {
     private LevelData load(String content, int width, int height) throws IOException {
         Path file = dir.resolve("level.txt");
         Files.writeString(file, content);
-        return new FileLevelLoader(file).load(width, height);
+        return new FileLevelProvider(file).load(width, height);
     }
 
     @Test
