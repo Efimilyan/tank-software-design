@@ -1,29 +1,39 @@
 package ru.mipt.bit.platformer.graphics;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Disposable;
 
 public class GameResources implements Disposable {
+    private static final int PIXEL_SIZE = 1;
     private final TiledMap level;
     private final Texture tankTexture;
     private final Texture greenTreeTexture;
     private final Texture bulletTexture;
+    private final Texture pixelTexture;
 
     public GameResources(ResourcePaths paths){
         level = new TmxMapLoader().load(paths.map());
         tankTexture = new Texture(paths.tankTexture());
         greenTreeTexture = new Texture(paths.treeTexture());
         bulletTexture = new Texture(paths.bulletTexture());
+        pixelTexture = createWhitePixel();
     }
-
+    private static Texture createWhitePixel() {
+        Pixmap pixmap = new Pixmap(PIXEL_SIZE, PIXEL_SIZE, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
+    }
     @Override
     public void dispose(){
+        pixelTexture.dispose();
         bulletTexture.dispose();
-        greenTreeTexture.dispose();
-        tankTexture.dispose();
-        level.dispose();
     }
 
     public TiledMap getLevel(){
@@ -37,5 +47,8 @@ public class GameResources implements Disposable {
     }
     public Texture getBulletTexture(){
         return bulletTexture;
+    }
+    public Texture getPixelTexture(){
+        return pixelTexture;
     }
 }
