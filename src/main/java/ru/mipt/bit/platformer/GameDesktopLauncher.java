@@ -77,7 +77,8 @@ public class GameDesktopLauncher implements ApplicationListener {
                 .register(ControlType.AI, () -> new RandomControlStrategy(
                         random, SETTINGS.enemyShotsPerSecond()));
         GameAssembly assembly = new GameAssembly(
-                LevelProviderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies, random);
+                LevelProviderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies, random,
+                keyCode -> Gdx.input.isKeyJustPressed(keyCode));
         new Lwjgl3Application(new GameDesktopLauncher(assembly), config);
     }
 }
