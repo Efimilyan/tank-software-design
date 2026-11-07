@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.RecordingGun;
 import ru.mipt.bit.platformer.model.Tank;
-import ru.mipt.bit.platformer.control.Command;
+import ru.mipt.bit.platformer.control.TankCommand;
 
 
 import java.util.HashSet;
@@ -102,11 +102,11 @@ class KeyboardControlStrategyTest {
     @Test
     void customActionBindingRunsItsCommandWithoutChangingStrategy() {
         List<String> log = new ArrayList<>();
-        Command custom = (tank, collisionChecker) -> log.add("custom");
+        TankCommand custom = (tank, collisionChecker) -> log.add("custom");
         KeyboardControlStrategy customStrategy = new KeyboardControlStrategy(
                 keyCode -> pressed.contains(keyCode),
                 List.of(),
-                List.of(new KeyBinding(custom, Keys.F)));
+                List.of(new TankKeyBinding(custom, Keys.F)));
         pressed.add(Keys.F);
 
         customStrategy.nextCommand(DELTA).execute(new Tank(START, SPEED), coordinates -> false);
@@ -121,8 +121,8 @@ class KeyboardControlStrategyTest {
                 keyCode -> pressed.contains(keyCode),
                 List.of(),
                 List.of(
-                        new KeyBinding((tank, collisionChecker) -> log.add("first"), Keys.F),
-                        new KeyBinding((tank, collisionChecker) -> log.add("second"), Keys.G)));
+                        new TankKeyBinding((tank, collisionChecker) -> log.add("first"), Keys.F),
+                        new TankKeyBinding((tank, collisionChecker) -> log.add("second"), Keys.G)));
         pressed.addAll(List.of(Keys.F, Keys.G));
 
         customStrategy.nextCommand(DELTA).execute(new Tank(START, SPEED), coordinates -> false);

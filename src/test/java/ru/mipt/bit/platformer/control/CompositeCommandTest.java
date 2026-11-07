@@ -15,7 +15,7 @@ class CompositeCommandTest {
     void executesAllCommandsInOrder() {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, 3, gun);
-        Command command = new CompositeCommand(
+        TankCommand command = new CompositeCommand(
                 List.of(new MoveCommand(Direction.UP), new ShootCommand()));
 
         command.execute(tank, coordinates -> false);

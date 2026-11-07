@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.input;
 
-import ru.mipt.bit.platformer.control.Command;
+import ru.mipt.bit.platformer.control.TankCommand;
 import ru.mipt.bit.platformer.control.CompositeCommand;
 import ru.mipt.bit.platformer.control.ControlStrategy;
 
@@ -9,27 +9,27 @@ import java.util.List;
 
 public class KeyboardControlStrategy implements ControlStrategy {
     private final KeyStateProvider keys;
-    private final List<KeyBinding> movementBindings;
-    private final List<KeyBinding> actionBindings;
+    private final List<TankKeyBinding> movementBindings;
+    private final List<TankKeyBinding> actionBindings;
 
     public KeyboardControlStrategy(KeyStateProvider keys,
-                                   List<KeyBinding> movementBindings,
-                                   List<KeyBinding> actionBindings) {
+                                   List<TankKeyBinding> movementBindings,
+                                   List<TankKeyBinding> actionBindings) {
         this.keys = keys;
         this.movementBindings = List.copyOf(movementBindings);
         this.actionBindings = List.copyOf(actionBindings);
     }
 
     @Override
-    public Command nextCommand(float deltaTime) {
-        List<Command> commands = new ArrayList<>();
-        for (KeyBinding binding : movementBindings) {
+    public TankCommand nextCommand(float deltaTime) {
+        List<TankCommand> commands = new ArrayList<>();
+        for (TankKeyBinding binding : movementBindings) {
             if (binding.isPressed(keys)) {
                 commands.add(binding.command());
                 break;
             }
         }
-        for (KeyBinding binding : actionBindings) {
+        for (TankKeyBinding binding : actionBindings) {
             if (binding.isPressed(keys)) {
                 commands.add(binding.command());
             }

@@ -33,7 +33,7 @@ class MoveCommandTest {
     void noneCommandDoesNothing() {
         Tank tank = new Tank(START, SPEED);
 
-        Command.NONE.execute(tank, coordinates -> false);
+        TankCommand.NONE.execute(tank, coordinates -> false);
 
         assertEquals(START, tank.getDestinationCoordinates());
     }

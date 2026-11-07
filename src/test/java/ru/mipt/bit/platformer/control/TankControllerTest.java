@@ -32,7 +32,7 @@ class TankControllerTest {
         int[] calls = {0};
         ControlStrategy counting = (deltaTime) -> {
             calls[0]++;
-            return Command.NONE;
+            return TankCommand.NONE;
         };
         TankController controller = new TankController(tank, counting, coordinates -> false);
 
@@ -73,7 +73,7 @@ class TankControllerTest {
 
     @Test
     void controllerDiesTogetherWithItsTank() {
-        TankController controller = new TankController(tank, (deltaTime) -> Command.NONE, coordinates -> false);
+        TankController controller = new TankController(tank, (deltaTime) -> TankCommand.NONE, coordinates -> false);
 
         tank.takeDamage(Tank.DEFAULT_HEALTH);
 

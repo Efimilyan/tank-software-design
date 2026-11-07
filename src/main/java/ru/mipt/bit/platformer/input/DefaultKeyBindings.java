@@ -12,15 +12,15 @@ public final class DefaultKeyBindings {
     private DefaultKeyBindings() {
     }
 
-    public static List<KeyBinding> movement() {
+    public static List<TankKeyBinding> movement() {
         return List.of(
-                new KeyBinding(new MoveCommand(Direction.UP), UP, W),
-                new KeyBinding(new MoveCommand(Direction.DOWN), DOWN, S),
-                new KeyBinding(new MoveCommand(Direction.LEFT), LEFT, A),
-                new KeyBinding(new MoveCommand(Direction.RIGHT), RIGHT, D));
+                new TankKeyBinding(new MoveCommand(Direction.UP), UP, W),
+                new TankKeyBinding(new MoveCommand(Direction.DOWN), DOWN, S),
+                new TankKeyBinding(new MoveCommand(Direction.LEFT), LEFT, A),
+                new TankKeyBinding(new MoveCommand(Direction.RIGHT), RIGHT, D));
     }
 
-    public static List<KeyBinding> actions() {
-        return List.of(new KeyBinding(new ShootCommand(), SPACE));
+    public static List<TankKeyBinding> actions() {
+        return List.of(new TankKeyBinding(new ShootCommand(), SPACE));
     }
 }

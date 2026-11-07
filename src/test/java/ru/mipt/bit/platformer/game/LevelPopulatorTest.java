@@ -206,7 +206,7 @@ class LevelPopulatorTest {
 
     private static Assembly assembleIdle(LevelData data, int width, int height) {
         LevelPopulator factory = new LevelPopulator(
-                SETTINGS, strategies((deltaTime) -> Command.NONE, alwaysChoosing(Direction.UP)), () -> HEALTH);
+                SETTINGS, strategies((deltaTime) -> TankCommand.NONE, alwaysChoosing(Direction.UP)), () -> HEALTH);
         Level level = new Level();
         Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();

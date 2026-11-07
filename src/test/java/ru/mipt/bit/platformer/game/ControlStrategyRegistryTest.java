@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.game;
 
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.control.Command;
+import ru.mipt.bit.platformer.control.TankCommand;
 import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.level.ControlType;
 
@@ -14,7 +14,7 @@ class ControlStrategyRegistryTest {
 
     @Test
     void createReturnsStrategyFromRegisteredFactory() {
-        ControlStrategy player = (deltaTime) -> Command.NONE;
+        ControlStrategy player = (deltaTime) -> TankCommand.NONE;
         registry.register(ControlType.HUMAN, () -> player);
 
         assertSame(player, registry.create(ControlType.HUMAN));
@@ -25,7 +25,7 @@ class ControlStrategyRegistryTest {
         int[] calls = {0};
         registry.register(ControlType.AI, () -> {
             calls[0]++;
-            return (deltaTime) -> Command.NONE;
+            return (deltaTime) -> TankCommand.NONE;
         });
 
         registry.create(ControlType.AI);

@@ -4,7 +4,7 @@ import ru.mipt.bit.platformer.model.api.CollisionChecker;
 import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.Tank;
 
-public class MoveCommand implements Command {
+public class MoveCommand implements TankCommand {
     private final Direction direction;
 
     public MoveCommand(Direction direction) {
