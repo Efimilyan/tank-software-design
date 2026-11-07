@@ -25,11 +25,13 @@ public class LevelPopulator {
     private final GameSettings settings;
     private final ControlStrategyRegistry strategies;
     private final IntSupplier tankHealth;
+    private final BulletSettings bulletSettings;
 
     public LevelPopulator(GameSettings settings, ControlStrategyRegistry strategies, IntSupplier tankHealth) {
         this.settings = settings;
         this.strategies = strategies;
         this.tankHealth = tankHealth;
+        this.bulletSettings = BulletSettings.of(settings.bulletType(), settings.nominalTankHealth());
     }
 
     public void populate(Level level, Controllers controllers, LevelData data,
@@ -49,8 +51,8 @@ public class LevelPopulator {
     private List<Tank> createTanks(Level level, BattleField battleField, List<TankSpec> specs) {
         List<Tank> tanks = new ArrayList<>();
         for (TankSpec spec : specs) {
-            Gun gun = new BulletGun(level::add, battleField, settings.bulletSpeed(),
-                    settings.bulletDamage(), settings.reloadTime());
+            Gun gun = new BulletGun(level::add, battleField, bulletSettings.speed(),
+                    bulletSettings.damage(), settings.reloadTime());
             tanks.add(new Tank(spec.position(), settings.tankSpeed(), tankHealth.getAsInt(), gun));
         }
         return tanks;

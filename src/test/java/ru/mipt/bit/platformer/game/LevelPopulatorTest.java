@@ -6,13 +6,10 @@ import ru.mipt.bit.platformer.control.*;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
-import ru.mipt.bit.platformer.model.Bullet;
+import ru.mipt.bit.platformer.model.*;
 import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.api.GameObject;
-import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.api.LevelListener;
-import ru.mipt.bit.platformer.model.Obstacle;
-import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,7 @@ class LevelPopulatorTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
     private static final GameSettings SETTINGS =
-            new GameSettings(SPEED, OptionalInt.of(HEALTH), 0.1f, 2, 0.5f, 0.0);
+            new GameSettings(SPEED, OptionalInt.of(HEALTH), BulletType.BASE_BULLET, 0.5f, 0.0);
 
     private static Random alwaysChoosing(Direction direction) {
         return new Random() {

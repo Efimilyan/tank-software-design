@@ -1,12 +1,13 @@
 package ru.mipt.bit.platformer.game;
 
+import ru.mipt.bit.platformer.model.BulletType;
+
 import java.util.OptionalInt;
 
 public record GameSettings(
         float tankSpeed,
         OptionalInt tankHealth,
-        float bulletSpeed,
-        int bulletDamage,
+        BulletType bulletType,
         float reloadTime,
         double enemyShotsPerSecond) {
 
@@ -19,5 +20,9 @@ public record GameSettings(
 
     public int maxTankHealth() {
         return tankHealth.orElse(DEFAULT_MAX_TANK_HEALTH);
+    }
+
+    public int nominalTankHealth() {
+        return maxTankHealth();
     }
 }

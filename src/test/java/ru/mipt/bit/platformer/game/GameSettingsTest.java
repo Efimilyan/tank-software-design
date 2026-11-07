@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.game;
 
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.BulletType;
 
 import java.util.OptionalInt;
 
@@ -8,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameSettingsTest {
     private static GameSettings withHealth(OptionalInt health) {
-        return new GameSettings(0.4f, health, 0.1f, 1, 0.5f, 0.6);
+        return new GameSettings(0.4f, health, BulletType.BASE_BULLET, 0.5f, 0.6);
     }
 
     @Test
@@ -25,5 +26,16 @@ class GameSettingsTest {
 
         assertEquals(50, settings.minTankHealth());
         assertEquals(50, settings.maxTankHealth());
+    }
+
+    @Test
+    void nominalHealthIsTopOfDefaultRange() {
+        assertEquals(GameSettings.DEFAULT_MAX_TANK_HEALTH,
+                withHealth(OptionalInt.empty()).nominalTankHealth());
+    }
+
+    @Test
+    void nominalHealthIsExplicitHealthWhenGiven() {
+        assertEquals(50, withHealth(OptionalInt.of(50)).nominalTankHealth());
     }
 }
