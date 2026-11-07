@@ -16,6 +16,7 @@ import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class LevelPopulatorTest {
     private static final float SPEED = 0.4f;
     private static final int HEALTH = 5;
-    private static final GameSettings SETTINGS = new GameSettings(SPEED, HEALTH, 0.1f, 2, 0.5f, 0.0);
+    private static final GameSettings SETTINGS =
+            new GameSettings(SPEED, OptionalInt.of(HEALTH), 0.1f, 2, 0.5f, 0.0);
 
     private static Random alwaysChoosing(Direction direction) {
         return new Random() {
@@ -61,7 +63,7 @@ class LevelPopulatorTest {
     private static Assembly assemble(LevelData data, Direction playerGoes, Direction enemyGoes,
                                      int width, int height) {
         LevelPopulator factory = new LevelPopulator(
-                SETTINGS, strategies(alwaysGoing(playerGoes), alwaysChoosing(enemyGoes)));
+                SETTINGS, strategies(alwaysGoing(playerGoes), alwaysChoosing(enemyGoes)), () -> HEALTH);
         Level level = new Level();
         Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();
@@ -172,6 +174,25 @@ class LevelPopulatorTest {
     }
 
     @Test
+    void eachTankTakesItsOwnHealthFromSupplier() {
+        List<Integer> values = new ArrayList<>(List.of(70, 90));
+        LevelPopulator populator = new LevelPopulator(
+                SETTINGS,
+                strategies(alwaysGoing(Direction.UP), alwaysChoosing(Direction.UP)),
+                () -> values.remove(0));
+        Level level = new Level();
+        LevelData data = new LevelData(List.of(player(1, 1), enemy(5, 5)), List.of());
+
+        populator.populate(level, new Controllers(), data, 10, 8);
+
+        List<Integer> healths = level.objects().stream()
+                .filter(Tank.class::isInstance)
+                .map(Tank.class::cast)
+                .map(Tank::getHealth)
+                .toList();
+        assertEquals(List.of(70, 90), healths);
+    }
+    @Test
     void tankShootsBulletIntoLevel() {
         LevelData level = new LevelData(List.of(player(1, 1)), List.of());
         Assembly assembly = assemble(level, Direction.UP, Direction.UP, 10, 8);
@@ -188,7 +209,7 @@ class LevelPopulatorTest {
 
     private static Assembly assembleIdle(LevelData data, int width, int height) {
         LevelPopulator factory = new LevelPopulator(
-                SETTINGS, strategies((deltaTime) -> Command.NONE, alwaysChoosing(Direction.UP)));
+                SETTINGS, strategies((deltaTime) -> Command.NONE, alwaysChoosing(Direction.UP)), () -> HEALTH);
         Level level = new Level();
         Controllers controllers = new Controllers();
         List<Tank> tanks = new ArrayList<>();

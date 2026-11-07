@@ -18,6 +18,8 @@ import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
+import java.util.Random;
+
 import static ru.mipt.bit.platformer.graphics.GdxGameUtils.getSingleLayer;
 
 public class GameAssembly {
@@ -25,13 +27,15 @@ public class GameAssembly {
     private final GameSettings settings;
     private final ResourcePaths paths;
     private final ControlStrategyRegistry strategies;
+    private final Random random;
 
     public GameAssembly(LevelProvider levelProvider, GameSettings settings, ResourcePaths paths,
-                        ControlStrategyRegistry strategies) {
+                        ControlStrategyRegistry strategies, Random random) {
         this.levelProvider = levelProvider;
         this.settings = settings;
         this.paths = paths;
         this.strategies = strategies;
+        this.random = random;
     }
 
     public MainCycle assemble() {
@@ -68,7 +72,8 @@ public class GameAssembly {
                               int fieldWidth, int fieldHeight) {
         Level level = new Level();
         level.subscribe(levelView);
-        new LevelPopulator(settings, strategies)
+        new LevelPopulator(settings, strategies,
+                new RandomHealthSupplier(random, settings.minTankHealth(), settings.maxTankHealth()))
                 .populate(level, controllers, levelData, fieldWidth, fieldHeight);
         return level;
     }
