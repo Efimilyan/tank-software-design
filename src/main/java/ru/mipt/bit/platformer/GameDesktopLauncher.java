@@ -14,12 +14,14 @@ import ru.mipt.bit.platformer.input.DefaultKeyBindings;
 import ru.mipt.bit.platformer.input.KeyboardControlStrategy;
 import ru.mipt.bit.platformer.level.ControlType;
 import ru.mipt.bit.platformer.level.LevelProviderSwitch;
+import ru.mipt.bit.platformer.model.BulletType;
 
+import java.util.OptionalInt;
 import java.util.Random;
 
 public class GameDesktopLauncher implements ApplicationListener {
     private static final GameSettings SETTINGS = new GameSettings(
-            0.4f, 3, 0.1f, 1, 0.5f, 0.6);
+            0.4f, OptionalInt.empty(), BulletType.BASE_BULLET, 0.5f, 0.6);
     private static final ResourcePaths RESOURCE_PATHS = new ResourcePaths(
             "level.tmx",
             "images/tank_blue.png",
@@ -75,7 +77,8 @@ public class GameDesktopLauncher implements ApplicationListener {
                 .register(ControlType.AI, () -> new RandomControlStrategy(
                         random, SETTINGS.enemyShotsPerSecond()));
         GameAssembly assembly = new GameAssembly(
-                LevelProviderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies);
+                LevelProviderSwitch.select(args), SETTINGS, RESOURCE_PATHS, strategies, random,
+                keyCode -> Gdx.input.isKeyJustPressed(keyCode));
         new Lwjgl3Application(new GameDesktopLauncher(assembly), config);
     }
 }

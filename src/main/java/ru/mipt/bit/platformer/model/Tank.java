@@ -3,13 +3,13 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.*;
 
-public class Tank implements GameObject, Blocking, Movable {
+public class Tank implements GameObject, Blocking, Movable, HasHealth {
     public static final int DEFAULT_HEALTH = 3;
 
     private final Gun gun;
     private final GridMovement movement;
     private Direction direction = Direction.RIGHT;
-    private int health;
+    private final Health health;
 
     public Tank(GridPoint2 coordinates, float movementSpeed) {
         this(coordinates, movementSpeed, DEFAULT_HEALTH);
@@ -22,7 +22,8 @@ public class Tank implements GameObject, Blocking, Movable {
     public Tank(GridPoint2 coordinates, float movementSpeed, int health, Gun gun) {
         this.gun = gun;
         this.movement = new GridMovement(coordinates, movementSpeed);
-        this.health = health;
+        this.health = new Health(health);
+
     }
 
     public void move(Direction direction, CollisionChecker collisionChecker) {
@@ -73,15 +74,17 @@ public class Tank implements GameObject, Blocking, Movable {
         return direction;
     }
 
+    @Override
     public int getHealth() {
-        return health;
+        return health.getCurrent();
+    }
+    @Override
+    public int getMaxHealth() {
+        return health.getMax();
     }
 
     public void takeDamage(int damage) {
-        if (damage < 0) {
-            throw new IllegalArgumentException("Урон не может быть отрицательным: " + damage);
-        }
-        health -= damage;
+        health.takeDamage(damage);
     }
 
     @Override
@@ -91,6 +94,6 @@ public class Tank implements GameObject, Blocking, Movable {
 
     @Override
     public boolean isAlive() {
-        return health > 0;
+        return health.isAlive();
     }
 }

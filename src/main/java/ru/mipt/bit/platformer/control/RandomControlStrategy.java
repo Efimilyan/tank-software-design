@@ -16,7 +16,7 @@ public class RandomControlStrategy implements ControlStrategy {
     }
 
     @Override
-    public Command nextCommand(float deltaTime) {
+    public TankCommand nextCommand(float deltaTime) {
         if (random.nextDouble() < shotsPerSecond * deltaTime) {
             return new ShootCommand();
         }

@@ -54,6 +54,17 @@ class TankTest {
         assertTrue(tank.isAlive());
     }
 
+
+    @Test
+    void maxHealthStaysAfterDamage() {
+        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 5);
+
+        tank.takeDamage(2);
+
+        assertEquals(3, tank.getHealth());
+        assertEquals(5, tank.getMaxHealth());
+    }
+
     @Test
     void tankIsDeadWhenHealthRunsOut() {
         Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);

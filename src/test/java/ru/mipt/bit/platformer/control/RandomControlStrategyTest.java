@@ -29,7 +29,7 @@ class RandomControlStrategyTest {
         };
     }
 
-    private static GridPoint2 destinationAfter(Command command) {
+    private static GridPoint2 destinationAfter(TankCommand command) {
         Tank tank = new Tank(START, SPEED);
         command.execute(tank, coordinates -> false);
         return tank.getDestinationCoordinates();
