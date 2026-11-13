@@ -1,8 +1,8 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
@@ -15,14 +15,14 @@ class TankTest {
 
     @Test
     void newTankFacesRight() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
         assertEquals(0f, tank.getRotation(), 0.001f);
     }
 
     @Test
     void newTankHasGivenHealth() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 7);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 7);
 
         assertEquals(7, tank.getHealth());
         assertTrue(tank.isAlive());
@@ -30,14 +30,14 @@ class TankTest {
 
     @Test
     void newTankFacesRightDirection() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
         assertEquals(Direction.RIGHT, tank.getDirection());
     }
 
     @Test
     void moveRemembersDirectionEvenWhenBlocked() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
         tank.move(Direction.UP, coordinates -> true);
 
@@ -46,7 +46,7 @@ class TankTest {
 
     @Test
     void damageReducesHealth() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 3);
 
         tank.takeDamage(1);
 
@@ -57,7 +57,7 @@ class TankTest {
 
     @Test
     void maxHealthStaysAfterDamage() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 5);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 5);
 
         tank.takeDamage(2);
 
@@ -67,7 +67,7 @@ class TankTest {
 
     @Test
     void tankIsDeadWhenHealthRunsOut() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 2);
 
         tank.takeDamage(2);
 
@@ -76,7 +76,7 @@ class TankTest {
 
     @Test
     void hitByBulletDamagesTank() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 3);
 
         tank.hit(2);
 
@@ -85,7 +85,7 @@ class TankTest {
 
     @Test
     void negativeDamageIsRejected() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 2);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 2);
 
         assertThrows(IllegalArgumentException.class, () -> tank.takeDamage(-1));
         assertEquals(2, tank.getHealth());
@@ -94,7 +94,7 @@ class TankTest {
     @Test
     void shootFiresIntoTileInFrontOfTank() {
         RecordingGun gun = new RecordingGun();
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 3, gun);
 
         tank.shoot();
 
@@ -104,7 +104,7 @@ class TankTest {
     @Test
     void shootFromMovingTankFiresBeyondItsDestinationTile() {
         RecordingGun gun = new RecordingGun();
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 3, gun);
         tank.move(Direction.UP, emptyField);
 
         tank.shoot();
@@ -115,7 +115,7 @@ class TankTest {
     @Test
     void updateReloadsTheGun() {
         RecordingGun gun = new RecordingGun();
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED, 3, gun);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 3, gun);
 
         tank.update(0.25f);
 
@@ -124,7 +124,7 @@ class TankTest {
 
     @Test
     void tankWithoutGunCanShootHarmlessly() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
         tank.shoot();
 
@@ -133,7 +133,7 @@ class TankTest {
 
     @Test
     void moveTurnsTankInThatDirection() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
         tank.move(Direction.UP, emptyField);
 
         assertEquals(90f, tank.getRotation(), 0.001f);
@@ -141,31 +141,31 @@ class TankTest {
 
     @Test
     void tankMovesToNextTile() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
         tank.move(Direction.UP, emptyField);
 
         tank.update(0.4f);
         tank.update(0.1f);
 
-        assertEquals(new GridPoint2(1, 2), tank.getCurrentCoordinates());
+        assertEquals(new GridPosition(1, 2), tank.getCurrentCoordinates());
     }
 
     @Test
     void tankDoesNotEnterObstacle() {
-        Obstacle obstacle = new Obstacle(new GridPoint2(1, 2));
+        Obstacle obstacle = new Obstacle(new GridPosition(1, 2));
         GameField field = new GameField(List.of(obstacle));
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
         tank.move(Direction.UP, field);
         tank.update(0.4f);
         tank.update(0.1f);
 
-        assertEquals(new GridPoint2(1, 1), tank.getCurrentCoordinates());
+        assertEquals(new GridPosition(1, 1), tank.getCurrentCoordinates());
     }
 
     @Test
     void cannotTurnWhileMoving() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
         tank.move(Direction.UP, emptyField);
         tank.move(Direction.LEFT, emptyField);
@@ -174,40 +174,40 @@ class TankTest {
     }
     @Test
     void idleTankOccupiesOnlyItsTile() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
 
-        assertTrue(tank.occupies(new GridPoint2(1, 1)));
-        assertFalse(tank.occupies(new GridPoint2(1, 2)));
+        assertTrue(tank.occupies(new GridPosition(1, 1)));
+        assertFalse(tank.occupies(new GridPosition(1, 2)));
     }
 
     @Test
     void movingTankOccupiesBothTiles() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
         tank.move(Direction.UP, emptyField);
 
-        assertTrue(tank.occupies(new GridPoint2(1, 1)));
-        assertTrue(tank.occupies(new GridPoint2(1, 2)));
-        assertFalse(tank.occupies(new GridPoint2(1, 3)));
+        assertTrue(tank.occupies(new GridPosition(1, 1)));
+        assertTrue(tank.occupies(new GridPosition(1, 2)));
+        assertFalse(tank.occupies(new GridPosition(1, 3)));
     }
 
     @Test
     void tankReleasesOldTileWhenMoveFinished() {
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
         tank.move(Direction.UP, emptyField);
         tank.update(0.4f);
         tank.update(0.1f);
 
-        assertFalse(tank.occupies(new GridPoint2(1, 1)));
-        assertTrue(tank.occupies(new GridPoint2(1, 2)));
+        assertFalse(tank.occupies(new GridPosition(1, 1)));
+        assertTrue(tank.occupies(new GridPosition(1, 2)));
     }
 
     @Test
     void blockedTankOccupiesOnlyItsTile() {
-        GameField field = new GameField(List.of(new Obstacle(new GridPoint2(1, 2))));
-        Tank tank = new Tank(new GridPoint2(1, 1), SPEED);
+        GameField field = new GameField(List.of(new Obstacle(new GridPosition(1, 2))));
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED);
         tank.move(Direction.UP, field);
 
-        assertTrue(tank.occupies(new GridPoint2(1, 1)));
-        assertFalse(tank.occupies(new GridPoint2(1, 2)));
+        assertTrue(tank.occupies(new GridPosition(1, 1)));
+        assertFalse(tank.occupies(new GridPosition(1, 2)));
     }
 }

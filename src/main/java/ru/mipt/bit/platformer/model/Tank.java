@@ -1,6 +1,5 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.*;
 
 public class Tank implements GameObject, Blocking, Movable, HasHealth {
@@ -11,15 +10,15 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
     private Direction direction = Direction.RIGHT;
     private final Health health;
 
-    public Tank(GridPoint2 coordinates, float movementSpeed) {
+    public Tank(GridPosition coordinates, float movementSpeed) {
         this(coordinates, movementSpeed, DEFAULT_HEALTH);
     }
 
-    public Tank(GridPoint2 coordinates, float movementSpeed, int health) {
+    public Tank(GridPosition coordinates, float movementSpeed, int health) {
         this(coordinates, movementSpeed, health, Gun.NONE);
     }
 
-    public Tank(GridPoint2 coordinates, float movementSpeed, int health, Gun gun) {
+    public Tank(GridPosition coordinates, float movementSpeed, int health, Gun gun) {
         this.gun = gun;
         this.movement = new GridMovement(coordinates, movementSpeed);
         this.health = new Health(health);
@@ -28,7 +27,7 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
 
     public void move(Direction direction, CollisionChecker collisionChecker) {
         if (movement.isIdle()) {
-            GridPoint2 nextCoordinates = direction.shift(movement.getCurrent());
+            GridPosition nextCoordinates = direction.shift(movement.getCurrent());
             if (!collisionChecker.isOccupied(nextCoordinates)) {
                 movement.start(nextCoordinates);
             }
@@ -46,17 +45,17 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
     }
 
     @Override
-    public boolean occupies(GridPoint2 position) {
+    public boolean occupies(GridPosition position) {
         return movement.occupies(position);
     }
 
     @Override
-    public GridPoint2 getCurrentCoordinates() {
+    public GridPosition getCurrentCoordinates() {
         return movement.getCurrent();
     }
 
     @Override
-    public GridPoint2 getDestinationCoordinates() {
+    public GridPosition getDestinationCoordinates() {
         return movement.getDestination();
     }
 

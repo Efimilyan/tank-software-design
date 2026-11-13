@@ -1,21 +1,19 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.api.BattleField;
 import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BulletTest {
     private static final float SPEED = 0.1f;
     private static final int DAMAGE = 2;
-    private static final GridPoint2 START = new GridPoint2(3, 3);
+    private static final GridPosition START = new GridPosition(3, 3);
 
     private static final BattleField FREE_FIELD =
             BattleField.of(coordinates -> false, (coordinates, damage) -> { });
@@ -35,7 +33,7 @@ class BulletTest {
     void bulletStartsFlyingToNextTileInItsDirection() {
         bullet.update(SPEED / 2);
 
-        assertEquals(new GridPoint2(3, 4), bullet.getDestinationCoordinates());
+        assertEquals(new GridPosition(3, 4), bullet.getDestinationCoordinates());
         assertEquals(START, bullet.getCurrentCoordinates());
         assertEquals(0.5f, bullet.getMovementProgress(), 0.001f);
     }
@@ -44,7 +42,7 @@ class BulletTest {
     void bulletArrivesInNextTileAfterOneTileTime() {
         bullet.update(SPEED);
 
-        assertEquals(new GridPoint2(3, 4), bullet.getCurrentCoordinates());
+        assertEquals(new GridPosition(3, 4), bullet.getCurrentCoordinates());
     }
 
     @Test
@@ -53,7 +51,7 @@ class BulletTest {
         bullet.update(SPEED);
         bullet.update(SPEED);
 
-        assertEquals(new GridPoint2(3, 6), bullet.getCurrentCoordinates());
+        assertEquals(new GridPosition(3, 6), bullet.getCurrentCoordinates());
         assertTrue(bullet.isAlive());
     }
 
@@ -66,9 +64,9 @@ class BulletTest {
     void bulletOccupiesCurrentAndDestinationTiles() {
         bullet.update(SPEED / 2);
 
-        assertTrue(bullet.occupies(new GridPoint2(3, 3)));
-        assertTrue(bullet.occupies(new GridPoint2(3, 4)));
-        assertFalse(bullet.occupies(new GridPoint2(3, 5)));
+        assertTrue(bullet.occupies(new GridPosition(3, 3)));
+        assertTrue(bullet.occupies(new GridPosition(3, 4)));
+        assertFalse(bullet.occupies(new GridPosition(3, 5)));
     }
 
     @Test
@@ -76,12 +74,12 @@ class BulletTest {
         List<String> hits = new ArrayList<>();
         BattleField wallAbove = new BattleField() {
             @Override
-            public boolean isOccupied(GridPoint2 coordinates) {
-                return coordinates.equals(new GridPoint2(3, 4));
+            public boolean isOccupied(GridPosition coordinates) {
+                return coordinates.equals(new GridPosition(3, 4));
             }
 
             @Override
-            public void hit(GridPoint2 coordinates, int damage) {
+            public void hit(GridPosition coordinates, int damage) {
                 hits.add(coordinates + " " + damage);
             }
         };

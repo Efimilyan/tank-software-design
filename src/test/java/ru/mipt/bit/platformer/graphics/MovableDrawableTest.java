@@ -2,20 +2,21 @@ package ru.mipt.bit.platformer.graphics;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import ru.mipt.bit.platformer.model.api.Direction;
+
 class MovableDrawableTest {
     private final TextureRegion region = new TextureRegion();
     private final TiledMapTileLayer layer = new TiledMapTileLayer(10, 8, 128, 128);
 
     @Test
     void rectangleFollowsTankToNextTile() {
-        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
+        Tank tank = new Tank(new GridPosition(1, 1), 0.4f);
         MovableDrawable drawable = new MovableDrawable(tank, region, new TileMovement(layer, Interpolation.linear));
         tank.move(Direction.UP, coordinates -> false);
         tank.update(0.4f);

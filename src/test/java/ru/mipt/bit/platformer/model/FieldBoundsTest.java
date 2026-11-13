@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,20 +14,20 @@ class FieldBoundsTest {
 
     @Test
     void cornersInsideFieldAreFree() {
-        assertFalse(bounds.isOccupied(new GridPoint2(0, 0)));
-        assertFalse(bounds.isOccupied(new GridPoint2(WIDTH - 1, HEIGHT - 1)));
+        assertFalse(bounds.isOccupied(new GridPosition(0, 0)));
+        assertFalse(bounds.isOccupied(new GridPosition(WIDTH - 1, HEIGHT - 1)));
     }
 
     @Test
     void cellInsideFieldIsFree() {
-        assertFalse(bounds.isOccupied(new GridPoint2(5, 4)));
+        assertFalse(bounds.isOccupied(new GridPosition(5, 4)));
     }
 
     @Test
     void cellsJustOutsideFieldAreBlocked() {
-        assertTrue(bounds.isOccupied(new GridPoint2(-1, 0)));
-        assertTrue(bounds.isOccupied(new GridPoint2(0, -1)));
-        assertTrue(bounds.isOccupied(new GridPoint2(WIDTH, 0)));
-        assertTrue(bounds.isOccupied(new GridPoint2(0, HEIGHT)));
+        assertTrue(bounds.isOccupied(new GridPosition(-1, 0)));
+        assertTrue(bounds.isOccupied(new GridPosition(0, -1)));
+        assertTrue(bounds.isOccupied(new GridPosition(WIDTH, 0)));
+        assertTrue(bounds.isOccupied(new GridPosition(0, HEIGHT)));
     }
 }

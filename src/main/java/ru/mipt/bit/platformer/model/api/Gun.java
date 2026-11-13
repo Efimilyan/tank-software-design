@@ -1,7 +1,5 @@
 package ru.mipt.bit.platformer.model.api;
 
-import com.badlogic.gdx.math.GridPoint2;
-
 public interface Gun {
     Gun NONE = new Gun() {
         @Override
@@ -9,11 +7,11 @@ public interface Gun {
         }
 
         @Override
-        public void fire(GridPoint2 from, Direction direction) {
+        public void fire(GridPosition from, Direction direction) {
         }
     };
 
     void update(float deltaTime);
 
-    void fire(GridPoint2 from, Direction direction);
+    void fire(GridPosition from, Direction direction);
 }

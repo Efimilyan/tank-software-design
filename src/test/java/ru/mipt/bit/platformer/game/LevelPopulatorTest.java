@@ -1,6 +1,5 @@
 package ru.mipt.bit.platformer.game;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.control.*;
 import ru.mipt.bit.platformer.level.ControlType;
@@ -9,6 +8,7 @@ import ru.mipt.bit.platformer.level.TankSpec;
 import ru.mipt.bit.platformer.model.*;
 import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 import ru.mipt.bit.platformer.model.api.LevelListener;
 
 import java.util.ArrayList;
@@ -46,11 +46,11 @@ class LevelPopulatorTest {
     }
 
     private static TankSpec player(int x, int y) {
-        return new TankSpec(new GridPoint2(x, y), ControlType.HUMAN);
+        return new TankSpec(new GridPosition(x, y), ControlType.HUMAN);
     }
 
     private static TankSpec enemy(int x, int y) {
-        return new TankSpec(new GridPoint2(x, y), ControlType.AI);
+        return new TankSpec(new GridPosition(x, y), ControlType.AI);
     }
 
     private record Assembly(Level level, Controllers controllers,
@@ -94,15 +94,15 @@ class LevelPopulatorTest {
     void createsTankForEachSpecAndObstacleForEachTree() {
         LevelData level = new LevelData(
                 List.of(player(1, 1), enemy(5, 5)),
-                List.of(new GridPoint2(3, 3), new GridPoint2(4, 4)));
+                List.of(new GridPosition(3, 3), new GridPosition(4, 4)));
 
         Assembly assembly = assemble(level, Direction.UP, Direction.UP, 10, 8);
 
         assertEquals(2, assembly.tanks().size());
         assertEquals(2, assembly.obstacles().size());
-        assertEquals(new GridPoint2(1, 1), assembly.tanks().get(0).getCurrentCoordinates());
-        assertEquals(new GridPoint2(5, 5), assembly.tanks().get(1).getCurrentCoordinates());
-        assertEquals(new GridPoint2(3, 3), assembly.obstacles().get(0).getCoordinates());
+        assertEquals(new GridPosition(1, 1), assembly.tanks().get(0).getCurrentCoordinates());
+        assertEquals(new GridPosition(5, 5), assembly.tanks().get(1).getCurrentCoordinates());
+        assertEquals(new GridPosition(3, 3), assembly.obstacles().get(0).getCoordinates());
     }
 
     @Test
@@ -112,8 +112,8 @@ class LevelPopulatorTest {
 
         runFor(assembly, 4);
 
-        assertEquals(new GridPoint2(1, 2), assembly.tanks().get(0).getCurrentCoordinates());
-        assertEquals(new GridPoint2(6, 5), assembly.tanks().get(1).getCurrentCoordinates());
+        assertEquals(new GridPosition(1, 2), assembly.tanks().get(0).getCurrentCoordinates());
+        assertEquals(new GridPosition(6, 5), assembly.tanks().get(1).getCurrentCoordinates());
     }
 
     @Test
@@ -123,19 +123,19 @@ class LevelPopulatorTest {
 
         runFor(assembly, 10);
 
-        assertEquals(new GridPoint2(0, 0), assembly.tanks().get(0).getCurrentCoordinates());
-        assertEquals(new GridPoint2(4, 4), assembly.tanks().get(1).getCurrentCoordinates());
+        assertEquals(new GridPosition(0, 0), assembly.tanks().get(0).getCurrentCoordinates());
+        assertEquals(new GridPosition(4, 4), assembly.tanks().get(1).getCurrentCoordinates());
     }
 
     @Test
     void treeBlocksTank() {
         LevelData level = new LevelData(
-                List.of(player(1, 1), enemy(8, 7)), List.of(new GridPoint2(1, 2)));
+                List.of(player(1, 1), enemy(8, 7)), List.of(new GridPosition(1, 2)));
         Assembly assembly = assemble(level, Direction.UP, Direction.UP, 10, 8);
 
         runFor(assembly, 10);
 
-        assertEquals(new GridPoint2(1, 1), assembly.tanks().get(0).getCurrentCoordinates());
+        assertEquals(new GridPosition(1, 1), assembly.tanks().get(0).getCurrentCoordinates());
     }
 
     @Test
@@ -145,8 +145,8 @@ class LevelPopulatorTest {
 
         runFor(assembly, 10);
 
-        assertEquals(new GridPoint2(1, 1), assembly.tanks().get(0).getCurrentCoordinates());
-        assertEquals(new GridPoint2(2, 1), assembly.tanks().get(1).getCurrentCoordinates());
+        assertEquals(new GridPosition(1, 1), assembly.tanks().get(0).getCurrentCoordinates());
+        assertEquals(new GridPosition(2, 1), assembly.tanks().get(1).getCurrentCoordinates());
     }
 
     @Test
@@ -156,8 +156,8 @@ class LevelPopulatorTest {
 
         runFor(assembly, 1);
 
-        assertEquals(new GridPoint2(2, 1), assembly.tanks().get(0).getDestinationCoordinates());
-        assertEquals(new GridPoint2(0, 1), assembly.tanks().get(1).getDestinationCoordinates());
+        assertEquals(new GridPosition(2, 1), assembly.tanks().get(0).getDestinationCoordinates());
+        assertEquals(new GridPosition(0, 1), assembly.tanks().get(1).getDestinationCoordinates());
     }
 
     @Test
@@ -200,7 +200,7 @@ class LevelPopulatorTest {
                 .filter(object -> object instanceof Bullet)
                 .toList();
         assertEquals(1, bullets.size());
-        assertEquals(new GridPoint2(2, 1), ((Bullet) bullets.get(0)).getCurrentCoordinates());
+        assertEquals(new GridPosition(2, 1), ((Bullet) bullets.get(0)).getCurrentCoordinates());
         assertEquals(2, ((Bullet) bullets.get(0)).getDamage());
     }
 
@@ -262,7 +262,7 @@ class LevelPopulatorTest {
     @Test
     void treeStopsBullet() {
         LevelData data = new LevelData(
-                List.of(player(1, 1), enemy(6, 1)), List.of(new GridPoint2(3, 1)));
+                List.of(player(1, 1), enemy(6, 1)), List.of(new GridPosition(3, 1)));
         Assembly assembly = assembleIdle(data, 10, 2);
 
         assembly.tanks().get(0).shoot();

@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
@@ -13,12 +13,12 @@ class GameFieldTest {
     void emptyFieldHasNoOccupiedTiles() {
         GameField field = new GameField(List.of());
 
-        assertFalse(field.isOccupied(new GridPoint2(1, 1)));
+        assertFalse(field.isOccupied(new GridPosition(1, 1)));
     }
 
     @Test
     void tileWithObstacleIsOccupied() {
-        GridPoint2 coordinate = new GridPoint2(1, 3);
+        GridPosition coordinate = new GridPosition(1, 3);
         Obstacle obstacle = new Obstacle(coordinate);
         GameField field = new GameField(List.of(obstacle));
 
@@ -30,7 +30,7 @@ class GameFieldTest {
         Level level = new Level();
         GameField field = new GameField();
         level.subscribe(field);
-        GridPoint2 coordinate = new GridPoint2(2, 2);
+        GridPosition coordinate = new GridPosition(2, 2);
 
         level.add(new Obstacle(coordinate));
 
@@ -42,7 +42,7 @@ class GameFieldTest {
         Level level = new Level();
         GameField field = new GameField();
         level.subscribe(field);
-        GridPoint2 coordinate = new GridPoint2(2, 2);
+        GridPosition coordinate = new GridPosition(2, 2);
         Obstacle obstacle = new Obstacle(coordinate);
         level.add(obstacle);
 
@@ -59,13 +59,13 @@ class GameFieldTest {
 
         level.add(deltaTime -> { });
 
-        assertFalse(field.isOccupied(new GridPoint2(0, 0)));
+        assertFalse(field.isOccupied(new GridPosition(0, 0)));
     }
 
     private static class Target extends Obstacle {
         int damageTaken = 0;
 
-        Target(GridPoint2 coordinates) {
+        Target(GridPosition coordinates) {
             super(coordinates);
         }
 
@@ -77,11 +77,11 @@ class GameFieldTest {
 
     @Test
     void hitDamagesOnlyObjectsInThatTile() {
-        Target inside = new Target(new GridPoint2(1, 1));
-        Target elsewhere = new Target(new GridPoint2(2, 2));
+        Target inside = new Target(new GridPosition(1, 1));
+        Target elsewhere = new Target(new GridPosition(2, 2));
         GameField field = new GameField(List.of(inside, elsewhere));
 
-        field.hit(new GridPoint2(1, 1), 3);
+        field.hit(new GridPosition(1, 1), 3);
 
         assertEquals(3, inside.damageTaken);
         assertEquals(0, elsewhere.damageTaken);

@@ -1,19 +1,19 @@
 package ru.mipt.bit.platformer.control;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.GameField;
 import ru.mipt.bit.platformer.model.Level;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class TankControllerTest {
     private static final float SPEED = 0.4f;
-    private static final GridPoint2 START = new GridPoint2(1, 1);
+    private static final GridPosition START = new GridPosition(1, 1);
 
     private final Tank tank = new Tank(START, SPEED);
 
@@ -24,7 +24,7 @@ class TankControllerTest {
 
         controller.update(0.1f);
 
-        assertEquals(new GridPoint2(1, 2), tank.getDestinationCoordinates());
+        assertEquals(new GridPosition(1, 2), tank.getDestinationCoordinates());
     }
 
     @Test
@@ -54,7 +54,7 @@ class TankControllerTest {
 
     @Test
     void controlledTankStopsInFrontOfObstacle() {
-        Obstacle obstacle = new Obstacle(new GridPoint2(1, 3));
+        Obstacle obstacle = new Obstacle(new GridPosition(1, 3));
         Level level = new Level();
         GameField field = new GameField();
         level.subscribe(field);
@@ -68,7 +68,7 @@ class TankControllerTest {
             level.update(0.1f);
         }
 
-        assertEquals(new GridPoint2(1, 2), tank.getCurrentCoordinates());
+        assertEquals(new GridPosition(1, 2), tank.getCurrentCoordinates());
     }
 
     @Test

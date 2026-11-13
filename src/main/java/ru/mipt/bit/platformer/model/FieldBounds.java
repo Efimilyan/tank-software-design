@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.CollisionChecker;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 public class FieldBounds implements CollisionChecker {
     private final int width;
@@ -13,8 +13,8 @@ public class FieldBounds implements CollisionChecker {
     }
 
     @Override
-    public boolean isOccupied(GridPoint2 coordinates) {
-        return coordinates.x < 0 || coordinates.x >= width
-                || coordinates.y < 0 || coordinates.y >= height;
+    public boolean isOccupied(GridPosition coordinates) {
+        return coordinates.x() < 0 || coordinates.x() >= width
+                || coordinates.y() < 0 || coordinates.y() >= height;
     }
 }

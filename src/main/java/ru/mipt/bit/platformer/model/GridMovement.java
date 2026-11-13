@@ -1,49 +1,46 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
-
-import static com.badlogic.gdx.math.MathUtils.clamp;
-import static com.badlogic.gdx.math.MathUtils.isEqual;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 public class GridMovement {
     private static final float ARRIVED = 1f;
 
     private final float speed;
-    private final GridPoint2 current;
-    private final GridPoint2 destination;
+    private GridPosition current;
+    private GridPosition destination;
     private float progress = ARRIVED;
 
-    public GridMovement(GridPoint2 start, float speed) {
-        this.current = new GridPoint2(start);
-        this.destination = new GridPoint2(start);
+    public GridMovement(GridPosition start, float speed) {
+        this.current = start;
+        this.destination = start;
         this.speed = speed;
     }
 
     public boolean isIdle() {
-        return isEqual(progress, ARRIVED);
+        return progress >= ARRIVED;
     }
 
-    public void start(GridPoint2 target) {
-        destination.set(target);
+    public void start(GridPosition target) {
+        destination = target;
         progress = 0f;
     }
 
     public void update(float deltaTime) {
-        progress = clamp(progress + deltaTime / speed, 0f, ARRIVED);
+        progress = Math.clamp(progress + deltaTime / speed, 0f, ARRIVED);
         if (isIdle()) {
-            current.set(destination);
+            current = destination;
         }
     }
 
-    public boolean occupies(GridPoint2 position) {
+    public boolean occupies(GridPosition position) {
         return current.equals(position) || destination.equals(position);
     }
 
-    public GridPoint2 getCurrent() {
+    public GridPosition getCurrent() {
         return current;
     }
 
-    public GridPoint2 getDestination() {
+    public GridPosition getDestination() {
         return destination;
     }
 

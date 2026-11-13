@@ -9,9 +9,9 @@ import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.NoSuchElementException;
 
@@ -45,25 +45,9 @@ public final class GdxGameUtils {
         }
     }
 
-    public static Rectangle moveRectangleAtTileCenter(TiledMapTileLayer tileLayer, Rectangle rectangle, GridPoint2 tileCoordinates) {
+    public static Rectangle moveRectangleAtTileCenter(TiledMapTileLayer tileLayer, Rectangle rectangle, GridPosition tileCoordinates) {
         Vector2 tileCenter = calculateTileCenter(tileLayer, tileCoordinates);
         return rectangle.setCenter(tileCenter);
-    }
-
-    public static GridPoint2 incrementedY(GridPoint2 point) {
-        return new GridPoint2(point).add(0, 1);
-    }
-
-    public static GridPoint2 decrementedX(GridPoint2 point) {
-        return new GridPoint2(point).sub(1, 0);
-    }
-
-    public static GridPoint2 decrementedY(GridPoint2 point) {
-        return new GridPoint2(point).sub(0, 1);
-    }
-
-    public static GridPoint2 incrementedX(GridPoint2 point) {
-        return new GridPoint2(point).add(1, 0);
     }
 
     public static void drawTextureRegionUnscaled(Batch batch, TextureRegion region, Rectangle rectangle, float rotation) {
@@ -80,11 +64,11 @@ public final class GdxGameUtils {
                 .setHeight(region.getRegionHeight());
     }
 
-    private static Vector2 calculateTileCenter(TiledMapTileLayer tileLayer, GridPoint2 tileCoordinates) {
+    private static Vector2 calculateTileCenter(TiledMapTileLayer tileLayer, GridPosition tileCoordinates) {
         int tileWidth = tileLayer.getTileWidth();
         int tileHeight = tileLayer.getTileHeight();
-        int tileBottomLeftCornerX = tileCoordinates.x * tileWidth;
-        int tileBottomLeftCornerY = tileCoordinates.y * tileHeight;
+        int tileBottomLeftCornerX = tileCoordinates.x() * tileWidth;
+        int tileBottomLeftCornerY = tileCoordinates.y() * tileHeight;
 
         return new Rectangle()
                 .setX(tileBottomLeftCornerX)

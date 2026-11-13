@@ -1,14 +1,14 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GridMovementTest {
     private static final float SPEED = 0.4f;
-    private static final GridPoint2 START = new GridPoint2(1, 1);
-    private static final GridPoint2 TARGET = new GridPoint2(2, 1);
+    private static final GridPosition START = new GridPosition(1, 1);
+    private static final GridPosition TARGET = new GridPosition(2, 1);
 
     private final GridMovement movement = new GridMovement(START, SPEED);
 
@@ -65,7 +65,7 @@ class GridMovementTest {
 
         assertTrue(movement.occupies(START));
         assertTrue(movement.occupies(TARGET));
-        assertFalse(movement.occupies(new GridPoint2(3, 1)));
+        assertFalse(movement.occupies(new GridPosition(3, 1)));
     }
 
     @Test
@@ -73,6 +73,6 @@ class GridMovementTest {
         movement.start(TARGET);
         movement.update(SPEED);
 
-        assertEquals(new GridPoint2(1, 1), START);
+        assertEquals(new GridPosition(1, 1), START);
     }
 }

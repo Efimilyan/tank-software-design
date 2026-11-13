@@ -1,6 +1,5 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.*;
 
 public class Bullet implements GameObject, Movable, Blocking {
@@ -10,7 +9,7 @@ public class Bullet implements GameObject, Movable, Blocking {
     private final GridMovement movement;
     private boolean alive = true;
 
-    public Bullet(GridPoint2 coordinates, Direction direction, float movementSpeed, int damage,
+    public Bullet(GridPosition coordinates, Direction direction, float movementSpeed, int damage,
                   BattleField battleField) {
         this.movement = new GridMovement(coordinates, movementSpeed);
         this.direction = direction;
@@ -21,7 +20,7 @@ public class Bullet implements GameObject, Movable, Blocking {
     @Override
     public void update(float deltaTime) {
         if (movement.isIdle()) {
-            GridPoint2 next = direction.shift(movement.getCurrent());
+            GridPosition next = direction.shift(movement.getCurrent());
             if (battleField.isOccupied(next)) {
                 battleField.hit(next, damage);
                 alive = false;
@@ -33,7 +32,7 @@ public class Bullet implements GameObject, Movable, Blocking {
     }
 
     @Override
-    public boolean occupies(GridPoint2 position) {
+    public boolean occupies(GridPosition position) {
         return movement.occupies(position);
     }
 
@@ -51,12 +50,12 @@ public class Bullet implements GameObject, Movable, Blocking {
     }
 
     @Override
-    public GridPoint2 getCurrentCoordinates() {
+    public GridPosition getCurrentCoordinates() {
         return movement.getCurrent();
     }
 
     @Override
-    public GridPoint2 getDestinationCoordinates() {
+    public GridPosition getDestinationCoordinates() {
         return movement.getDestination();
     }
 

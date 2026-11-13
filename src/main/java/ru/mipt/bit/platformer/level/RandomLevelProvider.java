@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,19 +23,19 @@ public class RandomLevelProvider implements LevelProvider {
 
     @Override
     public LevelData load(int fieldWidth, int fieldHeight) {
-        List<GridPoint2> cells = shuffledCells(fieldWidth, fieldHeight);
+        List<GridPosition> cells = shuffledCells(fieldWidth, fieldHeight);
         int treeCount = chooseTreeCount(cells.size());
         List<TankSpec> tanks = placeTanks(cells);
-        List<GridPoint2> trees = new ArrayList<>(
+        List<GridPosition> trees = new ArrayList<>(
                 cells.subList(1 + enemyCount, 1 + enemyCount + treeCount));
         return new LevelData(tanks, trees);
     }
 
-    private List<GridPoint2> shuffledCells(int fieldWidth, int fieldHeight) {
-        List<GridPoint2> cells = new ArrayList<>();
+    private List<GridPosition> shuffledCells(int fieldWidth, int fieldHeight) {
+        List<GridPosition> cells = new ArrayList<>();
         for (int x = 0; x < fieldWidth; x++) {
             for (int y = 0; y < fieldHeight; y++) {
-                cells.add(new GridPoint2(x, y));
+                cells.add(new GridPosition(x, y));
             }
         }
         Collections.shuffle(cells, random);
@@ -51,7 +51,7 @@ public class RandomLevelProvider implements LevelProvider {
         return random.nextInt(maxTreeCount + 1);
     }
 
-    private List<TankSpec> placeTanks(List<GridPoint2> cells) {
+    private List<TankSpec> placeTanks(List<GridPosition> cells) {
         List<TankSpec> tanks = new ArrayList<>();
         tanks.add(new TankSpec(cells.get(0), ControlType.HUMAN));
         for (int i = 1; i <= enemyCount; i++) {

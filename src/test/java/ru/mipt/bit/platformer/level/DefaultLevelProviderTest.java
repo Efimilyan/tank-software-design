@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,10 +20,10 @@ class DefaultLevelProviderTest {
 
     @Test
     void objectsAreInsideStandardFieldAndDoNotOverlap() {
-        List<GridPoint2> positions = new ArrayList<>(level.treePositions());
+        List<GridPosition> positions = new ArrayList<>(level.treePositions());
         level.tanks().forEach(tank -> positions.add(tank.position()));
 
-        positions.forEach(p -> assertTrue(p.x >= 0 && p.x < 10 && p.y >= 0 && p.y < 8));
+        positions.forEach(p -> assertTrue(p.x() >= 0 && p.x() < 10 && p.y() >= 0 && p.y() < 8));
         assertEquals(positions.size(), new HashSet<>(positions).size());
     }
 }

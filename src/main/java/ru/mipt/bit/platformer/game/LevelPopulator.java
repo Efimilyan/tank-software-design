@@ -1,21 +1,15 @@
 package ru.mipt.bit.platformer.game;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.control.ControlStrategy;
 import ru.mipt.bit.platformer.control.Controllers;
 import ru.mipt.bit.platformer.control.TankController;
 import ru.mipt.bit.platformer.level.LevelData;
 import ru.mipt.bit.platformer.level.TankSpec;
+import ru.mipt.bit.platformer.model.*;
 import ru.mipt.bit.platformer.model.api.BattleField;
-import ru.mipt.bit.platformer.model.BulletGun;
 import ru.mipt.bit.platformer.model.api.CollisionChecker;
-import ru.mipt.bit.platformer.model.CompositeCollisionChecker;
-import ru.mipt.bit.platformer.model.FieldBounds;
-import ru.mipt.bit.platformer.model.GameField;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 import ru.mipt.bit.platformer.model.api.Gun;
-import ru.mipt.bit.platformer.model.Level;
-import ru.mipt.bit.platformer.model.Obstacle;
-import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +52,8 @@ public class LevelPopulator {
         return tanks;
     }
 
-    private void addObstacles(Level level, List<GridPoint2> positions) {
-        for (GridPoint2 position : positions) {
+    private void addObstacles(Level level, List<GridPosition> positions) {
+        for (GridPosition position : positions) {
             level.add(new Obstacle(position));
         }
     }

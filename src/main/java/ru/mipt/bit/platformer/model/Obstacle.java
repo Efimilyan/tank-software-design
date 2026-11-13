@@ -1,22 +1,22 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.Blocking;
 import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 public class Obstacle implements Blocking, GameObject {
-    private final GridPoint2 coordinates;
+    private final GridPosition coordinates;
 
-    public Obstacle(GridPoint2 coordinates) {
-        this.coordinates = new GridPoint2(coordinates);
+    public Obstacle(GridPosition coordinates) {
+        this.coordinates = coordinates;;
     }
 
     @Override
-    public boolean occupies(GridPoint2 position) {
+    public boolean occupies(GridPosition position) {
         return coordinates.equals(position);
     }
 
-    public GridPoint2 getCoordinates() {
+    public GridPosition getCoordinates() {
         return coordinates;
     }
 

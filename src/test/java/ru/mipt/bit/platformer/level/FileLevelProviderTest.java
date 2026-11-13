@@ -1,8 +1,8 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,8 +29,8 @@ class FileLevelProviderTest {
     void firstLineIsTopRow() throws IOException {
         LevelData level = load("T_\n_X");
 
-        assertEquals(List.of(new TankSpec(new GridPoint2(1, 0), ControlType.HUMAN)), level.tanks());
-        assertEquals(List.of(new GridPoint2(0, 1)), level.treePositions());
+        assertEquals(List.of(new TankSpec(new GridPosition(1, 0), ControlType.HUMAN)), level.tanks());
+        assertEquals(List.of(new GridPosition(0, 1)), level.treePositions());
     }
 
     @Test
@@ -38,8 +38,8 @@ class FileLevelProviderTest {
         LevelData level = load("AX");
 
         assertEquals(List.of(
-                new TankSpec(new GridPoint2(0, 0), ControlType.AI),
-                new TankSpec(new GridPoint2(1, 0), ControlType.HUMAN)), level.tanks());
+                new TankSpec(new GridPosition(0, 0), ControlType.AI),
+                new TankSpec(new GridPosition(1, 0), ControlType.HUMAN)), level.tanks());
     }
 
     @Test
@@ -80,6 +80,6 @@ class FileLevelProviderTest {
 
         LevelData level = load(content);
 
-        assertEquals(List.of(new TankSpec(new GridPoint2(0, 7), ControlType.HUMAN)), level.tanks());
+        assertEquals(List.of(new TankSpec(new GridPosition(0, 7), ControlType.HUMAN)), level.tanks());
     }
 }

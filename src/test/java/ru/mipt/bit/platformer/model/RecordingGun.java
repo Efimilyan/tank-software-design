@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 import ru.mipt.bit.platformer.model.api.Gun;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class RecordingGun implements Gun {
     }
 
     @Override
-    public void fire(GridPoint2 from, Direction direction) {
+    public void fire(GridPosition from, Direction direction) {
         shots.add(from + " " + direction);
     }
 }

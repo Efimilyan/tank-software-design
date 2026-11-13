@@ -1,10 +1,10 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.api.BattleField;
 import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.api.GameObject;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BulletGunTest {
     private static final float RELOAD = 0.5f;
-    private static final GridPoint2 FROM = new GridPoint2(2, 3);
+    private static final GridPosition FROM = new GridPosition(2, 3);
 
     private final Level level = new Level();
     private final BulletGun gun = new BulletGun(level::add,
@@ -57,12 +57,12 @@ class BulletGunTest {
         List<String> hits = new ArrayList<>();
         BattleField occupied = new BattleField() {
             @Override
-            public boolean isOccupied(GridPoint2 coordinates) {
+            public boolean isOccupied(GridPosition coordinates) {
                 return true;
             }
 
             @Override
-            public void hit(GridPoint2 coordinates, int damage) {
+            public void hit(GridPosition coordinates, int damage) {
                 hits.add(coordinates + " " + damage);
             }
         };
@@ -79,12 +79,12 @@ class BulletGunTest {
         List<String> hits = new ArrayList<>();
         BattleField occupied = new BattleField() {
             @Override
-            public boolean isOccupied(GridPoint2 coordinates) {
+            public boolean isOccupied(GridPosition coordinates) {
                 return true;
             }
 
             @Override
-            public void hit(GridPoint2 coordinates, int damage) {
+            public void hit(GridPosition coordinates, int damage) {
                 hits.add("hit");
             }
         };
