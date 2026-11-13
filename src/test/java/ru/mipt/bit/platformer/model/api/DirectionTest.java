@@ -1,26 +1,25 @@
 package ru.mipt.bit.platformer.model.api;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DirectionTest {
-    private static final GridPoint2 ORIGIN = new GridPoint2(2, 2);
+    private static final GridPosition ORIGIN = new GridPosition(2, 2);
 
     @Test
     void shiftMovesByOneTile() {
-        assertEquals(new GridPoint2(2, 3), Direction.UP.shift(ORIGIN));
-        assertEquals(new GridPoint2(2, 1), Direction.DOWN.shift(ORIGIN));
-        assertEquals(new GridPoint2(1, 2), Direction.LEFT.shift(ORIGIN));
-        assertEquals(new GridPoint2(3, 2), Direction.RIGHT.shift(ORIGIN));
+        assertEquals(new GridPosition(2, 3), Direction.UP.shift(ORIGIN));
+        assertEquals(new GridPosition(2, 1), Direction.DOWN.shift(ORIGIN));
+        assertEquals(new GridPosition(1, 2), Direction.LEFT.shift(ORIGIN));
+        assertEquals(new GridPosition(3, 2), Direction.RIGHT.shift(ORIGIN));
     }
 
     @Test
     void shiftDoesNotChangeOriginal() {
         Direction.UP.shift(ORIGIN);
 
-        assertEquals(new GridPoint2(2, 2), ORIGIN);
+        assertEquals(new GridPosition(2, 2), ORIGIN);
     }
 
     @Test

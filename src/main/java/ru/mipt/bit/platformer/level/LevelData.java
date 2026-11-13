@@ -1,10 +1,10 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
-public record LevelData(List<TankSpec> tanks, List<GridPoint2> treePositions) {
+public record LevelData(List<TankSpec> tanks, List<GridPosition> treePositions) {
     public LevelData {
         long players = tanks.stream()
                 .filter(tank -> tank.control() == ControlType.HUMAN)

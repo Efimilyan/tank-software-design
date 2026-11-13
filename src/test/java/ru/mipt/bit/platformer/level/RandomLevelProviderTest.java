@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,8 +19,8 @@ class RandomLevelProviderTest {
         return new RandomLevelProvider(new Random(seed), enemyCount).load(width, height);
     }
 
-    private List<GridPoint2> allPositions(LevelData level) {
-        List<GridPoint2> positions = new ArrayList<>();
+    private List<GridPosition> allPositions(LevelData level) {
+        List<GridPosition> positions = new ArrayList<>();
         level.tanks().forEach(tank -> positions.add(tank.position()));
         positions.addAll(level.treePositions());
         return positions;
@@ -38,7 +38,7 @@ class RandomLevelProviderTest {
     @Test
     void objectsDoNotOverlap() {
         for (int seed = 0; seed < 100; seed++) {
-            List<GridPoint2> positions = allPositions(generate(seed, WIDTH, HEIGHT, ENEMY_COUNT));
+            List<GridPosition> positions = allPositions(generate(seed, WIDTH, HEIGHT, ENEMY_COUNT));
 
             assertEquals(positions.size(), new HashSet<>(positions).size());
         }
@@ -87,7 +87,7 @@ class RandomLevelProviderTest {
         assertEquals(generate(7, WIDTH, HEIGHT, ENEMY_COUNT), generate(7, WIDTH, HEIGHT, ENEMY_COUNT));
     }
 
-    private boolean isInside(GridPoint2 p) {
-        return p.x >= 0 && p.x < WIDTH && p.y >= 0 && p.y < HEIGHT;
+    private boolean isInside(GridPosition p) {
+        return p.x() >= 0 && p.x() < WIDTH && p.y() >= 0 && p.y() < HEIGHT;
     }
 }

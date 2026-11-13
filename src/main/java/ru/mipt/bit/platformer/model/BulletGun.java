@@ -1,10 +1,6 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.model.api.BattleField;
-import ru.mipt.bit.platformer.model.api.Direction;
-import ru.mipt.bit.platformer.model.api.Gun;
-import ru.mipt.bit.platformer.model.api.Spawner;
+import ru.mipt.bit.platformer.model.api.*;
 
 public class BulletGun implements Gun {
     private final Spawner spawner;
@@ -29,15 +25,19 @@ public class BulletGun implements Gun {
     }
 
     @Override
-    public void fire(GridPoint2 from, Direction direction) {
+    public void fire(GridPosition from, Direction direction, Blocking shooter) {
         if (reloadLeft > 0f) {
             return;
         }
         reloadLeft = reloadTime;
-        if (battleField.isOccupied(from)) {
+        if (isBlockedByOthers(from, shooter)) {
             battleField.hit(from, bulletDamage);
             return;
         }
         spawner.spawn(new Bullet(from, direction, bulletSpeed, bulletDamage, battleField));
+    }
+
+    private boolean isBlockedByOthers(GridPosition muzzle, Blocking shooter) {
+        return battleField.isOccupied(muzzle) && !shooter.occupies(muzzle);
     }
 }

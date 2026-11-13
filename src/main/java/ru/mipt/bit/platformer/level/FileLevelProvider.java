@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -26,7 +26,7 @@ public class FileLevelProvider implements LevelProvider {
         List<String> lines = readLines();
         requireFits(lines, fieldWidth, fieldHeight);
         List<TankSpec> tanks = new ArrayList<>();
-        List<GridPoint2> trees = new ArrayList<>();
+        List<GridPosition> trees = new ArrayList<>();
 
         for (int row = 0; row < lines.size(); row++) {
             parseRow(lines.get(row), row, lines.size() - 1 - row, tanks, trees);
@@ -35,10 +35,10 @@ public class FileLevelProvider implements LevelProvider {
     }
 
     private void parseRow(String line, int row, int y,
-                          List<TankSpec> tanks, List<GridPoint2> trees) {
+                          List<TankSpec> tanks, List<GridPosition> trees) {
         for (int x = 0; x < line.length(); x++) {
             char symbol = line.charAt(x);
-            GridPoint2 position = new GridPoint2(x, y);
+            GridPosition position = new GridPosition(x, y);
             switch (symbol) {
                 case TREE -> trees.add(position);
                 case PLAYER -> tanks.add(new TankSpec(position, ControlType.HUMAN));

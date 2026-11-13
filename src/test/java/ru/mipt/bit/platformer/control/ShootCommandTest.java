@@ -1,9 +1,9 @@
 package ru.mipt.bit.platformer.control;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.RecordingGun;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ class ShootCommandTest {
     @Test
     void commandAsksTankToShoot() {
         RecordingGun gun = new RecordingGun();
-        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, 3, gun);
+        Tank tank = new Tank(new GridPosition(1, 1), 0.4f, 3, gun);
 
         new ShootCommand().execute(tank, coordinates -> false);
 

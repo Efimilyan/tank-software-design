@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ public class DefaultLevelProvider implements LevelProvider {
     @Override
     public LevelData load(int fieldWidth, int fieldHeight) {
         return new LevelData(
-                List.of(new TankSpec(new GridPoint2(1, 1), ControlType.HUMAN),
-                        new TankSpec(new GridPoint2(6, 5), ControlType.AI),
-                        new TankSpec(new GridPoint2(8, 2), ControlType.AI)),
-                List.of(new GridPoint2(1, 3)));
+                List.of(new TankSpec(new GridPosition(1, 1), ControlType.HUMAN),
+                        new TankSpec(new GridPosition(6, 5), ControlType.AI),
+                        new TankSpec(new GridPosition(8, 2), ControlType.AI)),
+                List.of(new GridPosition(1, 3)));
     }
 }

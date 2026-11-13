@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.level;
 
-import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
-public record TankSpec(GridPoint2 position, ControlType control) {
+public record TankSpec(GridPosition position, ControlType control) {
 }

@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.api.CollisionChecker;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class CompositeCollisionChecker implements CollisionChecker {
     }
 
     @Override
-    public boolean isOccupied(GridPoint2 coordinates) {
+    public boolean isOccupied(GridPosition coordinates) {
         for (CollisionChecker checker : checkers) {
             if (checker.isOccupied(coordinates)) {
                 return true;

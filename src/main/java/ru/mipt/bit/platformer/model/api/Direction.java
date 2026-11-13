@@ -1,7 +1,5 @@
 package ru.mipt.bit.platformer.model.api;
 
-import com.badlogic.gdx.math.GridPoint2;
-
 public enum Direction {
     UP(0, 1, 90f),
     DOWN(0, -1, -90f),
@@ -18,8 +16,8 @@ public enum Direction {
         this.rotation = rotation;
     }
 
-    public GridPoint2 shift(GridPoint2 from) {
-        return new GridPoint2(from).add(dx, dy);
+    public GridPosition shift(GridPosition from) {
+        return from.shifted(dx, dy);
     }
 
     public float rotation() {

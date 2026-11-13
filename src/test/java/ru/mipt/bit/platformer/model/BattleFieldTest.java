@@ -1,18 +1,16 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.model.api.BattleField;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BattleFieldTest {
-    private static final GridPoint2 WALL = new GridPoint2(1, 1);
+    private static final GridPosition WALL = new GridPosition(1, 1);
 
     private final List<String> hits = new ArrayList<>();
     private final BattleField field = BattleField.of(
@@ -22,7 +20,7 @@ class BattleFieldTest {
     @Test
     void occupiedQuestionGoesToChecker() {
         assertTrue(field.isOccupied(WALL));
-        assertFalse(field.isOccupied(new GridPoint2(2, 2)));
+        assertFalse(field.isOccupied(new GridPosition(2, 2)));
     }
 
     @Test

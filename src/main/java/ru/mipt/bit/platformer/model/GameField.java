@@ -1,10 +1,6 @@
 package ru.mipt.bit.platformer.model;
 
-import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.model.api.BattleField;
-import ru.mipt.bit.platformer.model.api.Blocking;
-import ru.mipt.bit.platformer.model.api.GameObject;
-import ru.mipt.bit.platformer.model.api.LevelListener;
+import ru.mipt.bit.platformer.model.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +17,7 @@ public class GameField implements BattleField, LevelListener {
     }
 
     @Override
-    public boolean isOccupied(GridPoint2 coordinates) {
+    public boolean isOccupied(GridPosition coordinates) {
         for (int i = 0; i < obstacles.size(); i++) {
             Blocking obstacle = obstacles.get(i);
             if (obstacle.occupies(coordinates)) {
@@ -32,7 +28,7 @@ public class GameField implements BattleField, LevelListener {
     }
 
     @Override
-    public void hit(GridPoint2 coordinates, int damage) {
+    public void hit(GridPosition coordinates, int damage) {
         for (Blocking obstacle : List.copyOf(obstacles)) {
             if (obstacle.occupies(coordinates)) {
                 obstacle.hit(damage);

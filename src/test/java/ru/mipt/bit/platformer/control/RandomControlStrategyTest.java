@@ -1,10 +1,10 @@
 package ru.mipt.bit.platformer.control;
 
-import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.RecordingGun;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.model.api.Direction;
+import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RandomControlStrategyTest {
     private static final float SPEED = 0.4f;
-    private static final GridPoint2 START = new GridPoint2(5, 5);
+    private static final GridPosition START = new GridPosition(5, 5);
     private static final double NEVER_SHOOTS = 0.0;
     private static final float FRAME = 0.1f;
     private static final float ONE_SECOND = 1f;
@@ -29,7 +29,7 @@ class RandomControlStrategyTest {
         };
     }
 
-    private static GridPoint2 destinationAfter(TankCommand command) {
+    private static GridPosition destinationAfter(TankCommand command) {
         Tank tank = new Tank(START, SPEED);
         command.execute(tank, coordinates -> false);
         return tank.getDestinationCoordinates();
@@ -49,7 +49,7 @@ class RandomControlStrategyTest {
     @Test
     void allFourDirectionsAreEventuallyChosen() {
         RandomControlStrategy strategy = new RandomControlStrategy(new Random(42), NEVER_SHOOTS);
-        Set<GridPoint2> destinations = new HashSet<>();
+        Set<GridPosition> destinations = new HashSet<>();
 
         for (int i = 0; i < 200; i++) {
             destinations.add(destinationAfter(strategy.nextCommand(FRAME)));
@@ -63,8 +63,8 @@ class RandomControlStrategyTest {
         RandomControlStrategy strategy = new RandomControlStrategy(new Random(7), NEVER_SHOOTS);
 
         for (int i = 0; i < 50; i++) {
-            GridPoint2 destination = destinationAfter(strategy.nextCommand(FRAME));
-            int distance = Math.abs(destination.x - START.x) + Math.abs(destination.y - START.y);
+            GridPosition destination = destinationAfter(strategy.nextCommand(FRAME));
+            int distance = Math.abs(destination.x() - START.x()) + Math.abs(destination.y() - START.y());
 
             assertEquals(1, distance);
         }
@@ -100,8 +100,8 @@ class RandomControlStrategyTest {
         strategy.nextCommand(ONE_SECOND).execute(tank, coordinates -> false);
 
         assertEquals(List.of(), gun.shots);
-        assertEquals(1, Math.abs(tank.getDestinationCoordinates().x - START.x)
-                + Math.abs(tank.getDestinationCoordinates().y - START.y));
+        assertEquals(1, Math.abs(tank.getDestinationCoordinates().x() - START.x())
+                + Math.abs(tank.getDestinationCoordinates().y() - START.y()));
     }
 
     @Test
