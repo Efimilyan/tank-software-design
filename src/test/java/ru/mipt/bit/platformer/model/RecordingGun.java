@@ -1,5 +1,6 @@
 package ru.mipt.bit.platformer.model;
 
+import ru.mipt.bit.platformer.model.api.Blocking;
 import ru.mipt.bit.platformer.model.api.Direction;
 import ru.mipt.bit.platformer.model.api.GridPosition;
 import ru.mipt.bit.platformer.model.api.Gun;
@@ -17,7 +18,7 @@ public class RecordingGun implements Gun {
     }
 
     @Override
-    public void fire(GridPosition from, Direction direction) {
+    public void fire(GridPosition from, Direction direction, Blocking shooter) {
         shots.add(from + " " + direction);
     }
 }

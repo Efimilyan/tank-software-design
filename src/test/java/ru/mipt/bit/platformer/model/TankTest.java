@@ -102,14 +102,14 @@ class TankTest {
     }
 
     @Test
-    void shootFromMovingTankFiresBeyondItsDestinationTile() {
+    void shootFromMovingTankFiresIntoTileNextToItsCurrentPosition() {
         RecordingGun gun = new RecordingGun();
         Tank tank = new Tank(new GridPosition(1, 1), SPEED, 3, gun);
         tank.move(Direction.UP, emptyField);
 
         tank.shoot();
 
-        assertEquals(List.of("(1, 3) UP"), gun.shots);
+        assertEquals(List.of("(1, 2) UP"), gun.shots);
     }
 
     @Test

@@ -21,7 +21,7 @@ class CompositeCommandTest {
         command.execute(tank, coordinates -> false);
 
         assertEquals(new GridPosition(1, 2), tank.getDestinationCoordinates());
-        assertEquals(List.of("(1, 3) UP"), gun.shots);
+        assertEquals(List.of("(1, 2) UP"), gun.shots);
     }
 
     @Test

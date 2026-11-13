@@ -85,7 +85,7 @@ class KeyboardControlStrategyTest {
         strategy.nextCommand(DELTA).execute(tank, coordinates -> false);
 
         assertEquals(new GridPosition(5, 6), tank.getDestinationCoordinates());
-        assertEquals(List.of("(5, 7) UP"), gun.shots);
+        assertEquals(List.of("(5, 6) UP"), gun.shots);
     }
 
     @Test

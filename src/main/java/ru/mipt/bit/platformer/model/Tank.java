@@ -35,7 +35,7 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
         }
     }
     public void shoot() {
-        gun.fire(direction.shift(movement.getDestination()), direction);
+        gun.fire(direction.shift(movement.getCurrent()), direction, this);
     }
 
     @Override
