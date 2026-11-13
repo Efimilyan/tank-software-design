@@ -31,7 +31,7 @@ public class MainCycle implements Disposable {
 
     @Override
     public void dispose() {
-        resources.dispose();
         renderer.dispose();
+        resources.dispose();
     }
 }

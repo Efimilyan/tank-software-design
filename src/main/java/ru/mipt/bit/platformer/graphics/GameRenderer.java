@@ -12,12 +12,13 @@ import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static ru.mipt.bit.platformer.graphics.GdxGameUtils.createSingleLayerMapRenderer;
 
 public class GameRenderer implements Disposable {
+    private final OwnedResources ownedResources = new OwnedResources();
     private final Batch batch;
     private final MapRenderer levelRenderer;
 
     public GameRenderer(GameResources resources) {
-        batch = new SpriteBatch();
-        levelRenderer = createSingleLayerMapRenderer(resources.getLevel(), batch);
+        batch = ownedResources.own(new SpriteBatch());
+        levelRenderer = ownedResources.own(createSingleLayerMapRenderer(resources.getLevel(), batch));
     }
 
     public void render(Collection<? extends Drawable> drawables) {
@@ -34,6 +35,6 @@ public class GameRenderer implements Disposable {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        ownedResources.dispose();
     }
 }
