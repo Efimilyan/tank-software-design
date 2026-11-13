@@ -16,6 +16,10 @@ public class Obstacle implements Blocking, GameObject {
         return coordinates.equals(position);
     }
 
+    @Override
+    public void hit(int damage) {
+    }
+
     public GridPosition getCoordinates() {
         return coordinates;
     }

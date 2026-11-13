@@ -102,4 +102,22 @@ class BulletTest {
 
         assertEquals(START, blocked.getDestinationCoordinates());
     }
+
+    @Test
+    void bulletDiesWhenHit() {
+        bullet.hit(DAMAGE);
+
+        assertFalse(bullet.isAlive());
+    }
+
+    @Test
+    void bulletFlyingIntoAnotherBulletDestroysBoth() {
+        Bullet target = new Bullet(new GridPosition(3, 4), Direction.DOWN, SPEED, DAMAGE, FREE_FIELD);
+        Bullet shooter = new Bullet(START, Direction.UP, SPEED, DAMAGE, new GameField(List.of(target)));
+
+        shooter.update(SPEED);
+
+        assertFalse(shooter.isAlive());
+        assertFalse(target.isAlive());
+    }
 }

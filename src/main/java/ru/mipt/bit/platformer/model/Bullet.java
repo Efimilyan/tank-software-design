@@ -37,6 +37,10 @@ public class Bullet implements GameObject, Movable, Blocking {
     }
 
     @Override
+    public void hit(int damage) {
+        alive = false;
+    }
+    @Override
     public boolean isAlive() {
         return alive;
     }

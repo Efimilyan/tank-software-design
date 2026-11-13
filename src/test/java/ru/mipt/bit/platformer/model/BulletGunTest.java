@@ -9,8 +9,7 @@ import ru.mipt.bit.platformer.model.api.GridPosition;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BulletGunTest {
     private static final float RELOAD = 0.5f;
@@ -105,5 +104,18 @@ class BulletGunTest {
 
         assertEquals(1, spawned.size());
         assertTrue(spawned.get(0) instanceof Bullet);
+    }
+
+    @Test
+    void firingIntoTileWithBulletDestroysThatBullet() {
+        Bullet bulletInTheWay = new Bullet(FROM, Direction.UP, 0.1f, 2,
+                BattleField.of(coordinates -> false, (coordinates, damage) -> { }));
+        BulletGun gunNextToBullet = new BulletGun(level::add,
+                new GameField(List.of(bulletInTheWay)), 0.1f, 2, RELOAD);
+
+        gunNextToBullet.fire(FROM, Direction.RIGHT);
+
+        assertFalse(bulletInTheWay.isAlive());
+        assertTrue(level.objects().isEmpty());
     }
 }
