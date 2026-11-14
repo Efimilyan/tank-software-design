@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import ru.mipt.bit.platformer.control.RandomControlStrategy;
+import ru.mipt.bit.platformer.game.AssembledGame;
 import ru.mipt.bit.platformer.game.ControlStrategyRegistry;
-import ru.mipt.bit.platformer.game.MainCycle;
 import ru.mipt.bit.platformer.game.GameAssembly;
 import ru.mipt.bit.platformer.game.GameSettings;
 import ru.mipt.bit.platformer.graphics.ResourcePaths;
@@ -29,7 +29,7 @@ public class GameDesktopLauncher implements ApplicationListener {
             "images/bullet.png");
 
     private final GameAssembly assembly;
-    private MainCycle mainCycle;
+    private AssembledGame game;
 
     public GameDesktopLauncher(GameAssembly assembly) {
         this.assembly = assembly;
@@ -37,12 +37,12 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        mainCycle = assembly.assemble();
+        game = assembly.assemble();
     }
 
     @Override
     public void render() {
-        mainCycle.render(Gdx.graphics.getDeltaTime());
+        game.mainCycle().tick(Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void dispose() {
-        mainCycle.dispose();
+        game.view().dispose();
     }
 
     public static void main(String[] args) {

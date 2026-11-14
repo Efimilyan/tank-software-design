@@ -43,4 +43,10 @@ class ArchitectureTest {
                 .should().dependOnClassesThat().resideInAPackage(COMPOSITION_ROOT)
                 .check(PRODUCTION_CLASSES);
     }
+    @Test
+    void gameLoopDoesNotDependOnGraphicsOrLibGdx() {
+        noClasses().that().haveSimpleName("MainCycle")
+                .should().dependOnClassesThat().resideInAnyPackage(GRAPHICS, LIBGDX)
+                .check(PRODUCTION_CLASSES);
+    }
 }
