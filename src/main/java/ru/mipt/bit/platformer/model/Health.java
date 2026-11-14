@@ -24,6 +24,10 @@ public class Health {
         return current;
     }
 
+    public float remainingFraction() {
+        return (float) current / max;
+    }
+
     public int getMax() {
         return max;
     }

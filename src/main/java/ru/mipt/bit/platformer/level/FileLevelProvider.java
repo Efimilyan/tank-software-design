@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Адаптер LevelProvider: уровень из файла. */
 public class FileLevelProvider implements LevelProvider {
     private static final char TREE = 'T';
     private static final char PLAYER = 'X';

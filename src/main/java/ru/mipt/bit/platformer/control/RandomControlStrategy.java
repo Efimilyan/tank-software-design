@@ -4,6 +4,7 @@ import ru.mipt.bit.platformer.model.api.Direction;
 
 import java.util.Random;
 
+/** Адаптер ControlStrategy: случайный ИИ. */
 public class RandomControlStrategy implements ControlStrategy {
     private static final Direction[] DIRECTIONS = Direction.values();
 

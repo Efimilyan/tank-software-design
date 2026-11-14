@@ -6,6 +6,7 @@ import ru.mipt.bit.platformer.control.GlobalCommandSource;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Адаптер GlobalCommandSource: горячие клавиши. */
 public class HotkeyCommandSource implements GlobalCommandSource {
     private final JustPressedKeys keys;
     private final List<GlobalKeyBinding> bindings;

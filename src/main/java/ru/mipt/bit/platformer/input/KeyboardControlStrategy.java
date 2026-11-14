@@ -1,12 +1,13 @@
 package ru.mipt.bit.platformer.input;
 
-import ru.mipt.bit.platformer.control.TankCommand;
 import ru.mipt.bit.platformer.control.CompositeCommand;
 import ru.mipt.bit.platformer.control.ControlStrategy;
+import ru.mipt.bit.platformer.control.TankCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/** Адаптер ControlStrategy: клавиатура. */
 public class KeyboardControlStrategy implements ControlStrategy {
     private final KeyStateProvider keys;
     private final List<TankKeyBinding> movementBindings;

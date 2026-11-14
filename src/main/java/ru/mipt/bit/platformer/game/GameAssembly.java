@@ -7,21 +7,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.control.Controllers;
 import ru.mipt.bit.platformer.control.GlobalCommandController;
+import ru.mipt.bit.platformer.control.MainCycle;
 import ru.mipt.bit.platformer.control.ToggleHealthBarsCommand;
-import ru.mipt.bit.platformer.graphics.Drawable;
-import ru.mipt.bit.platformer.graphics.GameRenderer;
-import ru.mipt.bit.platformer.graphics.GameResources;
-import ru.mipt.bit.platformer.graphics.HealthBar;
-import ru.mipt.bit.platformer.graphics.HealthBarDrawable;
-import ru.mipt.bit.platformer.graphics.HealthBarLayout;
-import ru.mipt.bit.platformer.graphics.LevelView;
-import ru.mipt.bit.platformer.graphics.MovableDrawable;
-import ru.mipt.bit.platformer.graphics.ObstacleDrawable;
-import ru.mipt.bit.platformer.graphics.ResourcePaths;
-import ru.mipt.bit.platformer.graphics.SwitchableHealthBar;
-import ru.mipt.bit.platformer.graphics.TankHealthBar;
-import ru.mipt.bit.platformer.graphics.TileMovement;
-import ru.mipt.bit.platformer.graphics.Visibility;
+import ru.mipt.bit.platformer.graphics.*;
 import ru.mipt.bit.platformer.input.GlobalKeyBinding;
 import ru.mipt.bit.platformer.input.HotkeyCommandSource;
 import ru.mipt.bit.platformer.input.JustPressedKeys;
@@ -63,7 +51,7 @@ public class GameAssembly {
         this.keys = keys;
     }
 
-    public MainCycle assemble() {
+    public AssembledGame assemble() {
         GameResources resources = new GameResources(paths);
         GameRenderer renderer = new GameRenderer(resources);
         TiledMapTileLayer groundLayer = getSingleLayer(resources.getLevel());
@@ -76,7 +64,8 @@ public class GameAssembly {
         addGlobalCommands(controllers, healthBarSwitch);
         LevelView levelView = createLevelView(resources, groundLayer, healthBarSwitch);
         Level level = createLevel(levelView, controllers, levelData, fieldWidth, fieldHeight);
-        return new MainCycle(resources, renderer, levelView, controllers, level);
+        GdxGameView view = new GdxGameView(resources, renderer, levelView);
+        return new AssembledGame(new MainCycle(controllers, level, view), view);
     }
 
     private void addGlobalCommands(Controllers controllers, HealthBarSwitch healthBarSwitch) {
