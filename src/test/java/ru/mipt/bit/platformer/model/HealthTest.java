@@ -41,4 +41,12 @@ class HealthTest {
         assertThrows(IllegalArgumentException.class, () -> health.takeDamage(-1));
         assertEquals(3, health.getCurrent());
     }
+    @Test
+    void remainingFractionShowsShareOfMaxHealthLeft() {
+        Health health = new Health(10);
+
+        health.takeDamage(3);
+
+        assertEquals(0.7f, health.remainingFraction(), 0.0001f);
+    }
 }

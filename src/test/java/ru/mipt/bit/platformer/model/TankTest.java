@@ -210,4 +210,59 @@ class TankTest {
         assertTrue(tank.occupies(new GridPosition(1, 1)));
         assertFalse(tank.occupies(new GridPosition(1, 2)));
     }
+    @Test
+    void mediumDamagedTankMovesTwiceSlower() {
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 10);
+        tank.takeDamage(5);
+        tank.move(Direction.UP, emptyField);
+
+        tank.update(SPEED);
+
+        assertEquals(0.5f, tank.getMovementProgress(), 0.001f);
+    }
+
+    @Test
+    void heavilyDamagedTankMovesThreeTimesSlower() {
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 10);
+        tank.takeDamage(9);
+        tank.move(Direction.UP, emptyField);
+
+        tank.update(SPEED);
+
+        assertEquals(1f / 3, tank.getMovementProgress(), 0.001f);
+    }
+
+    @Test
+    void mediumDamagedTankStillShoots() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 10, gun);
+        tank.takeDamage(5);
+
+        tank.shoot();
+
+        assertEquals(1, gun.shots.size());
+    }
+
+    @Test
+    void heavilyDamagedTankCannotShoot() {
+        RecordingGun gun = new RecordingGun();
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 10, gun);
+        tank.takeDamage(9);
+
+        tank.shoot();
+
+        assertTrue(gun.shots.isEmpty());
+    }
+
+    @Test
+    void tankSlowsDownWhenHitInTheMiddleOfMovement() {
+        Tank tank = new Tank(new GridPosition(1, 1), SPEED, 10);
+        tank.move(Direction.UP, emptyField);
+        tank.update(SPEED / 2);
+
+        tank.takeDamage(5);
+        tank.update(SPEED / 2);
+
+        assertEquals(0.75f, tank.getMovementProgress(), 0.001f);
+    }
 }

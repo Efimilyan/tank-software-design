@@ -9,6 +9,7 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
     private final GridMovement movement;
     private Direction direction = Direction.RIGHT;
     private final Health health;
+    private TankState state;
 
     public Tank(GridPosition coordinates, float movementSpeed) {
         this(coordinates, movementSpeed, DEFAULT_HEALTH);
@@ -22,7 +23,7 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
         this.gun = gun;
         this.movement = new GridMovement(coordinates, movementSpeed);
         this.health = new Health(health);
-
+        this.state = DamageState.forHealth(this.health.remainingFraction());
     }
 
     public void move(Direction direction, CollisionChecker collisionChecker) {
@@ -35,13 +36,15 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
         }
     }
     public void shoot() {
-        gun.fire(direction.shift(movement.getCurrent()), direction, this);
+        if (state.canShoot()) {
+            gun.fire(direction.shift(movement.getCurrent()), direction, this);
+        }
     }
 
     @Override
     public void update(float deltaTime) {
-        gun.update(deltaTime);
-        movement.update(deltaTime);
+        gun.update(deltaTime * state.reloadSpeedFactor());
+        movement.update(deltaTime * state.movementSpeedFactor());
     }
 
     @Override
@@ -84,6 +87,7 @@ public class Tank implements GameObject, Blocking, Movable, HasHealth {
 
     public void takeDamage(int damage) {
         health.takeDamage(damage);
+        state = DamageState.forHealth(health.remainingFraction());
     }
 
     @Override
