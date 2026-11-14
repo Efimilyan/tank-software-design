@@ -1,6 +1,7 @@
 def versions = [:]
 versions.gdx = '1.12.1'
 versions.junit = '5.10.2'
+versions.archunit = '1.4.2'
 def deps = [:]
 
 def gdx = [:]
@@ -11,4 +12,5 @@ deps.gdx = gdx
 def junit = [:]
 junit.jupiter = "org.junit.jupiter:junit-jupiter:$versions.junit"
 deps.junit = junit
+deps.archunit = "com.tngtech.archunit:archunit:$versions.archunit"
 ext.deps = deps
