@@ -3,13 +3,10 @@ package ru.mipt.bit.platformer.graphics;
 import ru.mipt.bit.platformer.model.api.GameObject;
 import ru.mipt.bit.platformer.model.api.LevelListener;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
+/** Адаптер LevelListener: создаёт отрисовку объектов. */
 public class LevelView implements LevelListener {
     private final Map<Class<? extends GameObject>, Function<GameObject, Drawable>> creators =
             new HashMap<>();

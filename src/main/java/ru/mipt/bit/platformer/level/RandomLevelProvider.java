@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/** Адаптер LevelProvider: случайный уровень. */
 public class RandomLevelProvider implements LevelProvider {
     private static final double MAX_TREE_FRACTION = 0.25;
 

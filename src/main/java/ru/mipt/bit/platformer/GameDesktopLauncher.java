@@ -19,6 +19,7 @@ import ru.mipt.bit.platformer.model.BulletType;
 import java.util.OptionalInt;
 import java.util.Random;
 
+/** Адаптер: цикл libGDX запускает игру. */
 public class GameDesktopLauncher implements ApplicationListener {
     private static final GameSettings SETTINGS = new GameSettings(
             0.4f, OptionalInt.empty(), BulletType.BASE_BULLET, 0.5f, 0.6);

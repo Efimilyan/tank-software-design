@@ -4,6 +4,7 @@ import ru.mipt.bit.platformer.model.api.GridPosition;
 
 import java.util.List;
 
+/** Адаптер LevelProvider: уровень по умолчанию. */
 public class DefaultLevelProvider implements LevelProvider {
     @Override
     public LevelData load(int fieldWidth, int fieldHeight) {
